@@ -414,7 +414,7 @@ public class CTFcrack{
     	rsady.addActionListener(new ActionListener(){//调用rsatools
     		public void actionPerformed(ActionEvent evt){
              PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\插件\\rsa.py");
+    		 interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\rsa.py");
     		 BigInteger rsapstr=new BigInteger(rsap.getText());
              BigInteger rsaqstr=new BigInteger(rsaq.getText());
              BigInteger rsaestr=new BigInteger(rsae.getText());
@@ -424,47 +424,6 @@ public class CTFcrack{
     		}
     	});
     }
-/*    private JFrame Xirtools = new JFrame("希尔加密");
-    private JTextArea xj = new JTextArea();
-    private JTextArea xmw = new JTextArea();
-    private JTextArea xmy = new JTextArea();
-    private JButton xirdy = new JButton("Crack!");
-    private JLabel Xlabel1 = new JLabel("矩阵：");
-    private JLabel Xlabel2 = new JLabel("密文：");
-    private JLabel Xlabel3 = new JLabel("密钥：");*/
-/*    private void xirtools(){//希尔密码
-    	Container container = Xirtools.getContentPane();
-    	container.setLayout(null);
-    	Xirtools.setSize(300, 200);
-    	Xirtools.setVisible(true);
-    	Xirtools.setResizable(false);
-    	Xirtools.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	xj.setBounds(50, 20, 150, 20);
-    	container.add(xj);
-    	xmw.setBounds(50, 50, 150, 20);
-    	xmy.setBounds(50, 80, 150, 20);
-    	container.add(xmw);
-    	container.add(xmy);
-    	Xlabel1.setBounds(5, 20, 45, 20);
-    	Xlabel2.setBounds(5, 50, 45, 20);
-    	Xlabel3.setBounds(5, 80, 45, 20);
-    	container.add(Xlabel1);
-    	container.add(Xlabel2);
-    	container.add(Xlabel3);
-    	xirdy.setBounds(90, 120, 120, 30);
-    	container.add(xirdy);
-    	xirdy.addActionListener(new ActionListener(){//调用rsatools
-    		public void actionPerformed(ActionEvent evt){
-             PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\插件\\xir.py");
-    		 String jx = xj.getText();
-             String mw = xmw.getText();
-             PyFunction func = (PyFunction)interpreter.get("xir",PyFunction.class);
-             PyObject rsadstr = func.__call__(new PyString(mw),new PyString(jx));//这里出错 ----------
-             xmy.setText(rsadstr.toString());
-    		}
-    	});
-    }*/
     //下面是统一全局字体
     private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
