@@ -1,6 +1,5 @@
 /* 米斯特安全团队 Www.Hi-OurLife.Com
  * 作者：A先森_林晨
- * Mail:admin@hi-ourlife.com
  * QQ：627437686
  */
 import java.math.BigInteger;
@@ -46,8 +45,11 @@ public class CTFcrack{
 	private JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
 	private JMenuItem zhalan = new JMenuItem(" 栅栏密码>>解码");
 	private JMenuItem peig = new JMenuItem(" 培根密码>>解码");
-	private JMenuItem base64j = new JMenuItem(" 字符串>>Base64");
-	private JMenuItem base64c = new JMenuItem(" Base64>>字符串");
+	private JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
+	private JMenuItem base64j = new JMenuItem(" 字符串>>Base64(gbk)");
+	private JMenuItem base64c = new JMenuItem(" Base64>>字符串(gbk)");
+	private JMenuItem base64ju = new JMenuItem(" 字符串>>Base64(utf-8)");
+	private JMenuItem base64cu = new JMenuItem(" Base64>>字符串(utf-8)");
 	private JMenuItem morsee = new JMenuItem(" 字符串>>摩斯密码");
 	private JMenuItem morsed = new JMenuItem(" 摩斯密码>>字符串");
 	private JMenuItem UrlCoded = new JMenuItem(" Url编码>>字符串");
@@ -72,6 +74,10 @@ public class CTFcrack{
     private JMenu chaj = new JMenu(" 插件");
     private JMenuItem Tj = new JMenuItem(" 添加插件");
     private JMenuItem rsa = new JMenuItem(" RSAtools");
+    private JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
+    private JMenuItem b32d = new JMenuItem(" Base32>>字符串");
+    private JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
+    private JMenuItem b16d = new JMenuItem(" Base16>>字符串");
     //private JMenuItem xir = new JMenuItem(" 希尔加密");
     private JMenuItem cs;
     //rsatools窗口
@@ -83,8 +89,11 @@ public class CTFcrack{
     zifu.add(rot13);
     zifu.add(zhalan);
     zifu.add(peig);
+    zifu.add(zj);
     zifu.add(base64j);
     zifu.add(base64c);
+    zifu.add(base64ju);
+    zifu.add(base64cu);
     zifu.add(morsee);
     zifu.add(morsed);
     zifu.add(UrlCoded);
@@ -109,6 +118,10 @@ public class CTFcrack{
     Menu.add(chaj);
     chaj.add(Tj);
     chaj.add(rsa);
+    chaj.add(b32e);
+    chaj.add(b32d);
+    chaj.add(b16e);
+    chaj.add(b16d);
     //chaj.add(xir);
     ShuChu.setText("集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式 \n工具支持Python插件\n手头上有Python解码程序请联系我谢谢\n联系方式:QQ627437686\n懂Java的朋友也请联系我，共同开发。");
     //设置Swing的属性
@@ -146,6 +159,14 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
+    zj.addActionListener(new ActionListener() {//当按下凯撒密码
+        public void actionPerformed(ActionEvent evt) {
+          try {
+            CTFcrack.this.zjd(evt);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        } } );
     rot13.addActionListener(new ActionListener() {//当按下凯撒密码
         public void actionPerformed(ActionEvent evt) {
           try {
@@ -166,6 +187,22 @@ public class CTFcrack{
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Base64j(evt);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        } } );
+    base64ju.addActionListener(new ActionListener() {//当按下Base64解码时
+        public void actionPerformed(ActionEvent evt) {
+          try {
+            CTFcrack.this.Base64ju(evt);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        } } );
+    base64cu.addActionListener(new ActionListener() {//当按下Base64解码时
+        public void actionPerformed(ActionEvent evt) {
+          try {
+            CTFcrack.this.Base64cu(evt);
           } catch (Exception e) {
             e.printStackTrace();
           }
@@ -370,6 +407,42 @@ public class CTFcrack{
 			new CTFcrack().rsatools();
 		}
 	});
+	b32e.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+    		try{
+    			CTFcrack.this.Base32j(evt);
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+		}
+	});
+	b32d.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+    		try{
+    			CTFcrack.this.Base32c(evt);
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+		}
+	});
+	b16e.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+    		try{
+    			CTFcrack.this.Base16j(evt);
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+		}
+	});
+	b16d.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+    		try{
+    			CTFcrack.this.Base16c(evt);
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+		}
+	});
 /*	xir.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent evt){
 			new CTFcrack().xirtools();
@@ -424,6 +497,47 @@ public class CTFcrack{
     		}
     	});
     }
+/*    private JFrame Xirtools = new JFrame("希尔加密");
+    private JTextArea xj = new JTextArea();
+    private JTextArea xmw = new JTextArea();
+    private JTextArea xmy = new JTextArea();
+    private JButton xirdy = new JButton("Crack!");
+    private JLabel Xlabel1 = new JLabel("矩阵：");
+    private JLabel Xlabel2 = new JLabel("密文：");
+    private JLabel Xlabel3 = new JLabel("密钥：");*/
+/*    private void xirtools(){//希尔密码
+    	Container container = Xirtools.getContentPane();
+    	container.setLayout(null);
+    	Xirtools.setSize(300, 200);
+    	Xirtools.setVisible(true);
+    	Xirtools.setResizable(false);
+    	Xirtools.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    	xj.setBounds(50, 20, 150, 20);
+    	container.add(xj);
+    	xmw.setBounds(50, 50, 150, 20);
+    	xmy.setBounds(50, 80, 150, 20);
+    	container.add(xmw);
+    	container.add(xmy);
+    	Xlabel1.setBounds(5, 20, 45, 20);
+    	Xlabel2.setBounds(5, 50, 45, 20);
+    	Xlabel3.setBounds(5, 80, 45, 20);
+    	container.add(Xlabel1);
+    	container.add(Xlabel2);
+    	container.add(Xlabel3);
+    	xirdy.setBounds(90, 120, 120, 30);
+    	container.add(xirdy);
+    	xirdy.addActionListener(new ActionListener(){//调用rsatools
+    		public void actionPerformed(ActionEvent evt){
+             PythonInterpreter interpreter = new PythonInterpreter();
+    		 interpreter.execfile(System.getProperty("user.dir")+"\\插件\\xir.py");
+    		 String jx = xj.getText();
+             String mw = xmw.getText();
+             PyFunction func = (PyFunction)interpreter.get("xir",PyFunction.class);
+             PyObject rsadstr = func.__call__(new PyString(mw),new PyString(jx));//这里出错 ----------
+             xmy.setText(rsadstr.toString());
+    		}
+    	});
+    }*/
     //下面是统一全局字体
     private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
@@ -573,7 +687,125 @@ public class CTFcrack{
 				jg.append(ca[i]);
 			}else{
 			}
-
+		}
+		jg.append('\n');
+	    ShuChu.setText(jg.toString());
+	    jg.delete(0,jg.length());
+	}
+	private void zjd(ActionEvent evt){
+		String input = Shuru.getText();
+		char ca [] = input.toCharArray();
+		int zjl = ca.length;
+		StringBuilder jg = new StringBuilder();
+		for (int i=0;i<zjl;i++){
+			switch(ca[i]){
+			 case 'A':jg.append('J');
+			 break;
+			 case 'B':jg.append('K');
+			 break;
+			 case 'C':jg.append('L');
+			 break;
+			 case 'D':jg.append('M');
+			 break;
+			 case 'E':jg.append('N');
+			 break;
+			 case 'F':jg.append('O');
+			 break;
+			 case 'G':jg.append('P');
+			 break;
+			 case 'H':jg.append('Q');
+			 break;
+			 case 'I':jg.append('R');
+			 break;
+			 case 'J':jg.append('A');
+			 break;
+			 case 'K':jg.append('B');
+			 break;
+			 case 'L':jg.append('C');
+			 break;
+			 case 'M':jg.append('D');
+			 break;
+			 case 'N':jg.append('E');
+			 break;
+			 case 'O':jg.append('F');
+			 break;
+			 case 'P':jg.append('G');
+			 break;
+			 case 'Q':jg.append('H');
+			 break;
+			 case 'R':jg.append('I');
+			 break;
+			 case 'S':jg.append('W');
+			 break;
+			 case 'T':jg.append('X');
+			 break;
+			 case 'U':jg.append('Y');
+			 break;
+			 case 'V':jg.append('Z');
+			 break;
+			 case 'W':jg.append('S');
+			 break;
+			 case 'X':jg.append('T');
+			 break;
+			 case 'Y':jg.append('U');
+			 break;
+			 case 'Z':jg.append('V');
+			 break;
+			 case 'a':jg.append('j');
+			 break;
+			 case 'b':jg.append('k');
+			 break;
+			 case 'c':jg.append('l');
+			 break;
+			 case 'd':jg.append('m');
+			 break;
+			 case 'e':jg.append('n');
+			 break;
+			 case 'f':jg.append('o');
+			 break;
+			 case 'g':jg.append('p');
+			 break;
+			 case 'h':jg.append('q');
+			 break;
+			 case 'i':jg.append('r');
+			 break;
+			 case 'j':jg.append('a');
+			 break;
+			 case 'k':jg.append('b');
+			 break;
+			 case 'l':jg.append('c');
+			 break;
+			 case 'm':jg.append('d');
+			 break;
+			 case 'n':jg.append('e');
+			 break;
+			 case 'o':jg.append('f');
+			 break;
+			 case 'p':jg.append('g');
+			 break;
+			 case 'q':jg.append('h');
+			 break;
+			 case 'r':jg.append('i');
+			 break;
+			 case 's':jg.append('w');
+			 break;
+			 case 't':jg.append('x');
+			 break;
+			 case 'u':jg.append('y');
+			 break;
+			 case 'v':jg.append('z');
+			 break;
+			 case 'w':jg.append('s');
+			 break;
+			 case 'x':jg.append('t');
+			 break;
+			 case 'y':jg.append('u');
+			 break;
+			 case 'z':jg.append('v');
+			 break;
+			 default:
+				 jg.append(ca[i]);
+			}
 		}
 		jg.append('\n');
 	    ShuChu.setText(jg.toString());
@@ -612,6 +844,73 @@ public class CTFcrack{
 		jg.append(new BASE64Encoder().encode(shuru.getBytes()));
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
+	}
+	public void Base64ju(ActionEvent evt){
+		String shuru = Shuru.getText();
+		StringBuffer jg = new StringBuffer();
+        byte[] b = null;  
+        String s = null;  
+        try {  
+            b = shuru.getBytes("utf-8");  
+        } catch (UnsupportedEncodingException e) {  
+            e.printStackTrace();  
+        }  
+        if (b != null) {  
+            s = new BASE64Encoder().encode(b);  
+        } 
+        jg.append(s);
+		ShuChu.setText(jg.toString());
+		jg.delete(0, jg.length());
+	}
+	public void Base64cu(ActionEvent evt){
+		String shuru = Shuru.getText();
+		StringBuffer jg = new StringBuffer();
+		String result = null;
+		byte[] b = null;
+        if (shuru != null) {  
+            BASE64Decoder decoder = new BASE64Decoder();  
+            try {  
+                b = decoder.decodeBuffer(shuru);  
+                result = new String(b, "utf-8");  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            }  
+        }  
+        jg.append(result);
+		ShuChu.setText(jg.toString());
+		jg.delete(0, jg.length());
+	}
+	public void Base32j(ActionEvent evt){
+		String input = Shuru.getText();
+        PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\basecode.py");
+        PyFunction func = (PyFunction)interpreter.get("b32e",PyFunction.class);
+        PyObject rsadstr = func.__call__(new PyString(input));  
+        ShuChu.setText(rsadstr.toString());
+	}
+	public void Base32c(ActionEvent evt){
+		String input = Shuru.getText();
+        PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\basecode.py");
+        PyFunction func = (PyFunction)interpreter.get("b32d",PyFunction.class);
+        PyObject rsadstr = func.__call__(new PyString(input));  
+        ShuChu.setText(rsadstr.toString());
+	}
+	public void Base16j(ActionEvent evt){
+		String input = Shuru.getText();
+        PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\basecode.py");
+        PyFunction func = (PyFunction)interpreter.get("b16e",PyFunction.class);
+        PyObject rsadstr = func.__call__(new PyString(input));  
+        ShuChu.setText(rsadstr.toString());
+	}
+	public void Base16c(ActionEvent evt){
+		String input = Shuru.getText();
+        PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\basecode.py");
+        PyFunction func = (PyFunction)interpreter.get("b16d",PyFunction.class);
+        PyObject rsadstr = func.__call__(new PyString(input));  
+        ShuChu.setText(rsadstr.toString());
 	}
 	public void MorseE(ActionEvent evt){//摩斯加密
 		String shuru = Shuru.getText();
