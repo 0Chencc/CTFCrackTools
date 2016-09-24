@@ -1,4 +1,7 @@
 # coding = utf-8
+'''
+author:网友提供
+'''
 def computeD(fn, e):
     (x, y, r) = extendedGCD(fn, e)
     #y maybe < 0, so convert it

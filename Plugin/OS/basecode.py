@@ -1,3 +1,6 @@
+#coding=utf-8
+#author:A先森
+#team:米斯特安全
 import base64
 def b32e(data):
   encode = base64.b32encode(data)
