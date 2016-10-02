@@ -29,7 +29,6 @@ import org.python.util.PythonInterpreter;
 public class CTFcrack{
 	private static String zlstr[]= new String[1024];
 	private static int a1 = 0;
-	private static int cs1 = 0;
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//赋值一个字体
 	//主窗口
 	private JFrame jf = new JFrame("米斯特安全团队 CTF Crypto类破解工具 pro v1.2");
