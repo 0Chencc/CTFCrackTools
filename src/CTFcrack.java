@@ -6,6 +6,8 @@
 import java.math.BigInteger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
@@ -19,6 +21,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.util.regex.*;
+import java.awt.event.ActionListener;
 //导入了Jython包 可调用python
 import org.python.core.*;
 import javax.script.*;  
@@ -137,22 +140,50 @@ public class CTFcrack{
     //设置Swing的属性
     jf.setVisible(true);
     //jf.setResizable(false);
-    int width1 = 530;
-    jf.setSize(550, 530);//窗口
+    jf.setSize(720, 690);//窗口
     jf.setDefaultCloseOperation(3);
-    jl.setBounds(3, 20, width1, 20);//第一个标签
-    JieG.setBounds(3, 240, width1, 20);//结果标签
-    gShuru.setBounds(3, 40, width1, 200);//输入框
-    gShuChu.setBounds(3, 260, width1, 200);//输出框
-    AD.setBounds(3, 460, width1, 20);//广告
-    Menu.setBounds(0, 0, width1,20);//菜单
-    container.add(this.jl);
-    container.add(this.gShuru);
-    container.add(this.gShuChu);
-    container.add(this.JieG);
-    container.add(this.AD);
+    gShuru  
+    .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+    gShuru  
+    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);  
+    gShuChu
+    .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+    gShuChu
+    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    container.add(jl);
+    container.add(gShuru);
+    container.add(AD);
+    container.add(JieG);
+    container.add(gShuChu);
     container.add(Menu,BorderLayout.NORTH);
     //监听按钮
+    jf.addComponentListener(new ComponentAdapter(){
+    	@Override public void componentResized(ComponentEvent e){
+    		Menu.setBounds(0,
+    				0, 
+    				jf.getWidth()-20,
+    				20);//菜单
+    	    jl.setBounds(3, 
+    	    		20, 
+    	    		jf.getWidth()-20, 
+    	    		20);//第一个标签
+    	    gShuru.setBounds(3, 
+    	    		40, 
+    	    		jf.getWidth()-20, 
+    	    		(int)(jf.getHeight()*0.40));//输入框
+    	    JieG.setBounds(3, 
+    	    		jl.getHeight()+gShuru.getHeight()+20, 
+    	    		jf.getWidth()-20, 
+    	    		20);//结果标签
+    	    gShuChu.setBounds(3, 
+    	    		JieG.getY()+20, 
+    	    		jf.getWidth()-20,
+    	    		(int)(jf.getHeight()*0.42));//输出框
+    	    AD.setBounds(3, 
+    	    		gShuChu.getHeight()+JieG.getY()+20
+    	    		, jf.getWidth()-20
+    	    		, 20);//广告
+    	}});
     caesar.addActionListener(new ActionListener() {//当按下凯撒密码
         public void actionPerformed(ActionEvent evt) {
           try {
