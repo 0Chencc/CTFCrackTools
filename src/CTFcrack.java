@@ -28,7 +28,8 @@ import javax.script.*;
 import org.python.core.PyFunction;  
 import org.python.core.PyInteger;  
 import org.python.core.PyObject;  
-import org.python.util.PythonInterpreter;  
+import org.python.util.PythonInterpreter; 
+import javax.imageio.*;
 public class CTFcrack{
 	private static String zlstr[]= new String[1024];
 	private static int a1 = 0;
@@ -81,6 +82,8 @@ public class CTFcrack{
     private JMenuItem b32d = new JMenuItem(" Base32>>字符串");
     private JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
     private JMenuItem b16d = new JMenuItem(" Base16>>字符串");
+    private JMenu girlgif = new JMenu(" 妹子");
+    private JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
     //private JMenuItem xir = new JMenuItem(" 希尔加密");
     //rsatools窗口
     private void CreateJFrame(){//主窗口
@@ -125,6 +128,8 @@ public class CTFcrack{
     chaj.add(b32d);
     chaj.add(b16e);
     chaj.add(b16d);
+    Menu.add(girlgif);
+    girlgif.add(girlgifw);
     //chaj.add(xir);
     ShuChu.setText("作者注："
     		+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
@@ -486,6 +491,12 @@ public class CTFcrack{
     		}
 		}
 	});
+	girlgifw.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			new CTFcrack().girl();
+			
+		}
+	});	
 /*	xir.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent evt){
 			new CTFcrack().xirtools();
@@ -540,7 +551,18 @@ public class CTFcrack{
     		}
     	});
     }
-/*    private JFrame Xirtools = new JFrame("希尔加密");
+    private void girl(){
+        JFrame frame = new JFrame(); 
+        frame.setTitle("可爱的我来啦！"); 
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); 
+        File imgadd = new File(System.getProperty("user.dir")+"\\girl\\girl1.gif");
+        ImageIcon imageIcon = new ImageIcon(imgadd.toString()); 
+        JLabel label = new JLabel("", imageIcon, SwingConstants.CENTER); 
+        frame.add(label); 
+        frame.pack(); 
+        frame.setVisible(true); 
+    }
+	/*    private JFrame Xirtools = new JFrame("希尔加密");
     private JTextArea xj = new JTextArea();
     private JTextArea xmw = new JTextArea();
     private JTextArea xmy = new JTextArea();
@@ -594,7 +616,6 @@ public class CTFcrack{
 	  }
 	}  
 	public static void main(String[] args){//主方法
-	 System.out.println("完成");
 	 InitGlobalFont(Zt);//赋值字体
 	 new CTFcrack().CreateJFrame();
 	}
@@ -716,7 +737,7 @@ public class CTFcrack{
 		    ShuChu.setText(jg.toString());
 		    jg.delete(0,jg.length());
 	  }
-		public void peigd(ActionEvent evt){
+	public void peigd(ActionEvent evt){
 			String input = Shuru.getText();
 			char ca[]=input.toCharArray();
 			int pglen = ca.length;
