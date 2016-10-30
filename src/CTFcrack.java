@@ -1,7 +1,7 @@
-/* Ã×Ë¹ÌØ°²È«ÍÅ¶Ó Www.Hi-OurLife.Com
- * ×÷Õß£ºAÏÈÉ­_ÁÖ³¿
+/* ç±³æ–¯ç‰¹å®‰å…¨å›¢é˜Ÿ Www.Hi-OurLife.Com
+ * ä½œè€…ï¼šAå…ˆæ£®_æ—æ™¨
  * Mail:admin@hi-ourlife.com
- * QQ£º627437686
+ * QQï¼š627437686
  */
 import java.math.BigInteger;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.util.regex.*;
 import java.awt.event.ActionListener;
-//µ¼ÈëÁËJython°ü ¿Éµ÷ÓÃpython
+//å¯¼å…¥äº†JythonåŒ… å¯è°ƒç”¨python
 import org.python.core.*;
 import javax.script.*;  
 import org.python.core.PyFunction;  
@@ -33,60 +33,62 @@ import javax.imageio.*;
 public class CTFcrack{
 	private static String zlstr[]= new String[1024];
 	private static int a1 = 0;
-	private static Font Zt = new Font("¿¬Ìå", Font.PLAIN, 15);//¸³ÖµÒ»¸ö×ÖÌå
-	//Ö÷´°¿Ú
-	private JFrame jf = new JFrame("Ã×Ë¹ÌØ°²È«ÍÅ¶Ó CTF CryptoÀàÆÆ½â¹¤¾ß pro v1.2");
-    private JLabel jl = new JLabel("=====ÌîĞ´ËùĞè¼ì²âµÄÃÜÂë====");
+	private static Font Zt = new Font("æ¥·ä½“", Font.PLAIN, 15);//èµ‹å€¼ä¸€ä¸ªå­—ä½“
+	//ä¸»çª—å£
+	private JFrame jf = new JFrame("ç±³æ–¯ç‰¹å®‰å…¨å›¢é˜Ÿ CTF Cryptoç±»ç ´è§£å·¥å…· pro v1.2");
+    private JLabel jl = new JLabel("=====å¡«å†™æ‰€éœ€æ£€æµ‹çš„å¯†ç ====");
 	private JTextArea Shuru = new JTextArea();
 	private JTextArea ShuChu = new JTextArea();
 	private JScrollPane gShuChu = new JScrollPane(this.ShuChu);
 	private JScrollPane gShuru = new JScrollPane(this.Shuru);
-	private JLabel JieG = new JLabel("======½á¹û======");
-	private JLabel AD = new JLabel("Ã×Ë¹ÌØ°²È«ÍÅ¶ÓÍøÖ·:www.hi-ourlife.com          ³ÌĞò×÷Õß:Ã×Ë¹ÌØ_AÏÈÉ­");
+	private JLabel JieG = new JLabel("======ç»“æœ======");
+	private JLabel AD = new JLabel("ç±³æ–¯ç‰¹å®‰å…¨å›¢é˜Ÿç½‘å€:www.hi-ourlife.com          ç¨‹åºä½œè€…:ç±³æ–¯ç‰¹_Aå…ˆæ£®");
 	private JMenuBar Menu = new JMenuBar();
-    private JMenu zifu = new JMenu(" ½âÂë·½Ê½");
-	private JMenuItem caesar = new JMenuItem(" ¿­ÈöÃÜÂë>>½âÂë");;
-	private JMenuItem rot13 = new JMenuItem(" Rot13>>½âÂë");
-	private JMenuItem zhalan = new JMenuItem(" Õ¤À¸ÃÜÂë>>½âÂë");
-	private JMenuItem peig = new JMenuItem(" Åà¸ùÃÜÂë>>×ª»»");
-	private JMenuItem peigd = new JMenuItem(" Åà¸ùÃÜÂë>>½âÂë");
-	private JMenuItem zj = new JMenuItem(" ÖíÈ¦ÃÜÂë>>½âÂë");
-	private JMenuItem base64j = new JMenuItem(" ×Ö·û´®>>Base64(gbk)");
-	private JMenuItem base64c = new JMenuItem(" Base64>>×Ö·û´®(gbk)");
-	private JMenuItem base64ju = new JMenuItem(" ×Ö·û´®>>Base64(utf-8)");
-	private JMenuItem base64cu = new JMenuItem(" Base64>>×Ö·û´®(utf-8)");
-	private JMenuItem morsee = new JMenuItem(" ×Ö·û´®>>Ä¦Ë¹ÃÜÂë");
-	private JMenuItem morsed = new JMenuItem(" Ä¦Ë¹ÃÜÂë>>×Ö·û´®");
-	private JMenuItem UrlCoded = new JMenuItem(" Url±àÂë>>×Ö·û´®");
-	private JMenuItem UrlCodee = new JMenuItem(" ×Ö·û´®>>Url±àÂë");
-	private JMenuItem UnicoderStre = new JMenuItem(" ×Ö·û´®>>Unicode");
-	private JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>×Ö·û´®");
+    private JMenu zifu = new JMenu(" è§£ç æ–¹å¼");
+	private JMenuItem caesar = new JMenuItem(" å‡¯æ’’å¯†ç >>è§£ç ");;
+	private JMenuItem rot13 = new JMenuItem(" Rot13>>è§£ç ");
+	private JMenuItem zhalan = new JMenuItem(" æ …æ å¯†ç >>è§£ç ");
+	private JMenuItem peig = new JMenuItem(" åŸ¹æ ¹å¯†ç >>è½¬æ¢");
+	private JMenuItem peigd = new JMenuItem(" åŸ¹æ ¹å¯†ç >>è§£ç ");
+	private JMenuItem zj = new JMenuItem(" çŒªåœˆå¯†ç >>è§£ç ");
+	private JMenuItem base64j = new JMenuItem(" å­—ç¬¦ä¸²>>Base64(gbk)");
+	private JMenuItem base64c = new JMenuItem(" Base64>>å­—ç¬¦ä¸²(gbk)");
+	private JMenuItem base64ju = new JMenuItem(" å­—ç¬¦ä¸²>>Base64(utf-8)");
+	private JMenuItem base64cu = new JMenuItem(" Base64>>å­—ç¬¦ä¸²(utf-8)");
+	private JMenuItem morsee = new JMenuItem(" å­—ç¬¦ä¸²>>æ‘©æ–¯å¯†ç ");
+	private JMenuItem morsed = new JMenuItem(" æ‘©æ–¯å¯†ç >>å­—ç¬¦ä¸²");
+	private JMenuItem UrlCoded = new JMenuItem(" Urlç¼–ç >>å­—ç¬¦ä¸²");
+	private JMenuItem UrlCodee = new JMenuItem(" å­—ç¬¦ä¸²>>Urlç¼–ç ");
+	private JMenuItem UnicoderStre = new JMenuItem(" å­—ç¬¦ä¸²>>Unicode");
+	private JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>å­—ç¬¦ä¸²");
 	private JMenuItem asciiZUnicode = new JMenuItem(" Ascii>>Unicode");
 	private JMenuItem UnicodeZascii = new JMenuItem(" Unicode>>Ascii");
-    private JMenu jinz = new JMenu(" ½øÖÆ×ª»»");
-    private JMenuItem j2z8 = new JMenuItem(" ¶ş½øÖÆ>>°Ë½øÖÆ");
-    private JMenuItem j2z10 = new JMenuItem(" ¶ş½øÖÆ>>Ê®½øÖÆ");
-    private JMenuItem j2z16 = new JMenuItem(" ¶ş½øÖÆ>>Ê®Áù½øÖÆ");
-    private JMenuItem j8z2 = new JMenuItem(" °Ë½øÖÆ>>¶ş½øÖÆ");
-    private JMenuItem j8z10 = new JMenuItem(" °Ë½øÖÆ>>Ê®½øÖÆ");
-    private JMenuItem j8z16 = new JMenuItem(" °Ë½øÖÆ>>Ê®Áù½øÖÆ");
-    private JMenuItem j10z2 = new JMenuItem(" Ê®½øÖÆ>>¶ş½øÖÆ");
-    private JMenuItem j10z8 = new JMenuItem(" Ê®½øÖÆ>>°Ë½øÖÆ");
-    private JMenuItem j10z16 = new JMenuItem(" Ê®½øÖÆ>>Ê®Áù½øÖÆ");
-    private JMenuItem j16z2 = new JMenuItem(" Ê®Áù½øÖÆ>>¶ş½øÖÆ");
-    private JMenuItem j16z8 = new JMenuItem(" Ê®Áù½øÖÆ>>°Ë½øÖÆ");
-    private JMenuItem j16z10 = new JMenuItem(" Ê®Áù½øÖÆ>>Ê®½øÖÆ");
-    private JMenu chaj = new JMenu(" ²å¼ş");
+    private JMenu jinz = new JMenu(" è¿›åˆ¶è½¬æ¢");
+    private JMenuItem j2z8 = new JMenuItem(" äºŒè¿›åˆ¶>>å…«è¿›åˆ¶");
+    private JMenuItem j2z10 = new JMenuItem(" äºŒè¿›åˆ¶>>åè¿›åˆ¶");
+    private JMenuItem j2z16 = new JMenuItem(" äºŒè¿›åˆ¶>>åå…­è¿›åˆ¶");
+    private JMenuItem j8z2 = new JMenuItem(" å…«è¿›åˆ¶>>äºŒè¿›åˆ¶");
+    private JMenuItem j8z10 = new JMenuItem(" å…«è¿›åˆ¶>>åè¿›åˆ¶");
+    private JMenuItem j8z16 = new JMenuItem(" å…«è¿›åˆ¶>>åå…­è¿›åˆ¶");
+    private JMenuItem j10z2 = new JMenuItem(" åè¿›åˆ¶>>äºŒè¿›åˆ¶");
+    private JMenuItem j10z8 = new JMenuItem(" åè¿›åˆ¶>>å…«è¿›åˆ¶");
+    private JMenuItem j10z16 = new JMenuItem(" åè¿›åˆ¶>>åå…­è¿›åˆ¶");
+    private JMenuItem j16z2 = new JMenuItem(" åå…­è¿›åˆ¶>>äºŒè¿›åˆ¶");
+    private JMenuItem j16z8 = new JMenuItem(" åå…­è¿›åˆ¶>>å…«è¿›åˆ¶");
+    private JMenuItem j16z10 = new JMenuItem(" åå…­è¿›åˆ¶>>åè¿›åˆ¶");
+    private JMenu chaj = new JMenu(" æ’ä»¶");
     private JMenuItem rsa = new JMenuItem(" RSAtools");
-    private JMenuItem b32e = new JMenuItem(" ×Ö·û´®>>Base32");
-    private JMenuItem b32d = new JMenuItem(" Base32>>×Ö·û´®");
-    private JMenuItem b16e = new JMenuItem(" ×Ö·û´®>>Base16");
-    private JMenuItem b16d = new JMenuItem(" Base16>>×Ö·û´®");
-    private JMenu girlgif = new JMenu(" ÃÃ×Ó");
-    private JMenuItem girlgifw = new JMenuItem(" ÕÙ»½ÃÃ×Ó");
-    //private JMenuItem xir = new JMenuItem(" Ï£¶û¼ÓÃÜ");
-    //rsatools´°¿Ú
-    private void CreateJFrame(){//Ö÷´°¿Ú
+    private JMenuItem b32e = new JMenuItem(" å­—ç¬¦ä¸²>>Base32");
+    private JMenuItem b32d = new JMenuItem(" Base32>>å­—ç¬¦ä¸²");
+    private JMenuItem b16e = new JMenuItem(" å­—ç¬¦ä¸²>>Base16");
+    private JMenuItem b16d = new JMenuItem(" Base16>>å­—ç¬¦ä¸²");
+    private JMenu crackzip = new JMenu(" å‹ç¼©åŒ…");
+    private JMenuItem ces = new JMenuItem(" æµ‹è¯•");
+    private JMenu girlgif = new JMenu(" å¦¹å­");
+    private JMenuItem girlgifw = new JMenuItem(" å¬å”¤å¦¹å­");
+    //private JMenuItem xir = new JMenuItem(" å¸Œå°”åŠ å¯†");
+    //rsatoolsçª—å£
+    private void CreateJFrame(){//ä¸»çª—å£
     Container container = jf.getContentPane();
     container.setLayout(null);
     Menu.add(zifu);
@@ -121,31 +123,33 @@ public class CTFcrack{
     jinz.add(j16z2);
     jinz.add(j16z8);
     jinz.add(j16z10);
-    buildPluginMenu(chaj);//´«ÈëÒªÌí¼Ó²Ëµ¥µÄÄ¿Â¼
+    buildPluginMenu(chaj);//ä¼ å…¥è¦æ·»åŠ èœå•çš„ç›®å½•
     Menu.add(chaj);
     chaj.add(rsa);
     chaj.add(b32e);
     chaj.add(b32d);
     chaj.add(b16e);
     chaj.add(b16d);
+    Menu.add(crackzip);
+    crackzip.add(ces);
     Menu.add(girlgif);
     girlgif.add(girlgifw);
     //chaj.add(xir);
-    ShuChu.setText("×÷Õß×¢£º"
-    		+ "\n¼¯ºÏÕ¤À¸ ¿­Èö Ä¦Ë¹ Base64 Url±àÂë UnicodeµÈ¶àÖÖ½âÂë·½Ê½"
-    		+ "\n¹¤¾ßÖ§³ÖPython²å¼ş"
-    		+ "\n½«Ğ´ºÃµÄpy½Å±¾·Å½øPluginÄ¿Â¼¼´¿É"
-    		+ "\n´ò¿ª³ÌĞòºó×Ô¶¯±éÀúÍê³É"
-    		+ "\nÃ¿´Î´ò¿ª³ÌĞòµÚÒ»´Îµ÷ÓÃpython»áÉÔÂı"
-    		+ "\n½ÓÏÂÀ´¾ÍOKÁË"
-    		+ "\nÁªÏµ·½Ê½:QQ627437686"
-    		+ "\n¶®JavaµÄÅóÓÑÒ²ÇëÁªÏµÎÒ£¬¹²Í¬¿ª·¢¡£"
-    		+ "\n³ÌĞòÒÑ¿ªÔ´ githubµØÖ·£ºhttps://github.com/0Linchen/CTFcryptoCrack"
-    		+ "\n½»Á÷Èº£º392613610");
-    //ÉèÖÃSwingµÄÊôĞÔ
+    ShuChu.setText("ä½œè€…æ³¨ï¼š"
+    		+ "\né›†åˆæ …æ  å‡¯æ’’ æ‘©æ–¯ Base64 Urlç¼–ç  Unicodeç­‰å¤šç§è§£ç æ–¹å¼"
+    		+ "\nå·¥å…·æ”¯æŒPythonæ’ä»¶"
+    		+ "\nå°†å†™å¥½çš„pyè„šæœ¬æ”¾è¿›Pluginç›®å½•å³å¯"
+    		+ "\næ‰“å¼€ç¨‹åºåè‡ªåŠ¨éå†å®Œæˆ"
+    		+ "\næ¯æ¬¡æ‰“å¼€ç¨‹åºç¬¬ä¸€æ¬¡è°ƒç”¨pythonä¼šç¨æ…¢"
+    		+ "\næ¥ä¸‹æ¥å°±OKäº†"
+    		+ "\nè”ç³»æ–¹å¼:QQ627437686"
+    		+ "\næ‡‚Javaçš„æœ‹å‹ä¹Ÿè¯·è”ç³»æˆ‘ï¼Œå…±åŒå¼€å‘ã€‚"
+    		+ "\nç¨‹åºå·²å¼€æº githubåœ°å€ï¼šhttps://github.com/0Linchen/CTFcryptoCrack"
+    		+ "\näº¤æµç¾¤ï¼š392613610");
+    //è®¾ç½®Swingçš„å±æ€§
     jf.setVisible(true);
     //jf.setResizable(false);
-    jf.setSize(720, 690);//´°¿Ú
+    jf.setSize(720, 690);//çª—å£
     jf.setDefaultCloseOperation(3);
     gShuru  
     .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
@@ -161,35 +165,35 @@ public class CTFcrack{
     container.add(JieG);
     container.add(gShuChu);
     container.add(Menu,BorderLayout.NORTH);
-    //¼àÌı°´Å¥
+    //ç›‘å¬æŒ‰é’®
     jf.addComponentListener(new ComponentAdapter(){
     	@Override public void componentResized(ComponentEvent e){
     		Menu.setBounds(0,
     				0, 
     				jf.getWidth()-20,
-    				20);//²Ëµ¥
+    				20);//èœå•
     	    jl.setBounds(3, 
     	    		20, 
     	    		jf.getWidth()-20, 
-    	    		20);//µÚÒ»¸ö±êÇ©
+    	    		20);//ç¬¬ä¸€ä¸ªæ ‡ç­¾
     	    gShuru.setBounds(3, 
     	    		40, 
     	    		jf.getWidth()-20, 
-    	    		(int)(jf.getHeight()*0.40));//ÊäÈë¿ò
+    	    		(int)(jf.getHeight()*0.40));//è¾“å…¥æ¡†
     	    JieG.setBounds(3, 
     	    		jl.getHeight()+gShuru.getHeight()+20, 
     	    		jf.getWidth()-20, 
-    	    		20);//½á¹û±êÇ©
+    	    		20);//ç»“æœæ ‡ç­¾
     	    gShuChu.setBounds(3, 
     	    		JieG.getY()+20, 
     	    		jf.getWidth()-20,
-    	    		(int)(jf.getHeight()*0.42));//Êä³ö¿ò
+    	    		(int)(jf.getHeight()*0.42));//è¾“å‡ºæ¡†
     	    AD.setBounds(3, 
     	    		gShuChu.getHeight()+JieG.getY()+20
     	    		, jf.getWidth()-20
-    	    		, 20);//¹ã¸æ
+    	    		, 20);//å¹¿å‘Š
     	}});
-    caesar.addActionListener(new ActionListener() {//µ±°´ÏÂ¿­ÈöÃÜÂë
+    caesar.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹å‡¯æ’’å¯†ç 
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Caesar(evt);
@@ -197,7 +201,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    peig.addActionListener(new ActionListener() {//µ±°´ÏÂ¿­ÈöÃÜÂë
+    peig.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹å‡¯æ’’å¯†ç 
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.peigd(evt);
@@ -205,7 +209,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    zj.addActionListener(new ActionListener() {//µ±°´ÏÂ¿­ÈöÃÜÂë
+    zj.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹å‡¯æ’’å¯†ç 
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.zjd(evt);
@@ -213,7 +217,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    rot13.addActionListener(new ActionListener() {//µ±°´ÏÂ¿­ÈöÃÜÂë
+    rot13.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹å‡¯æ’’å¯†ç 
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Rot13(evt);
@@ -221,7 +225,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    zhalan.addActionListener(new ActionListener() {//µ±°´ÏÂÕ¤À¸ÃÜÂë
+    zhalan.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹æ …æ å¯†ç 
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Zhalan(evt);
@@ -229,7 +233,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    base64j.addActionListener(new ActionListener() {//µ±°´ÏÂBase64¼ÓÃÜÊ±
+    base64j.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹Base64åŠ å¯†æ—¶
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Base64j(evt);
@@ -237,7 +241,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    base64ju.addActionListener(new ActionListener() {//µ±°´ÏÂBase64½âÂëÊ±
+    base64ju.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹Base64è§£ç æ—¶
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Base64ju(evt);
@@ -245,7 +249,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    base64cu.addActionListener(new ActionListener() {//µ±°´ÏÂBase64½âÂëÊ±
+    base64cu.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹Base64è§£ç æ—¶
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Base64cu(evt);
@@ -253,7 +257,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    base64c.addActionListener(new ActionListener() {//µ±°´ÏÂBase64½âÂëÊ±
+    base64c.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹Base64è§£ç æ—¶
         public void actionPerformed(ActionEvent evt) {
           try {
             CTFcrack.this.Base64c(evt);
@@ -261,7 +265,7 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    morsee.addActionListener(new ActionListener() {//µ±°´ÏÂÄ¦Ë¹¼ÓÃÜÊ±
+    morsee.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹æ‘©æ–¯åŠ å¯†æ—¶
     	public void actionPerformed(ActionEvent evt){
     		try{
     			CTFcrack.this.MorseE(evt);
@@ -270,7 +274,7 @@ public class CTFcrack{
     		}
     	}
     });
-    morsed.addActionListener(new ActionListener() {//µ±°´ÏÂÄ¦Ë¹½âÃÜÊ±
+    morsed.addActionListener(new ActionListener() {//å½“æŒ‰ä¸‹æ‘©æ–¯è§£å¯†æ—¶
     	public void actionPerformed(ActionEvent evt){
     		try{
     			CTFcrack.this.MorseD(evt);
@@ -279,7 +283,7 @@ public class CTFcrack{
     		}
     	}
     });
-    UrlCodee.addActionListener(new ActionListener(){//µ±°´ÏÂUrl±àÂë
+    UrlCodee.addActionListener(new ActionListener(){//å½“æŒ‰ä¸‹Urlç¼–ç 
     	public void actionPerformed(ActionEvent evt){
     		try{
     			CTFcrack.this.UrlEncoder(evt);
@@ -288,7 +292,7 @@ public class CTFcrack{
     		}
     	}
     });
-    UrlCoded.addActionListener(new ActionListener(){//µ±°´ÏÂUrl±àÂë½âÂë
+    UrlCoded.addActionListener(new ActionListener(){//å½“æŒ‰ä¸‹Urlç¼–ç è§£ç 
     	public void actionPerformed(ActionEvent evt){
     		try{
     			CTFcrack.this.UrlDecoder(evt);
@@ -482,6 +486,24 @@ public class CTFcrack{
     		}
 		}
 	});
+	ces.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent evt){
+    		try{
+    			StringBuilder result = new StringBuilder();
+    			File pythonfl = new File("C:\\Users\\0chen\\Desktop\\ces.py");
+    			BufferedReader br = new BufferedReader(new FileReader(pythonfl));
+                String s = null;
+                while((s = br.readLine())!=null){//ä½¿ç”¨readLineæ–¹æ³•ï¼Œä¸€æ¬¡è¯»ä¸€è¡Œ
+                    result.append(System.lineSeparator()+s);
+                }
+                br.close();
+                System.out.println(result.toString());
+    			System.out.println((result.toString()).substring((result.toString()).indexOf("#type:")+5,(result.toString()).indexOf("\n")));
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+		}
+	});
 	peigd.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent evt){
     		try{
@@ -503,7 +525,7 @@ public class CTFcrack{
 		}
 	});*/
     }
-    private JFrame Rsatools = new JFrame("RsaTools--Python²å¼ş");
+    private JFrame Rsatools = new JFrame("RsaTools--Pythonæ’ä»¶");
     private JTextArea rsap = new JTextArea();
     private JTextArea rsaq = new JTextArea();
     private JTextArea rsae = new JTextArea();
@@ -513,12 +535,12 @@ public class CTFcrack{
     private JLabel Rlabele = new JLabel("e:");
     private JLabel Rlabeld = new JLabel("d:");
     private JButton rsady = new JButton("Calc.D");
-    private void rsatools(){//rsatools´°¿Ú
+    private void rsatools(){//rsatoolsçª—å£
         Container container = Rsatools.getContentPane();
         container.setLayout(null);
         Rsatools.setVisible(true);
         Rsatools.setResizable(false);
-        Rsatools.setSize(300, 200);//´°¿Ú
+        Rsatools.setSize(300, 200);//çª—å£
         Rsatools.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         rsap.setBounds(30, 10, 200,20);
         rsaq.setBounds(30, 40,200, 20);
@@ -538,10 +560,10 @@ public class CTFcrack{
         container.add(Rlabeld);
         rsady.setBounds(80, 130, 100, 20);
         container.add(rsady);
-    	rsady.addActionListener(new ActionListener(){//µ÷ÓÃrsatools
+    	rsady.addActionListener(new ActionListener(){//è°ƒç”¨rsatools
     		public void actionPerformed(ActionEvent evt){
              PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\×Ô´ø²å¼ş\\rsa.py");
+    		 interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\è‡ªå¸¦æ’ä»¶\\rsa.py");
     		 BigInteger rsapstr=new BigInteger(rsap.getText());
              BigInteger rsaqstr=new BigInteger(rsaq.getText());
              BigInteger rsaestr=new BigInteger(rsae.getText());
@@ -553,7 +575,7 @@ public class CTFcrack{
     }
     private void girl(){
         JFrame frame = new JFrame(); 
-        frame.setTitle("¿É°®µÄÎÒÀ´À²£¡"); 
+        frame.setTitle("å¯çˆ±çš„æˆ‘æ¥å•¦ï¼"); 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); 
         File imgadd = new File(System.getProperty("user.dir")+"\\girl\\girl1.gif");
         ImageIcon imageIcon = new ImageIcon(imgadd.toString()); 
@@ -562,15 +584,15 @@ public class CTFcrack{
         frame.pack(); 
         frame.setVisible(true); 
     }
-	/*    private JFrame Xirtools = new JFrame("Ï£¶û¼ÓÃÜ");
+	/*    private JFrame Xirtools = new JFrame("å¸Œå°”åŠ å¯†");
     private JTextArea xj = new JTextArea();
     private JTextArea xmw = new JTextArea();
     private JTextArea xmy = new JTextArea();
     private JButton xirdy = new JButton("Crack!");
-    private JLabel Xlabel1 = new JLabel("¾ØÕó£º");
-    private JLabel Xlabel2 = new JLabel("ÃÜÎÄ£º");
-    private JLabel Xlabel3 = new JLabel("ÃÜÔ¿£º");*/
-/*    private void xirtools(){//Ï£¶ûÃÜÂë
+    private JLabel Xlabel1 = new JLabel("çŸ©é˜µï¼š");
+    private JLabel Xlabel2 = new JLabel("å¯†æ–‡ï¼š");
+    private JLabel Xlabel3 = new JLabel("å¯†é’¥ï¼š");*/
+/*    private void xirtools(){//å¸Œå°”å¯†ç 
     	Container container = Xirtools.getContentPane();
     	container.setLayout(null);
     	Xirtools.setSize(300, 200);
@@ -591,20 +613,20 @@ public class CTFcrack{
     	container.add(Xlabel3);
     	xirdy.setBounds(90, 120, 120, 30);
     	container.add(xirdy);
-    	xirdy.addActionListener(new ActionListener(){//µ÷ÓÃrsatools
+    	xirdy.addActionListener(new ActionListener(){//è°ƒç”¨rsatools
     		public void actionPerformed(ActionEvent evt){
              PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\²å¼ş\\xir.py");
+    		 interpreter.execfile(System.getProperty("user.dir")+"\\æ’ä»¶\\xir.py");
     		 String jx = xj.getText();
              String mw = xmw.getText();
              PyFunction func = (PyFunction)interpreter.get("xir",PyFunction.class);
-             PyObject rsadstr = func.__call__(new PyString(mw),new PyString(jx));//ÕâÀï³ö´í ----------
+             PyObject rsadstr = func.__call__(new PyString(mw),new PyString(jx));//è¿™é‡Œå‡ºé”™ ----------
              xmy.setText(rsadstr.toString());
     		}
     	});
     }*/
-    //ÏÂÃæÊÇÍ³Ò»È«¾Ö×ÖÌå
-	private static void InitGlobalFont(Font font) {//ÉèÖÃÈ«¾ÖÍ³Ò»×ÖÌå
+    //ä¸‹é¢æ˜¯ç»Ÿä¸€å…¨å±€å­—ä½“
+	private static void InitGlobalFont(Font font) {//è®¾ç½®å…¨å±€ç»Ÿä¸€å­—ä½“
 		  FontUIResource fontRes = new FontUIResource(font);  
 		  for (Enumeration<Object> keys = UIManager.getDefaults().keys();  
 		  keys.hasMoreElements(); ) {  
@@ -615,11 +637,11 @@ public class CTFcrack{
 		 }
 	  }
 	}  
-	public static void main(String[] args){//Ö÷·½·¨
-	 InitGlobalFont(Zt);//¸³Öµ×ÖÌå
+	public static void main(String[] args){//ä¸»æ–¹æ³•
+	 InitGlobalFont(Zt);//èµ‹å€¼å­—ä½“
 	 new CTFcrack().CreateJFrame();
 	}
-	public void Zhalan(ActionEvent evt){//Õ¤À¸½âÂë
+	public void Zhalan(ActionEvent evt){//æ …æ è§£ç 
 		String Shuru = this.Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		 int x[] = new int[1024];
@@ -634,17 +656,17 @@ public class CTFcrack{
 				 }
 			 }
 		 }else{
-			 jg.append("ÓÃÈâÑÛ¾ÍÄÜ¿´³öÀ´\n");
+			 jg.append("ç”¨è‚‰çœ¼å°±èƒ½çœ‹å‡ºæ¥\n");
 		 }
 		 if (a!=0){
-			 jg.append("µÃµ½ÒòÊı(ÅÅ³ı1ºÍ×Ö·û´®³¤¶È):\n");
+			 jg.append("å¾—åˆ°å› æ•°(æ’é™¤1å’Œå­—ç¬¦ä¸²é•¿åº¦):\n");
 			 for(int yi=0;yi<a;yi++){
 				 jg.append(" "+x[yi]);
 			 }
 			 jg.append("\n");
 			 jg.append("\n");
 			 for(i=0;i<a;i++){
-				 jg.append("µÚ"+(i+1)+"À¸£º");
+				 jg.append("ç¬¬"+(i+1)+"æ ï¼š");
 				 for(int j=0;j<(sl/x[i]);j++){
 					 zlstr[a1]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
 					 a1 = a1+1;
@@ -659,8 +681,8 @@ public class CTFcrack{
 				 jg.append("\n");
 			 }
 		 }else{
-			 jg.append("½âÂëÊ§°Ü...\n");
-			 jg.append("³¢ÊÔÈ¥³ı×Ö·û´®ÖĞµÄ¿Õ¸ñ½âÂë\n");
+			 jg.append("è§£ç å¤±è´¥...\n");
+			 jg.append("å°è¯•å»é™¤å­—ç¬¦ä¸²ä¸­çš„ç©ºæ ¼è§£ç \n");
 			 sl = Shuru.replace(" ", "").length();
 			 jg.append(sl);
 			 if (sl!=1&&sl!=2){
@@ -671,19 +693,19 @@ public class CTFcrack{
 					 }
 				 }
 			 }else{
-				 jg.append("ÓÃÈâÑÛ¾ÍÄÜ¿´³öÀ´\n");
+				 jg.append("ç”¨è‚‰çœ¼å°±èƒ½çœ‹å‡ºæ¥\n");
 			 }
 			 if (a!=0){
-				 jg.append("Õâ´®ÃÜÎÄ(È¥³ı¿Õ¸ñºó)ÊÇÕ¤À¸ÃÜÂë...\n");
-				 jg.append("µÃµ½ÒòÊı(ÅÅ³ı1ºÍ×Ö·û´®³¤¶È):");
+				 jg.append("è¿™ä¸²å¯†æ–‡(å»é™¤ç©ºæ ¼å)æ˜¯æ …æ å¯†ç ...\n");
+				 jg.append("å¾—åˆ°å› æ•°(æ’é™¤1å’Œå­—ç¬¦ä¸²é•¿åº¦):");
 				 for(int yi=0;yi<a;yi++){
 					 jg.append(" "+x[yi]);
 				 }
 				 jg.append("\n");
 				 jg.append("\n");
-				 jg.append("¿ªÊ¼½âÂë...");
+				 jg.append("å¼€å§‹è§£ç ...");
 				 for(i=0;i<a;i++){
-					 jg.append("µÚ"+(i+1)+"À¸£º");
+					 jg.append("ç¬¬"+(i+1)+"æ ï¼š");
 					 for(int j=0;j<(sl/x[i]);j++){
 						 zlstr[a1]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
 						 a1 = a1+1;
@@ -702,7 +724,7 @@ public class CTFcrack{
 	 ShuChu.setText(jg.toString());
 	 jg.delete(0, jg.length());
 	 }
-	public void Caesar(ActionEvent evt){//¿­ÈöÃÜÂë
+	public void Caesar(ActionEvent evt){//å‡¯æ’’å¯†ç 
 		String input = Shuru.getText();
 	    char[] ca = input.toCharArray();
 	    int len = ca.length;
@@ -889,7 +911,7 @@ public class CTFcrack{
 	    ShuChu.setText(jg.toString());
 	    jg.delete(0,jg.length());
 	}
-	public void Base64c(ActionEvent evt){//base64½âÃÜ
+	public void Base64c(ActionEvent evt){//base64è§£å¯†
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		String jiami = null;
@@ -902,7 +924,7 @@ public class CTFcrack{
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
 	}
-	public void Base64j(ActionEvent evt){//base64¼ÓÃÜ
+	public void Base64j(ActionEvent evt){//base64åŠ å¯†
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		jg.append(new BASE64Encoder().encode(shuru.getBytes()));
@@ -984,7 +1006,7 @@ public class CTFcrack{
 	    PyObject jg = func.__call__(new PyString(input));  
 	    ShuChu.setText(jg.toString());
 	}
-	public void MorseE(ActionEvent evt){//Ä¦Ë¹¼ÓÃÜ
+	public void MorseE(ActionEvent evt){//æ‘©æ–¯åŠ å¯†
 		String shuru = Shuru.getText();
 		int len = shuru.length();
 		StringBuffer jg = new StringBuffer(len *3);
@@ -1005,7 +1027,7 @@ public class CTFcrack{
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
 	}
-	public void MorseD(ActionEvent evt){//Ä¦Ë¹½âÂë
+	public void MorseD(ActionEvent evt){//æ‘©æ–¯è§£ç 
 	  initMorseTable();
 	  String input = Shuru.getText();
 	  String morse = format(input);
@@ -1018,7 +1040,7 @@ public class CTFcrack{
 	  ShuChu.setText(jg.toString());
 	  jg.delete(0, jg.length());
 	}
-	public void UrlEncoder(ActionEvent evt) throws UnsupportedEncodingException{//Url±àÂë
+	public void UrlEncoder(ActionEvent evt) throws UnsupportedEncodingException{//Urlç¼–ç 
 		String input = Shuru.getText();
 		StringBuilder jg = new StringBuilder();
 		String jm;
@@ -1040,9 +1062,9 @@ public class CTFcrack{
 		String input = Shuru.getText();
 		StringBuilder jg = new StringBuilder();
 	    for (int i = 0; i < input.length(); i++) {	 
-	        // È¡³öÃ¿Ò»¸ö×Ö·û
+	        // å–å‡ºæ¯ä¸€ä¸ªå­—ç¬¦
 	        char c = input.charAt(i);
-	        // ×ª»»Îªunicode
+	        // è½¬æ¢ä¸ºunicode
 	        jg.append("\\u" + Integer.toHexString(c));
 	    }
 	    ShuChu.setText(jg.toString());
@@ -1053,9 +1075,9 @@ public class CTFcrack{
 		StringBuilder jg = new StringBuilder();
 	    String[] hex = input.split("\\\\u");
 	    for (int i = 1; i < hex.length; i++) {
-	        // ×ª»»³öÃ¿Ò»¸ö´úÂëµã
+	        // è½¬æ¢å‡ºæ¯ä¸€ä¸ªä»£ç ç‚¹
 	        int data = Integer.parseInt(hex[i], 16);
-	        // ×·¼Ó³Éstring
+	        // è¿½åŠ æˆstring
 	        jg.append((char) data);
 	    }
 	    ShuChu.setText(jg.toString());
@@ -1065,9 +1087,9 @@ public class CTFcrack{
 		String input = Shuru.getText();
 		StringBuilder jg = new StringBuilder();
 	    for (int i = 0; i < input.length(); i++) {	 
-	        // È¡³öÃ¿Ò»¸ö×Ö·û
+	        // å–å‡ºæ¯ä¸€ä¸ªå­—ç¬¦
 	        char c = input.charAt(i);
-	        // ×ª»»Îªunicode
+	        // è½¬æ¢ä¸ºunicode
 	        jg.append("&#" + (int)(c)+";");
 	    }
 	    ShuChu.setText(jg.toString());
@@ -1084,16 +1106,16 @@ public class CTFcrack{
 	    ShuChu.setText(jg.toString());
 	    jg.delete(0, jg.length());
 	}
-	private boolean isLowercase(char c) {//ÅĞ¶ÏÊÇ·ñĞ¡Ğ´×ÖÄ¸
+	private boolean isLowercase(char c) {//åˆ¤æ–­æ˜¯å¦å°å†™å­—æ¯
 		return (c >= 'a') && (c <= 'z');
 	}
-	private boolean isUppercase(char c) {//ÅĞ¶ÏÊÇ·ñÎª´óĞ´×ÖÄ¸
+	private boolean isUppercase(char c) {//åˆ¤æ–­æ˜¯å¦ä¸ºå¤§å†™å­—æ¯
 		return (c >= 'A') && (c <= 'Z');
 	}
-	private  boolean isChar(char c){//ÅĞ¶ÏÊÇ·ñÎª×ÖÄ¸
+	private  boolean isChar(char c){//åˆ¤æ–­æ˜¯å¦ä¸ºå­—æ¯
 		return (isLowercase(c)) || (isUppercase(c));
 	}
-	private boolean isDigit(char c){//ÅĞ¶ÏÊÇ·ñÎªÊı×Ö
+	private boolean isDigit(char c){//åˆ¤æ–­æ˜¯å¦ä¸ºæ•°å­—
 		return (c >='0')&&(c <= '9');
 	}
 	private String format(String input){
@@ -1114,7 +1136,7 @@ public class CTFcrack{
 	    return back.toString();
 	  }
 	private static Hashtable<String, Character> htMorse = new Hashtable();
-	// ********ÓÉÍÅ¶ÓºËĞÄ z13±í¸ç±àĞ´µÄ×Ô¶¯±éÀúpython²å¼ş********
+	// ********ç”±å›¢é˜Ÿæ ¸å¿ƒ z13è¡¨å“¥ç¼–å†™çš„è‡ªåŠ¨éå†pythonæ’ä»¶********
 	private void buildPluginMenu(JMenu menu) {
 		File[] dir = new File(System.getProperty("user.dir") + "\\Plugin").listFiles();
 		for (File file : dir) {
@@ -1142,7 +1164,7 @@ public class CTFcrack{
 		});
 		return item;
 	}
-	// ********½áÊø********
+	// ********ç»“æŸ********
 	public char morseToChar(String morse)
 	  {
 	    return ((Character)htMorse.get(morse)).charValue();
@@ -1160,11 +1182,11 @@ public class CTFcrack{
 	    isInited = true;
 	  }
 	  private static boolean isInited = false;
-	  private static final String[] morseCharacters = {//Ä¦Ë¹ÃÜÂë ×ÖÄ¸
+	  private static final String[] morseCharacters = {//æ‘©æ–¯å¯†ç  å­—æ¯
 	    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", 
 	    ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", 
 	    ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
-	  private static final String[] morseDigits = {//Ä¦Ë¹ÃÜÂë Êı×Ö
+	  private static final String[] morseDigits = {//æ‘©æ–¯å¯†ç  æ•°å­—
 	    "-----", ".----", "..---", "...--", "....-", 
 	    ".....", "-....", "--...", "---..", "----." };
 }
