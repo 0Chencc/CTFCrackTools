@@ -51,10 +51,10 @@ public class CTFcrack{
 	private JMenuItem peig = new JMenuItem(" 培根密码>>转换");
 	private JMenuItem peigd = new JMenuItem(" 培根密码>>解码");
 	private JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
-	private JMenuItem base64j = new JMenuItem(" 字符串>>Base64(gbk)");
-	private JMenuItem base64c = new JMenuItem(" Base64>>字符串(gbk)");
-	private JMenuItem base64ju = new JMenuItem(" 字符串>>Base64(utf-8)");
-	private JMenuItem base64cu = new JMenuItem(" Base64>>字符串(utf-8)");
+	private JMenuItem base64jg = new JMenuItem(" 字符串>>Base64(gbk)");
+	private JMenuItem base64cg = new JMenuItem(" Base64>>字符串(gbk)");
+	private JMenuItem base64j = new JMenuItem(" 字符串>>Base64(utf-8)");
+	private JMenuItem base64c = new JMenuItem(" Base64>>字符串(utf-8)");
 	private JMenuItem morsee = new JMenuItem(" 字符串>>摩斯密码");
 	private JMenuItem morsed = new JMenuItem(" 摩斯密码>>字符串");
 	private JMenuItem UrlCoded = new JMenuItem(" Url编码>>字符串");
@@ -76,6 +76,7 @@ public class CTFcrack{
     private JMenuItem j16z2 = new JMenuItem(" 十六进制>>二进制");
     private JMenuItem j16z8 = new JMenuItem(" 十六进制>>八进制");
     private JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
+    private JMenu unzip = new JMenu("压缩包");
     private JMenu chaj = new JMenu(" 插件");
     private JMenuItem rsa = new JMenuItem(" RSAtools");
     private JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
@@ -100,8 +101,8 @@ public class CTFcrack{
     zifu.add(zj);
     zifu.add(base64j);
     zifu.add(base64c);
-    zifu.add(base64ju);
-    zifu.add(base64cu);
+    zifu.add(base64jg);
+    zifu.add(base64cg);
     zifu.add(morsee);
     zifu.add(morsed);
     zifu.add(UrlCoded);
@@ -241,18 +242,18 @@ public class CTFcrack{
             e.printStackTrace();
           }
         } } );
-    base64ju.addActionListener(new ActionListener() {//当按下Base64解码时
+    base64jg.addActionListener(new ActionListener() {//当按下Base64解码时
         public void actionPerformed(ActionEvent evt) {
           try {
-            CTFcrack.this.Base64ju(evt);
+            CTFcrack.this.Base64jg(evt);
           } catch (Exception e) {
             e.printStackTrace();
           }
         } } );
-    base64cu.addActionListener(new ActionListener() {//当按下Base64解码时
+    base64cg.addActionListener(new ActionListener() {//当按下Base64解码时
         public void actionPerformed(ActionEvent evt) {
           try {
-            CTFcrack.this.Base64cu(evt);
+            CTFcrack.this.Base64cg(evt);
           } catch (Exception e) {
             e.printStackTrace();
           }
@@ -911,7 +912,7 @@ public class CTFcrack{
 	    ShuChu.setText(jg.toString());
 	    jg.delete(0,jg.length());
 	}
-	public void Base64c(ActionEvent evt){//base64解密
+	public void Base64c(ActionEvent evt){//base64解密utf-8
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		String jiami = null;
@@ -924,20 +925,20 @@ public class CTFcrack{
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
 	}
-	public void Base64j(ActionEvent evt){//base64加密
+	public void Base64j(ActionEvent evt){//base64加密utf-8
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		jg.append(new BASE64Encoder().encode(shuru.getBytes()));
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
 	}
-	public void Base64ju(ActionEvent evt){
+	public void Base64jg(ActionEvent evt){//base64加密gbk
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 	    byte[] b = null;  
 	    String s = null;  
 	    try {  
-	        b = shuru.getBytes("utf-8");  
+	        b = shuru.getBytes("gbk");  
 	    } catch (UnsupportedEncodingException e) {  
 	        e.printStackTrace();  
 	    }  
@@ -948,7 +949,7 @@ public class CTFcrack{
 		ShuChu.setText(jg.toString());
 		jg.delete(0, jg.length());
 	}
-	public void Base64cu(ActionEvent evt){
+	public void Base64cg(ActionEvent evt){//base64解密gbk
 		String shuru = Shuru.getText();
 		StringBuffer jg = new StringBuffer();
 		String result = null;
@@ -957,7 +958,7 @@ public class CTFcrack{
 	        BASE64Decoder decoder = new BASE64Decoder();  
 	        try {  
 	            b = decoder.decodeBuffer(shuru);  
-	            result = new String(b, "utf-8");  
+	            result = new String(b, "gbk");  
 	        } catch (Exception e) {  
 	            e.printStackTrace();  
 	        }  
