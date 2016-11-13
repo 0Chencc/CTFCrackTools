@@ -31,512 +31,413 @@ import org.python.core.PyObject;
 import org.python.util.PythonInterpreter; 
 import javax.imageio.*;
 public class CTFcrack{
-	private static String zlstr[]= new String[1024];
-	private static int a1 = 0;
-	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//赋值一个字体
-	//主窗口
-	private JFrame jf = new JFrame("米斯特安全团队 CTF Crypto类破解工具 pro v1.2");
-    private JLabel jl = new JLabel("=====填写所需检测的密码====");
-	private JTextArea Shuru = new JTextArea();
-	private JTextArea ShuChu = new JTextArea();
-	private JScrollPane gShuChu = new JScrollPane(this.ShuChu);
-	private JScrollPane gShuru = new JScrollPane(this.Shuru);
-	private JLabel JieG = new JLabel("======结果======");
-	private JLabel AD = new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
-	private JMenuBar Menu = new JMenuBar();
-    private JMenu zifu = new JMenu(" 解码方式");
-	private JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
-	private JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
-	private JMenuItem zhalan = new JMenuItem(" 栅栏密码>>解码");
-	private JMenuItem peig = new JMenuItem(" 培根密码>>转换");
-	private JMenuItem peigd = new JMenuItem(" 培根密码>>解码");
-	private JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
-	private JMenuItem base64jg = new JMenuItem(" 字符串>>Base64(gbk)");
-	private JMenuItem base64cg = new JMenuItem(" Base64>>字符串(gbk)");
-	private JMenuItem base64j = new JMenuItem(" 字符串>>Base64(utf-8)");
-	private JMenuItem base64c = new JMenuItem(" Base64>>字符串(utf-8)");
-	private JMenuItem morsee = new JMenuItem(" 字符串>>摩斯密码");
-	private JMenuItem morsed = new JMenuItem(" 摩斯密码>>字符串");
-	private JMenuItem UrlCoded = new JMenuItem(" Url编码>>字符串");
-	private JMenuItem UrlCodee = new JMenuItem(" 字符串>>Url编码");
-	private JMenuItem UnicoderStre = new JMenuItem(" 字符串>>Unicode");
-	private JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>字符串");
-	private JMenuItem asciiZUnicode = new JMenuItem(" Ascii>>Unicode");
-	private JMenuItem UnicodeZascii = new JMenuItem(" Unicode>>Ascii");
-    private JMenu jinz = new JMenu(" 进制转换");
-    private JMenuItem j2z8 = new JMenuItem(" 二进制>>八进制");
-    private JMenuItem j2z10 = new JMenuItem(" 二进制>>十进制");
-    private JMenuItem j2z16 = new JMenuItem(" 二进制>>十六进制");
-    private JMenuItem j8z2 = new JMenuItem(" 八进制>>二进制");
-    private JMenuItem j8z10 = new JMenuItem(" 八进制>>十进制");
-    private JMenuItem j8z16 = new JMenuItem(" 八进制>>十六进制");
-    private JMenuItem j10z2 = new JMenuItem(" 十进制>>二进制");
-    private JMenuItem j10z8 = new JMenuItem(" 十进制>>八进制");
-    private JMenuItem j10z16 = new JMenuItem(" 十进制>>十六进制");
-    private JMenuItem j16z2 = new JMenuItem(" 十六进制>>二进制");
-    private JMenuItem j16z8 = new JMenuItem(" 十六进制>>八进制");
-    private JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
-    private JMenu unzip = new JMenu("压缩包");
-    private JMenu chaj = new JMenu(" 插件");
-    private JMenuItem rsa = new JMenuItem(" RSAtools");
-    private JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
-    private JMenuItem b32d = new JMenuItem(" Base32>>字符串");
-    private JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
-    private JMenuItem b16d = new JMenuItem(" Base16>>字符串");
-    private JMenu crackzip = new JMenu(" 压缩包");
-    private JMenuItem ces = new JMenuItem(" 测试");
-    private JMenu girlgif = new JMenu(" 妹子");
-    private JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
-    //private JMenuItem xir = new JMenuItem(" 希尔加密");
-    //rsatools窗口
-    private void CreateJFrame(){//主窗口
-    Container container = jf.getContentPane();
-    container.setLayout(null);
-    Menu.add(zifu);
-    zifu.add(caesar);
-    zifu.add(rot13);
-    zifu.add(zhalan);
-    zifu.add(peig);
-    zifu.add(peigd);
-    zifu.add(zj);
-    zifu.add(base64j);
-    zifu.add(base64c);
-    zifu.add(base64jg);
-    zifu.add(base64cg);
-    zifu.add(morsee);
-    zifu.add(morsed);
-    zifu.add(UrlCoded);
-    zifu.add(UrlCodee);
-    zifu.add(UnicoderStre);
-    zifu.add(UnicoderStrd);
-    zifu.add(asciiZUnicode);
-    zifu.add(UnicodeZascii);
-    Menu.add(jinz);
-    jinz.add(j2z8);
-    jinz.add(j2z10);
-    jinz.add(j2z16);
-    jinz.add(j8z2);
-    jinz.add(j8z10);
-    jinz.add(j8z16);
-    jinz.add(j10z2);
-    jinz.add(j10z8);
-    jinz.add(j10z16);
-    jinz.add(j16z2);
-    jinz.add(j16z8);
-    jinz.add(j16z10);
-    buildPluginMenu(chaj);//传入要添加菜单的目录
-    Menu.add(chaj);
-    chaj.add(rsa);
-    chaj.add(b32e);
-    chaj.add(b32d);
-    chaj.add(b16e);
-    chaj.add(b16d);
-    Menu.add(crackzip);
-    crackzip.add(ces);
-    Menu.add(girlgif);
-    girlgif.add(girlgifw);
-    //chaj.add(xir);
-    ShuChu.setText("作者注："
-    		+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
-    		+ "\n工具支持Python插件"
-    		+ "\n将写好的py脚本放进Plugin目录即可"
-    		+ "\n打开程序后自动遍历完成"
-    		+ "\n每次打开程序第一次调用python会稍慢"
-    		+ "\n接下来就OK了"
-    		+ "\n联系方式:QQ627437686"
-    		+ "\n懂Java的朋友也请联系我，共同开发。"
-    		+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFcryptoCrack"
-    		+ "\n交流群：392613610");
-    //设置Swing的属性
-    jf.setVisible(true);
-    //jf.setResizable(false);
-    jf.setSize(720, 690);//窗口
-    jf.setDefaultCloseOperation(3);
-    gShuru  
-    .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-    gShuru  
-    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);  
-    gShuChu
-    .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-    gShuChu
-    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    container.add(jl);
-    container.add(gShuru);
-    container.add(AD);
-    container.add(JieG);
-    container.add(gShuChu);
-    container.add(Menu,BorderLayout.NORTH);
-    //监听按钮
-    jf.addComponentListener(new ComponentAdapter(){
-    	@Override public void componentResized(ComponentEvent e){
-    		Menu.setBounds(0,
-    				0, 
-    				jf.getWidth()-20,
-    				20);//菜单
-    	    jl.setBounds(3, 
-    	    		20, 
-    	    		jf.getWidth()-20, 
-    	    		20);//第一个标签
-    	    gShuru.setBounds(3, 
-    	    		40, 
-    	    		jf.getWidth()-20, 
-    	    		(int)(jf.getHeight()*0.40));//输入框
-    	    JieG.setBounds(3, 
-    	    		jl.getHeight()+gShuru.getHeight()+20, 
-    	    		jf.getWidth()-20, 
-    	    		20);//结果标签
-    	    gShuChu.setBounds(3, 
-    	    		JieG.getY()+20, 
-    	    		jf.getWidth()-20,
-    	    		(int)(jf.getHeight()*0.42));//输出框
-    	    AD.setBounds(3, 
-    	    		gShuChu.getHeight()+JieG.getY()+20
-    	    		, jf.getWidth()-20
-    	    		, 20);//广告
-    	}});
-    caesar.addActionListener(new ActionListener() {//当按下凯撒密码
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Caesar(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    peig.addActionListener(new ActionListener() {//当按下凯撒密码
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.peigd(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    zj.addActionListener(new ActionListener() {//当按下凯撒密码
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.zjd(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    rot13.addActionListener(new ActionListener() {//当按下凯撒密码
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Rot13(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    zhalan.addActionListener(new ActionListener() {//当按下栅栏密码
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Zhalan(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    base64j.addActionListener(new ActionListener() {//当按下Base64加密时
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Base64j(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    base64jg.addActionListener(new ActionListener() {//当按下Base64解码时
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Base64jg(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    base64cg.addActionListener(new ActionListener() {//当按下Base64解码时
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Base64cg(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    base64c.addActionListener(new ActionListener() {//当按下Base64解码时
-        public void actionPerformed(ActionEvent evt) {
-          try {
-            CTFcrack.this.Base64c(evt);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        } } );
-    morsee.addActionListener(new ActionListener() {//当按下摩斯加密时
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.MorseE(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-    morsed.addActionListener(new ActionListener() {//当按下摩斯解密时
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.MorseD(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-    UrlCodee.addActionListener(new ActionListener(){//当按下Url编码
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.UrlEncoder(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-    UrlCoded.addActionListener(new ActionListener(){//当按下Url编码解码
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.UrlDecoder(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-    UnicoderStre.addActionListener(new ActionListener(){
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.UnicodeStre(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-    UnicoderStrd.addActionListener(new ActionListener(){
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.UnicodeStrd(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });    
-	j2z8.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toOctalString(Long.parseLong(Shuru.getText(), 2)));
-			}catch(Exception e){
-				e.printStackTrace();
+	private static String v1 = "v1.2.1";//版本号
+	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
+	JTextArea Shuru = new JTextArea();
+	JTextArea ShuChu = new JTextArea();
+    public void CryptoWindow(){//主窗口
+		JFrame jf = new JFrame("米斯特安全团队 CTF Crypto类破解工具 pro "+v1);
+		JLabel jl = new JLabel("=====填写所需检测的密码====");
+
+		JScrollPane gShuChu = new JScrollPane(ShuChu);
+		JScrollPane gShuru = new JScrollPane(Shuru);
+		JLabel JieG = new JLabel("======结果======");
+		JLabel AD = new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
+		JMenuBar Menu = new JMenuBar();
+		JMenu zifu = new JMenu(" 解码方式");
+		JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
+		JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
+		JMenuItem zhalan = new JMenuItem(" 栅栏密码>>解码");
+		JMenuItem peig = new JMenuItem(" 培根密码>>转换");
+		JMenuItem peigd = new JMenuItem(" 培根密码>>解码");
+		JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
+		JMenuItem base64jg = new JMenuItem(" 字符串>>Base64(gbk)");
+		JMenuItem base64cg = new JMenuItem(" Base64>>字符串(gbk)");
+		JMenuItem base64j = new JMenuItem(" 字符串>>Base64(utf-8)");
+		JMenuItem base64c = new JMenuItem(" Base64>>字符串(utf-8)");
+		JMenuItem morsee = new JMenuItem(" 字符串>>摩斯密码");
+		JMenuItem morsed = new JMenuItem(" 摩斯密码>>字符串");
+		JMenuItem UrlCoded = new JMenuItem(" Url编码>>字符串");
+		JMenuItem UrlCodee = new JMenuItem(" 字符串>>Url编码");
+		JMenuItem UnicoderStre = new JMenuItem(" 字符串>>Unicode");
+		JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>字符串");
+		JMenuItem asciiZUnicode = new JMenuItem(" Ascii>>Unicode");
+		JMenuItem UnicodeZascii = new JMenuItem(" Unicode>>Ascii");
+		JMenu jinz = new JMenu(" 进制转换");
+		JMenuItem j2z8 = new JMenuItem(" 二进制>>八进制");
+		JMenuItem j2z10 = new JMenuItem(" 二进制>>十进制");
+		JMenuItem j2z16 = new JMenuItem(" 二进制>>十六进制");
+		JMenuItem j8z2 = new JMenuItem(" 八进制>>二进制");
+		JMenuItem j8z10 = new JMenuItem(" 八进制>>十进制");
+		JMenuItem j8z16 = new JMenuItem(" 八进制>>十六进制");
+		JMenuItem j10z2 = new JMenuItem(" 十进制>>二进制");
+		JMenuItem j10z8 = new JMenuItem(" 十进制>>八进制");
+		JMenuItem j10z16 = new JMenuItem(" 十进制>>十六进制");
+		JMenuItem j16z2 = new JMenuItem(" 十六进制>>二进制");
+		JMenuItem j16z8 = new JMenuItem(" 十六进制>>八进制");
+		JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
+		JMenu pulg = new JMenu("其他功能");
+		JMenuItem unzip = new JMenuItem("压缩包");
+		JMenu chaj = new JMenu(" 插件");
+		JMenuItem rsa = new JMenuItem(" RSAtools");
+		JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
+		JMenuItem b32d = new JMenuItem(" Base32>>字符串");
+		JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
+		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
+		JMenu girlgif = new JMenu(" 妹子");
+		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
+		Container container = jf.getContentPane();
+		container.setLayout(null);
+		Menu.add(zifu);
+		zifu.add(caesar);
+		zifu.add(rot13);
+		zifu.add(zhalan);
+		zifu.add(peig);
+		zifu.add(peigd);
+		zifu.add(zj);
+		zifu.add(base64j);
+		zifu.add(base64c);
+		zifu.add(base64jg);
+		zifu.add(base64cg);
+		zifu.add(morsee);
+		zifu.add(morsed);
+		zifu.add(UrlCoded);
+		zifu.add(UrlCodee);
+		zifu.add(UnicoderStre);
+		zifu.add(UnicoderStrd);
+		zifu.add(asciiZUnicode);
+		zifu.add(UnicodeZascii);
+		Menu.add(jinz);
+		jinz.add(j2z8);
+		jinz.add(j2z10);
+		jinz.add(j2z16);
+		jinz.add(j8z2);
+		jinz.add(j8z10);
+		jinz.add(j8z16);
+		jinz.add(j10z2);
+		jinz.add(j10z8);
+		jinz.add(j10z16);
+		jinz.add(j16z2);
+		jinz.add(j16z8);
+		jinz.add(j16z10);
+		buildPluginMenu(chaj);//传入要添加菜单的目录
+		Menu.add(chaj);
+		chaj.add(rsa);
+		chaj.add(b32e);
+		chaj.add(b32d);
+		chaj.add(b16e);
+		chaj.add(b16d);
+		Menu.add(girlgif);
+		girlgif.add(girlgifw);
+		Menu.add(pulg);
+		pulg.add(unzip);
+		//chaj.add(xir);
+		ShuChu.setText("作者注："
+			+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
+			+ "\n工具支持Python插件"
+			+ "\n将写好的py脚本放进Plugin目录即可"
+			+ "\n打开程序后自动遍历完成"
+			+ "\n每次打开程序第一次调用python会稍慢"
+			+ "\n接下来就OK了"
+			+ "\n联系方式:QQ627437686"
+			+ "\n懂Java的朋友也请联系我，共同开发。"
+			+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFcryptoCrack"
+			+ "\n交流群：392613610");
+		//设置Swing的属性
+		jf.setVisible(true);
+		//jf.setResizable(false);
+		jf.setSize(720, 690);//窗口
+		jf.setDefaultCloseOperation(3);
+		gShuru  
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+		gShuru  
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);  
+		gShuChu
+		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+		gShuChu
+		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		container.add(jl);
+		container.add(gShuru);
+		container.add(AD);
+		container.add(JieG);
+		container.add(gShuChu);
+		container.add(Menu,BorderLayout.NORTH);
+		//监听按钮
+		jf.addComponentListener(new ComponentAdapter(){
+			@Override public void componentResized(ComponentEvent e){
+				Menu.setBounds(0,
+						0, 
+						jf.getWidth()-20,
+						20);//菜单
+		    jl.setBounds(3, 
+		    		20, 
+		    		jf.getWidth()-20, 
+		    		20);//第一个标签
+		    gShuru.setBounds(3, 
+		    		40, 
+		    		jf.getWidth()-20, 
+		    		(int)(jf.getHeight()*0.40));//输入框
+		    JieG.setBounds(3, 
+		    		jl.getHeight()+gShuru.getHeight()+20, 
+		    		jf.getWidth()-20, 
+		    		20);//结果标签
+		    gShuChu.setBounds(3, 
+		    		JieG.getY()+20, 
+		    		jf.getWidth()-20,
+		    		(int)(jf.getHeight()*0.42));//输出框
+		    AD.setBounds(3, 
+		    		gShuChu.getHeight()+JieG.getY()+20
+		    		, jf.getWidth()-20
+		    		, 20);//广告
+			}});
+		caesar.addActionListener(new ActionListener() {//当按下凯撒密码
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Caesar(Shuru.getText()));
+		    } } );
+		peig.addActionListener(new ActionListener() {//当按下培根密码
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(peigd(Shuru.getText()));
+		    } } );
+		zj.addActionListener(new ActionListener() {//当按下猪圈密码
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(zjd(Shuru.getText()));
+		    } } );
+		rot13.addActionListener(new ActionListener() {//当按下rot13密码
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Rot13(Shuru.getText()));
+		    } } );
+		zhalan.addActionListener(new ActionListener() {//当按下栅栏密码
+		    public void actionPerformed(ActionEvent evt) {
+		    ShuChu.setText(Zhalan(Shuru.getText()));
+		    } } );
+		base64j.addActionListener(new ActionListener() {//当按下Base64加密时
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Base64j(Shuru.getText()));
+		    } } );
+		base64jg.addActionListener(new ActionListener() {//当按下Base64解码时
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Base64jg(Shuru.getText()));
+		    } } );
+		base64cg.addActionListener(new ActionListener() {//当按下Base64解码时
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Base64cg(Shuru.getText()));
+		    } } );
+		base64c.addActionListener(new ActionListener() {//当按下Base64解码时
+		    public void actionPerformed(ActionEvent evt) {
+		    	ShuChu.setText(Base64c(Shuru.getText()));
+		    } } );
+		morsee.addActionListener(new ActionListener() {//当按下摩斯加密时
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(MorseE(Shuru.getText()));
 			}
-		}
-	});
-	j2z10.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.valueOf(Shuru.getText(),2).toString());
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		morsed.addActionListener(new ActionListener() {//当按下摩斯解密时
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(MorseD(Shuru.getText()));
 			}
-		}
-	});
-	j2z16.addActionListener(new ActionListener(){
+		});
+		UrlCodee.addActionListener(new ActionListener(){//当按下Url编码
 		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toHexString(Long.parseLong(Shuru.getText(), 2)));
-			}catch(Exception e){
-				e.printStackTrace();
+			try {
+				ShuChu.setText(UrlEncoder(Shuru.getText()));
+			} catch (UnsupportedEncodingException e) {
+				// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j8z2.addActionListener(new ActionListener(){
+		});
+		UrlCoded.addActionListener(new ActionListener(){//当按下Url编码解码
 		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toBinaryString(Long.valueOf(Shuru.getText(),8)));
-			}catch(Exception e){
-				e.printStackTrace();
+			try {
+				ShuChu.setText(UrlDecoder(Shuru.getText()));
+			} catch (UnsupportedEncodingException e) {
+				// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j8z10.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.valueOf(Shuru.getText(),8).toString());
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		UnicoderStre.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(UnicodeStre(Shuru.getText()));
 			}
-		}
-	});
-	j8z16.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toHexString(Long.valueOf(Shuru.getText(),8)));
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		UnicoderStrd.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(UnicodeStrd(Shuru.getText()));
 			}
-		}
-	});
-	j10z2.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toBinaryString(Long.parseLong(Shuru.getText())));
-			}catch(Exception e){
-				e.printStackTrace();
+		});    
+		j2z8.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toOctalString(Long.parseLong(Shuru.getText(), 2)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j10z8.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toOctalString(Long.parseLong(Shuru.getText())));
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j2z10.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.valueOf(Shuru.getText(),2).toString());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j10z16.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toHexString(Long.parseLong(Shuru.getText())));
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j2z16.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toHexString(Long.parseLong(Shuru.getText(), 2)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j16z2.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toBinaryString(Long.valueOf(Shuru.getText(),16)));
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j8z2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toBinaryString(Long.valueOf(Shuru.getText(),8)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j16z8.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.toOctalString(Long.valueOf(Shuru.getText(),16)));
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j8z10.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.valueOf(Shuru.getText(),8).toString());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	j16z10.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				ShuChu.setText(Long.valueOf(Shuru.getText(),16).toString());
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j8z16.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toHexString(Long.valueOf(Shuru.getText(),8)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-    UnicodeZascii.addActionListener(new ActionListener(){
-    	public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.UnicodeZascii(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-    	}
-    });
-	asciiZUnicode.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			try{
-				CTFcrack.this.asciiZUnicode(evt);
-			}catch(Exception e){
-				e.printStackTrace();
+		});
+		j10z2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toBinaryString(Long.parseLong(Shuru.getText())));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-		}
-	});
-	rsa.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			new CTFcrack().rsatools();
-		}
-	});
-	b32e.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.Base32j(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	b32d.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.Base32c(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	b16e.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.Base16j(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	b16d.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.Base16c(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	ces.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			StringBuilder result = new StringBuilder();
-    			File pythonfl = new File("C:\\Users\\0chen\\Desktop\\ces.py");
-    			BufferedReader br = new BufferedReader(new FileReader(pythonfl));
-                String s = null;
-                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
-                    result.append(System.lineSeparator()+s);
-                }
-                br.close();
-                System.out.println(result.toString());
-    			System.out.println((result.toString()).substring((result.toString()).indexOf("#type:")+5,(result.toString()).indexOf("\n")));
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	peigd.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-    		try{
-    			CTFcrack.this.peigen(evt);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
-		}
-	});
-	girlgifw.addActionListener(new ActionListener(){
+		});
+		j10z8.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toOctalString(Long.parseLong(Shuru.getText())));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+		j10z16.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toHexString(Long.parseLong(Shuru.getText())));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+		j16z2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toBinaryString(Long.valueOf(Shuru.getText(),16)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+		j16z8.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.toOctalString(Long.valueOf(Shuru.getText(),16)));
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+		j16z10.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				try{
+					ShuChu.setText(Long.valueOf(Shuru.getText(),16).toString());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+		UnicodeZascii.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(UnicodeZascii(Shuru.getText()));
+			}
+		});
+		asciiZUnicode.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(asciiZUnicode(Shuru.getText()));
+			}
+		});
+		rsa.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				new CTFcrack().rsatools();
+			}
+		});
+		b32e.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(Base32j(Shuru.getText()));
+			}
+		});
+		b32d.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(Base32c(Shuru.getText()));
+			}
+		});
+		b16e.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(Base16j(Shuru.getText()));
+			}
+		});
+		b16d.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(Base16c(Shuru.getText()));
+			}
+		});
+		peigd.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				ShuChu.setText(peigd(Shuru.getText()));
+			}
+		});
+		girlgifw.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				new CTFcrack().girl();
+				
+			}
+		});	
+		unzip.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
-			new CTFcrack().girl();
+			new CTFcrack().unzipgui();
 			
 		}
 	});	
-/*	xir.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent evt){
-			new CTFcrack().xirtools();
-		}
-	});*/
     }
-    private JFrame Rsatools = new JFrame("RsaTools--Python插件");
-    private JTextArea rsap = new JTextArea();
-    private JTextArea rsaq = new JTextArea();
-    private JTextArea rsae = new JTextArea();
-    private JTextArea rsad = new JTextArea();
-    private JLabel Rlabelp = new JLabel("p:");
-    private JLabel Rlabelq = new JLabel("q:");
-    private JLabel Rlabele = new JLabel("e:");
-    private JLabel Rlabeld = new JLabel("d:");
-    private JButton rsady = new JButton("Calc.D");
     private void rsatools(){//rsatools窗口
+        JFrame Rsatools = new JFrame("RsaTools--Python插件");
+        JTextArea rsap = new JTextArea();
+        JTextArea rsaq = new JTextArea();
+        JTextArea rsae = new JTextArea();
+        JTextArea rsad = new JTextArea();
+        JLabel Rlabelp = new JLabel("p:");
+        JLabel Rlabelq = new JLabel("q:");
+        JLabel Rlabele = new JLabel("e:");
+        JLabel Rlabeld = new JLabel("d:");
+        JButton rsady = new JButton("Calc.D");
         Container container = Rsatools.getContentPane();
         container.setLayout(null);
         Rsatools.setVisible(true);
@@ -564,7 +465,7 @@ public class CTFcrack{
     	rsady.addActionListener(new ActionListener(){//调用rsatools
     		public void actionPerformed(ActionEvent evt){
              PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\自带插件\\rsa.py");
+    		 interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\rsa.py");
     		 BigInteger rsapstr=new BigInteger(rsap.getText());
              BigInteger rsaqstr=new BigInteger(rsaq.getText());
              BigInteger rsaestr=new BigInteger(rsae.getText());
@@ -574,9 +475,8 @@ public class CTFcrack{
     		}
     	});
     }
-    private void girl(){
-        JFrame frame = new JFrame(); 
-        frame.setTitle("可爱的我来啦！"); 
+    private void girl(){//妹子窗口
+        JFrame frame = new JFrame("可爱的我来啦！"); 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); 
         File imgadd = new File(System.getProperty("user.dir")+"\\girl\\girl1.gif");
         ImageIcon imageIcon = new ImageIcon(imgadd.toString()); 
@@ -585,48 +485,13 @@ public class CTFcrack{
         frame.pack(); 
         frame.setVisible(true); 
     }
-	/*    private JFrame Xirtools = new JFrame("希尔加密");
-    private JTextArea xj = new JTextArea();
-    private JTextArea xmw = new JTextArea();
-    private JTextArea xmy = new JTextArea();
-    private JButton xirdy = new JButton("Crack!");
-    private JLabel Xlabel1 = new JLabel("矩阵：");
-    private JLabel Xlabel2 = new JLabel("密文：");
-    private JLabel Xlabel3 = new JLabel("密钥：");*/
-/*    private void xirtools(){//希尔密码
-    	Container container = Xirtools.getContentPane();
-    	container.setLayout(null);
-    	Xirtools.setSize(300, 200);
-    	Xirtools.setVisible(true);
-    	Xirtools.setResizable(false);
-    	Xirtools.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	xj.setBounds(50, 20, 150, 20);
-    	container.add(xj);
-    	xmw.setBounds(50, 50, 150, 20);
-    	xmy.setBounds(50, 80, 150, 20);
-    	container.add(xmw);
-    	container.add(xmy);
-    	Xlabel1.setBounds(5, 20, 45, 20);
-    	Xlabel2.setBounds(5, 50, 45, 20);
-    	Xlabel3.setBounds(5, 80, 45, 20);
-    	container.add(Xlabel1);
-    	container.add(Xlabel2);
-    	container.add(Xlabel3);
-    	xirdy.setBounds(90, 120, 120, 30);
-    	container.add(xirdy);
-    	xirdy.addActionListener(new ActionListener(){//调用rsatools
-    		public void actionPerformed(ActionEvent evt){
-             PythonInterpreter interpreter = new PythonInterpreter();
-    		 interpreter.execfile(System.getProperty("user.dir")+"\\插件\\xir.py");
-    		 String jx = xj.getText();
-             String mw = xmw.getText();
-             PyFunction func = (PyFunction)interpreter.get("xir",PyFunction.class);
-             PyObject rsadstr = func.__call__(new PyString(mw),new PyString(jx));//这里出错 ----------
-             xmy.setText(rsadstr.toString());
-    		}
-    	});
-    }*/
-    //下面是统一全局字体
+    private void unzipgui(){//破解压缩包窗口 未完成
+    	JFrame frame = new JFrame("zip Crack!");
+    	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    	frame.setBounds(200,200,400,250);
+    	frame.setVisible(true); 
+    	
+    }
 	private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
 		  for (Enumeration<Object> keys = UIManager.getDefaults().keys();  
@@ -640,10 +505,11 @@ public class CTFcrack{
 	}  
 	public static void main(String[] args){//主方法
 	 InitGlobalFont(Zt);//赋值字体
-	 new CTFcrack().CreateJFrame();
+	 new CTFcrack().CryptoWindow();//创建主窗口CryptoWindow
 	}
-	public void Zhalan(ActionEvent evt){//栅栏解码
-		String Shuru = this.Shuru.getText();
+	public String Zhalan(String Shuru){//栅栏解码
+		String zlstr[]= new String[1024];
+		int num = 0;
 		StringBuffer jg = new StringBuffer();
 		 int x[] = new int[1024];
 		 int sl = Shuru.length();
@@ -669,16 +535,16 @@ public class CTFcrack{
 			 for(i=0;i<a;i++){
 				 jg.append("第"+(i+1)+"栏：");
 				 for(int j=0;j<(sl/x[i]);j++){
-					 zlstr[a1]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
-					 a1 = a1+1;
+					 zlstr[num]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
+					 num++;
 				 }
 				 int slen = zlstr[0].length();
 				 for(int ji = 0;ji<slen;ji++){
-					 for(int s=0;s<a1;s++){
+					 for(int s=0;s<num;s++){
 						 jg.append(zlstr[s].substring(ji, ji+1));
 					 }
 				 }
-				 a1 = 0;
+				 num = 0;
 				 jg.append("\n");
 			 }
 		 }else{
@@ -708,25 +574,23 @@ public class CTFcrack{
 				 for(i=0;i<a;i++){
 					 jg.append("第"+(i+1)+"栏：");
 					 for(int j=0;j<(sl/x[i]);j++){
-						 zlstr[a1]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
-						 a1 = a1+1;
+						 zlstr[num]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
+						 num++;
 					 }
 					 int slen = zlstr[0].length();
 					 for(int ji = 0;ji<slen;ji++){
-						 for(int s=0;s<a1;s++){
+						 for(int s=0;s<num;s++){
 							 jg.append(zlstr[s].substring(ji, ji+1));
 						 }
 					 }
-					 a1 = 0;
+					 num = 0;
 					 jg.append("\n");
 				 }
 		 }
 	   }
-	 ShuChu.setText(jg.toString());
-	 jg.delete(0, jg.length());
+	 return jg.toString();
 	 }
-	public void Caesar(ActionEvent evt){//凯撒密码
-		String input = Shuru.getText();
+	public String Caesar(String input){//凯撒密码
 	    char[] ca = input.toCharArray();
 	    int len = ca.length;
 	    StringBuilder jg = new StringBuilder((len + 1) * 26);
@@ -757,11 +621,9 @@ public class CTFcrack{
 	      jg.append(ca);
 	      jg.append('\n');
 		    }
-		    ShuChu.setText(jg.toString());
-		    jg.delete(0,jg.length());
+	    return jg.toString();
 	  }
-	public void peigd(ActionEvent evt){
-			String input = Shuru.getText();
+	public String peigd(String input){//培根规律
 			char ca[]=input.toCharArray();
 			int pglen = ca.length;
 			StringBuilder jg = new StringBuilder();
@@ -776,11 +638,9 @@ public class CTFcrack{
 			}
 		}
 		jg.append('\n');
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0,jg.length());
+	    return jg.toString();
 	}
-	private void zjd(ActionEvent evt){
-		String input = Shuru.getText();
+	public String zjd(String input){//猪圈密码
 		char ca [] = input.toCharArray();
 		int zjl = ca.length;
 		StringBuilder jg = new StringBuilder();
@@ -895,11 +755,10 @@ public class CTFcrack{
 			}
 		}
 		jg.append('\n');
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0,jg.length());
+	    return jg.toString();
+	    
 	}
-	public void Rot13(ActionEvent evt){
-		String input = Shuru.getText();
+	public String Rot13(String input){
 	    StringBuilder jg = new StringBuilder();
 	    for (int i = 0; i < input.length(); i++) {
 	        char c = input.charAt(i);
@@ -909,36 +768,33 @@ public class CTFcrack{
 	        else if  (c >= 'N' && c <= 'Z') c -= 13;
 	        jg.append(c);
 	    }
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0,jg.length());
+	    return jg.toString();
+	    
 	}
-	public void Base64c(ActionEvent evt){//base64解密utf-8
-		String shuru = Shuru.getText();
+	public String Base64c(String input){//base64解密utf-8
 		StringBuffer jg = new StringBuffer();
 		String jiami = null;
 		try{
-			jiami = new String(new BASE64Decoder().decodeBuffer(shuru));
+			jiami = new String(new BASE64Decoder().decodeBuffer(input));
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		jg.append(jiami);
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
+		
 	}
-	public void Base64j(ActionEvent evt){//base64加密utf-8
-		String shuru = Shuru.getText();
+	public String Base64j(String input){//base64加密utf-8
 		StringBuffer jg = new StringBuffer();
-		jg.append(new BASE64Encoder().encode(shuru.getBytes()));
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		jg.append(new BASE64Encoder().encode(input.getBytes()));
+		return jg.toString();
+		
 	}
-	public void Base64jg(ActionEvent evt){//base64加密gbk
-		String shuru = Shuru.getText();
+	public String Base64jg(String input){//base64加密gbk
 		StringBuffer jg = new StringBuffer();
 	    byte[] b = null;  
 	    String s = null;  
 	    try {  
-	        b = shuru.getBytes("gbk");  
+	        b = input.getBytes("gbk");  
 	    } catch (UnsupportedEncodingException e) {  
 	        e.printStackTrace();  
 	    }  
@@ -946,75 +802,68 @@ public class CTFcrack{
 	        s = new BASE64Encoder().encode(b);  
 	    } 
 	    jg.append(s);
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
+		
 	}
-	public void Base64cg(ActionEvent evt){//base64解密gbk
-		String shuru = Shuru.getText();
+	public String Base64cg(String input){//base64解密gbk
 		StringBuffer jg = new StringBuffer();
 		String result = null;
 		byte[] b = null;
-	    if (shuru != null) {  
+	    if (input != null) {  
 	        BASE64Decoder decoder = new BASE64Decoder();  
 	        try {  
-	            b = decoder.decodeBuffer(shuru);  
+	            b = decoder.decodeBuffer(input);  
 	            result = new String(b, "gbk");  
 	        } catch (Exception e) {  
 	            e.printStackTrace();  
 	        }  
 	    }  
 	    jg.append(result);
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
+		
 	}
-	public void Base32j(ActionEvent evt){
-		String input = Shuru.getText();
+	public String Base32j(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b32e",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
-	    ShuChu.setText(rsadstr.toString());
+	    return (rsadstr.toString());
 	}
-	public void Base32c(ActionEvent evt){
-		String input = Shuru.getText();
+	public String Base32c(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b32d",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
-	    ShuChu.setText(rsadstr.toString());
+	    return (rsadstr.toString());
 	}
-	public void Base16j(ActionEvent evt){
-		String input = Shuru.getText();
+	public String Base16j(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b16e",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
-	    ShuChu.setText(rsadstr.toString());
+	    return (rsadstr.toString());
 	}
-	public void Base16c(ActionEvent evt){
-		String input = Shuru.getText();
+	public String Base16c(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b16d",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
-	    ShuChu.setText(rsadstr.toString());
+	    return (rsadstr.toString());
 	}
-	public void peigen(ActionEvent evt){
-		String input = Shuru.getText();
+	public String peigen(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\peigen.py");
 	    PyFunction func = (PyFunction)interpreter.get("run",PyFunction.class);
 	    PyObject jg = func.__call__(new PyString(input));  
-	    ShuChu.setText(jg.toString());
+	    return jg.toString();
 	}
-	public void MorseE(ActionEvent evt){//摩斯加密
-		String shuru = Shuru.getText();
-		int len = shuru.length();
+	public String MorseE(String input){//摩斯加密
+		int len = input.length();
 		StringBuffer jg = new StringBuffer(len *3);
-		shuru = shuru.toLowerCase();
+		input = input.toLowerCase();
 		for (int i = 0; i < len; i++)
 	    {
-	      char c = shuru.charAt(i);
+	      char c = input.charAt(i);
 	      if (isChar(c)) {
 	        jg.append(morseCharacters[(c - 'a')]);
 	        jg.append(" ");
@@ -1025,12 +874,11 @@ public class CTFcrack{
 	      }
 	
 	    }
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
+		
 	}
-	public void MorseD(ActionEvent evt){//摩斯解码
+	public String MorseD(String input){//摩斯解码
 	  initMorseTable();
-	  String input = Shuru.getText();
 	  String morse = format(input);
 	  StringTokenizer st = new StringTokenizer(morse);
 	  StringBuilder jg = new StringBuilder(morse.length() / 2);
@@ -1038,29 +886,25 @@ public class CTFcrack{
 	  {
 	    jg.append(htMorse.get(st.nextToken()));
 	  }
-	  ShuChu.setText(jg.toString());
-	  jg.delete(0, jg.length());
+	  return jg.toString();
+	  
 	}
-	public void UrlEncoder(ActionEvent evt) throws UnsupportedEncodingException{//Url编码
-		String input = Shuru.getText();
+	public String UrlEncoder(String input) throws UnsupportedEncodingException{//Url编码
 		StringBuilder jg = new StringBuilder();
 		String jm;
 		jm = URLEncoder.encode(input,"utf-8");
 		jg.append(jm);
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
+		
 	}
-	public void UrlDecoder(ActionEvent evt) throws UnsupportedEncodingException{
-		String input = Shuru.getText();
+	public String UrlDecoder(String input) throws UnsupportedEncodingException{
 		StringBuilder jg = new StringBuilder();
 		String jm;
 		jm = URLDecoder.decode(input,"utf-8");
 		jg.append(jm);
-		ShuChu.setText(jg.toString());
-		jg.delete(0, jg.length());
+		return jg.toString();
 	}
-	public void UnicodeStre(ActionEvent evt){
-		String input = Shuru.getText();
+	public String UnicodeStre(String input){
 		StringBuilder jg = new StringBuilder();
 	    for (int i = 0; i < input.length(); i++) {	 
 	        // 取出每一个字符
@@ -1068,11 +912,10 @@ public class CTFcrack{
 	        // 转换为unicode
 	        jg.append("\\u" + Integer.toHexString(c));
 	    }
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0, jg.length());
+	    return jg.toString();
+	    
 	}
-	public void UnicodeStrd(ActionEvent evt){
-		String input = Shuru.getText();
+	public String UnicodeStrd(String input){
 		StringBuilder jg = new StringBuilder();
 	    String[] hex = input.split("\\\\u");
 	    for (int i = 1; i < hex.length; i++) {
@@ -1081,11 +924,10 @@ public class CTFcrack{
 	        // 追加成string
 	        jg.append((char) data);
 	    }
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0, jg.length());
+	    return jg.toString();
+	    
 	}
-	public void asciiZUnicode(ActionEvent evt){
-		String input = Shuru.getText();
+	public String asciiZUnicode(String input){
 		StringBuilder jg = new StringBuilder();
 	    for (int i = 0; i < input.length(); i++) {	 
 	        // 取出每一个字符
@@ -1093,19 +935,18 @@ public class CTFcrack{
 	        // 转换为unicode
 	        jg.append("&#" + (int)(c)+";");
 	    }
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0, jg.length());
+	    return jg.toString();
+	    
 	}
-	public void UnicodeZascii(ActionEvent evt){
-		String input = Shuru.getText();
+	public String UnicodeZascii(String input){
 		StringBuilder jg = new StringBuilder();
 		Pattern pattern = Pattern.compile("\\&\\#(\\d+)");
 		Matcher m =pattern.matcher(input);
 	    while (m.find()){  
 	        jg.append((char)Integer.valueOf(m.group(1)).intValue());  
 	    }
-	    ShuChu.setText(jg.toString());
-	    jg.delete(0, jg.length());
+	    return jg.toString();
+	    
 	}
 	private boolean isLowercase(char c) {//判断是否小写字母
 		return (c >= 'a') && (c <= 'z');
@@ -1147,7 +988,7 @@ public class CTFcrack{
 			}
 		}
 	}
-	private JMenuItem buildPluginMenuItem(String filename) {
+	public JMenuItem buildPluginMenuItem(String filename) {
 		JMenuItem item = new JMenuItem(filename);
 		item.setActionCommand(filename);
 		item.addActionListener(new ActionListener() {
@@ -1165,7 +1006,7 @@ public class CTFcrack{
 		});
 		return item;
 	}
-	// ********结束********
+	//**********************************************************
 	public char morseToChar(String morse)
 	  {
 	    return ((Character)htMorse.get(morse)).charValue();
