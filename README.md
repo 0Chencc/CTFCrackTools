@@ -1,4 +1,4 @@
-# CTFcrypto类工具说明
+# CTFCrack工具说明
 本工具由米斯特安全团队开发<br/>
 集成摩斯电码，凯撒密码，栅栏密码，Rot13密码以及各种编码互换等CTF中常见密码加解<br/>
 旨在于帮助CTFer攻克CTFcrypto类难关<br/>
@@ -7,6 +7,9 @@
 每次程序打开时第一次调用脚本时，会稍卡，因为在加载调用py的插件。大概2秒<br/>
 须知：OS目录为程序自带插件，勿删。<br/>
 删除了将调用不了某些功能，误删的朋友可到github上下载<br/>
+## 使用须知
+git上的是源码，需要下载后导入javaIDE编译<br/>
+推荐Eclipse导入编译。
 # 附上程序截图
 ![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/1.png)
 ![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/2.png)
