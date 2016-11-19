@@ -36,19 +36,18 @@ public class CTFcrack{
 	JTextArea Shuru = new JTextArea();
 	JTextArea ShuChu = new JTextArea();
     public void CryptoWindow(){//主窗口
-		JFrame jf = new JFrame("米斯特安全团队 CTF Crypto类破解工具 pro "+v1);
-		JLabel jl = new JLabel("=====填写所需检测的密码====");
-
+		JFrame jf = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
+		JLabel jl = new JLabel("填写所需检测的密码：");
 		JScrollPane gShuChu = new JScrollPane(ShuChu);
 		JScrollPane gShuru = new JScrollPane(Shuru);
-		JLabel JieG = new JLabel("======结果======");
+		JLabel JieG = new JLabel("结果：");
 		JLabel AD = new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
 		JMenuBar Menu = new JMenuBar();
 		JMenu zifu = new JMenu(" 解码方式");
 		JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
 		JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
 		JMenuItem zhalan = new JMenuItem(" 栅栏密码>>解码");
-		JMenuItem peig = new JMenuItem(" 培根密码>>转换");
+		JMenuItem peig = new JMenuItem(" 培根密码>>大小写转换AB");
 		JMenuItem peigd = new JMenuItem(" 培根密码>>解码");
 		JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
 		JMenuItem base64jg = new JMenuItem(" 字符串>>Base64(gbk)");
@@ -487,10 +486,11 @@ public class CTFcrack{
     }
     private void unzipgui(){//破解压缩包窗口 未完成
     	JFrame frame = new JFrame("zip Crack!");
+    	JButton crack = new JButton("Crack");
+    	frame.add(crack);
     	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     	frame.setBounds(200,200,400,250);
     	frame.setVisible(true); 
-    	
     }
 	private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
