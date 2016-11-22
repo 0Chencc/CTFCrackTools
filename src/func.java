@@ -15,12 +15,12 @@ import org.python.util.PythonInterpreter;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 public interface func {
-	public static String Zhalan(String Shuru){//栅栏解码
+	public static String Zhalan(String input){//栅栏解码
 		String zlstr[]= new String[1024];
 		int num = 0;
 		StringBuffer jg = new StringBuffer();
 		 int x[] = new int[1024];
-		 int sl = Shuru.length();
+		 int sl = input.length();
 		 int a = 0;
 		 int i=0;
 		 if (sl!=1&&sl!=2){
@@ -43,7 +43,7 @@ public interface func {
 			 for(i=0;i<a;i++){
 				 jg.append("第"+(i+1)+"栏：");
 				 for(int j=0;j<(sl/x[i]);j++){
-					 zlstr[num]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
+					 zlstr[num]=(input.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
 					 num++;
 				 }
 				 int slen = zlstr[0].length();
@@ -58,7 +58,7 @@ public interface func {
 		 }else{
 			 jg.append("解码失败...\n");
 			 jg.append("尝试去除字符串中的空格解码\n");
-			 sl = Shuru.replace(" ", "").length();
+			 sl = input.replace(" ", "").length();
 			 jg.append(sl);
 			 if (sl!=1&&sl!=2){
 				 for (i=2;i<sl;i++) {
@@ -82,7 +82,7 @@ public interface func {
 				 for(i=0;i<a;i++){
 					 jg.append("第"+(i+1)+"栏：");
 					 for(int j=0;j<(sl/x[i]);j++){
-						 zlstr[num]=(Shuru.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
+						 zlstr[num]=(input.substring((0+(x[i]*j)), (x[i]+(x[i]*j))));
 						 num++;
 					 }
 					 int slen = zlstr[0].length();

@@ -480,20 +480,23 @@ public class CTFcrack{
     	JFrame frame = new JFrame("zip Crack!");
     	JButton crack = new JButton("Crack");
     	JButton infile = new JButton("打开文件");
-    	JComboBox changce = new JComboBox();
+    	JComboBox select = new JComboBox();
     	JLabel filename = new JLabel("已选中文件名");
     	JLabel filepath = new JLabel("文件路径");
-    	changce.addItem("选择插件");
+    	JLabel selectpydetail = new JLabel("插件详情");
+    	select.addItem("选择插件");
     	filepath.setBounds(80, 40, 3000, 20);
     	filename.setBounds(235, 20, 150, 20);
     	infile.setBounds(80, 20, 150, 20);
-    	changce.setBounds(80, 60, 150, 20);
+    	select.setBounds(80, 60, 150, 20);
+    	selectpydetail.setBounds(80,80,150,20);
     	crack.setBounds(80, 100, 150, 20);
     	Container container = frame.getContentPane();
     	container.add(filename);
     	container.add(filepath);
     	container.add(crack);
-    	container.add(changce);
+    	container.add(select);
+    	container.add(selectpydetail);
     	container.add(infile);
     	container.setLayout(null);
     	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -560,5 +563,4 @@ public class CTFcrack{
 		return item;
 	}
 	//**********************************************************
-
 }
