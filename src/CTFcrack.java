@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
 //导入了Jython包 可调用python
 import org.python.core.*;
@@ -22,7 +23,7 @@ import org.python.core.PyObject;
 import org.python.util.PythonInterpreter; 
 import javax.imageio.*;
 public class CTFcrack{
-	private static String v1 = "v1.2.1";//版本号
+	private static String v1 = "v2.0";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
 	JTextArea Shuru = new JTextArea();
 	JTextArea ShuChu = new JTextArea();
@@ -478,10 +479,42 @@ public class CTFcrack{
     private void unzipgui(){//破解压缩包窗口 未完成
     	JFrame frame = new JFrame("zip Crack!");
     	JButton crack = new JButton("Crack");
-    	frame.add(crack);
+    	JButton infile = new JButton("打开文件");
+    	JComboBox changce = new JComboBox();
+    	JLabel filename = new JLabel("已选中文件名");
+    	JLabel filepath = new JLabel("文件路径");
+    	changce.addItem("选择插件");
+    	filepath.setBounds(80, 40, 3000, 20);
+    	filename.setBounds(235, 20, 150, 20);
+    	infile.setBounds(80, 20, 150, 20);
+    	changce.setBounds(80, 60, 150, 20);
+    	crack.setBounds(80, 100, 150, 20);
+    	Container container = frame.getContentPane();
+    	container.add(filename);
+    	container.add(filepath);
+    	container.add(crack);
+    	container.add(changce);
+    	container.add(infile);
+    	container.setLayout(null);
     	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	frame.setBounds(200,200,400,250);
+    	frame.setBounds(180,200,350,180);
     	frame.setVisible(true); 
+    	String zip[] = {"zip","rar"};
+    	FileNameExtensionFilter filter;
+    	filter = new FileNameExtensionFilter("压缩包",zip);
+    	infile.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    	    	JFileChooser openfile = new JFileChooser();
+    	    	openfile.setFileFilter(filter);
+    	    	openfile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
+    	        if (openframe == JFileChooser.APPROVE_OPTION){
+                File file = openfile.getSelectedFile();//得到选择的文件名
+                filepath.setText(file.toString());
+                filename.setText(openfile.getSelectedFile().getName());
+    	    }
+    		}
+    	});
     }
 	private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
