@@ -25,7 +25,7 @@ import org.python.core.PyObject;
 import org.python.util.PythonInterpreter; 
 import javax.imageio.*;
 public class CTFcrack{
-	private static String v1 = "v2.0";//版本号
+	private static String v1 = "v2.0 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
 	JTextArea Shuru = new JTextArea();
 	JTextArea ShuChu = new JTextArea();
@@ -71,6 +71,7 @@ public class CTFcrack{
 		JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
 		JMenu pulg = new JMenu("其他功能");
 		JMenuItem unzip = new JMenuItem("压缩包");
+		JMenuItem imagewindow = new JMenuItem("图片解码");
 		JMenu chaj = new JMenu(" 插件");
 		JMenuItem rsa = new JMenuItem(" RSAtools");
 		JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
@@ -124,9 +125,11 @@ public class CTFcrack{
 		girlgif.add(girlgifw);
 		Menu.add(pulg);
 		pulg.add(unzip);
+		pulg.add(imagewindow);
 		//chaj.add(xir);
 		ShuChu.setText("作者注："
 			+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
+			+ "\n正在开发unzip的功能ing"
 			+ "\n工具支持Python插件"
 			+ "\n将写好的py脚本放进Plugin目录即可"
 			+ "\n打开程序后自动遍历完成"
@@ -439,6 +442,12 @@ public class CTFcrack{
 			
 		}
 	});	
+		imagewindow.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+			new CTFcrack().imagewindow();
+			
+		}
+	});	
     }
     private void rsatools(){//rsatools窗口
         JFrame Rsatools = new JFrame("RsaTools--Python插件");
@@ -499,9 +508,11 @@ public class CTFcrack{
         frame.setVisible(true); 
     }
     private void unzipgui(){//破解压缩包窗口 未完成
-    	JFrame frame = new JFrame("zip Crack!");
+    	JFrame frame = new JFrame("Zip Crack!");
     	JButton crack = new JButton("Crack");
     	JButton infile = new JButton("打开文件");
+    	JCheckBox iskey = new JCheckBox("是否有密文");
+    	JTextArea key = new JTextArea();
     	JComboBox select = new JComboBox();
     	JLabel filename = new JLabel("已选中文件名");
     	JLabel filepath = new JLabel("文件路径");
@@ -512,21 +523,26 @@ public class CTFcrack{
     	infile.setBounds(80, 20, 150, 20);
     	select.setBounds(80, 60, 150, 20);
     	selectpydetail.setBounds(80,80,150,20);
-    	crack.setBounds(80, 100, 150, 20);
+    	iskey.setBounds(80, 100, 150, 20);
+    	key.setBounds(80, 125, 150, 20);
+    	key.setEditable(false);
+    	crack.setBounds(80, 150, 150, 20);
     	Container container = frame.getContentPane();
     	container.add(filename);
     	container.add(filepath);
     	container.add(crack);
     	container.add(select);
+    	container.add(key);
+    	container.add(iskey);
     	container.add(selectpydetail);
     	container.add(infile);
     	container.setLayout(null);
     	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	frame.setBounds(180,200,350,180);
+    	frame.setBounds(180,200,350,260);
     	frame.setVisible(true); 
     	String zip[] = {"zip","rar"};
     	FileNameExtensionFilter filter;
-    	filter = new FileNameExtensionFilter("压缩包",zip);
+    	filter = new FileNameExtensionFilter("压缩包(.zip;.rar)",zip);
     	infile.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
     	    	JFileChooser openfile = new JFileChooser();
@@ -538,6 +554,69 @@ public class CTFcrack{
                 filepath.setText(file.toString());
                 filename.setText(openfile.getSelectedFile().getName());
     	    }
+    		}
+    	});
+    	iskey.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			key.setEditable(iskey.isSelected());
+    		}
+    	});
+    }
+    private void imagewindow(){//破解图片窗口 未完成
+    	JFrame frame = new JFrame("Image Crack!");
+    	JButton crack = new JButton("Crack");
+    	JButton infile = new JButton("打开文件");
+    	JCheckBox iskey = new JCheckBox("是否有密文");
+    	JTextArea key = new JTextArea();
+    	JComboBox select = new JComboBox();
+    	JLabel filename = new JLabel("已选中文件名");
+    	JLabel filepath = new JLabel("文件路径");
+    	JLabel selectpydetail = new JLabel("插件详情");
+    	select.addItem("选择插件");
+    	filepath.setBounds(80, 40, 3000, 20);
+    	filename.setBounds(235, 20, 150, 20);
+    	infile.setBounds(80, 20, 150, 20);
+    	select.setBounds(80, 60, 150, 20);
+    	selectpydetail.setBounds(80,80,150,20);
+    	iskey.setBounds(80, 100, 150, 20);
+    	key.setBounds(80, 125, 150, 20);
+    	key.setEditable(false);
+    	crack.setBounds(80, 150, 150, 20);
+    	Container container = frame.getContentPane();
+    	container.add(filename);
+    	container.add(filepath);
+    	container.add(crack);
+    	container.add(select);
+    	container.add(key);
+    	container.add(iskey);
+    	container.add(selectpydetail);
+    	container.add(infile);
+    	container.setLayout(null);
+    	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    	frame.setBounds(180,200,350,260);
+    	frame.setVisible(true); 
+    	String image[] = {"jpg","png","bmp","pdm"};
+    	String txt[] = {"txt"};
+    	FileNameExtensionFilter filter,filter2;
+    	JFileChooser openfile = new JFileChooser();
+    	openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    	filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image);
+    	openfile.setFileFilter(filter);
+    	filter2 = new FileNameExtensionFilter("文本(.txt)",txt);
+    	openfile.setFileFilter(filter2);
+    	infile.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
+    	        if (openframe == JFileChooser.APPROVE_OPTION){
+                File file = openfile.getSelectedFile();//得到选择的文件名
+                filepath.setText(file.toString());
+                filename.setText(openfile.getSelectedFile().getName());
+    	    }
+    		}
+    	});
+    	iskey.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			key.setEditable(iskey.isSelected());
     		}
     	});
     }
