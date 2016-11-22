@@ -12,6 +12,8 @@ import java.util.Enumeration;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
 //导入了Jython包 可调用python
@@ -29,7 +31,7 @@ public class CTFcrack{
 	JTextArea ShuChu = new JTextArea();
     public void CryptoWindow(){//主窗口
 		JFrame jf = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
-		JLabel jl = new JLabel("填写所需检测的密码：");
+		JLabel jl = new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
 		JScrollPane gShuChu = new JScrollPane(ShuChu);
 		JScrollPane gShuru = new JScrollPane(Shuru);
 		JLabel JieG = new JLabel("结果：");
@@ -153,6 +155,26 @@ public class CTFcrack{
 		container.add(JieG);
 		container.add(gShuChu);
 		container.add(Menu,BorderLayout.NORTH);
+		//监听文本框变化
+		Shuru.getDocument().addDocumentListener(new DocumentListener(){
+			int inputlength;
+			@Override public void changedUpdate(DocumentEvent evt) {
+				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
+		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+		    }
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
+		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
+		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+			}
+		});
 		//监听按钮
 		jf.addComponentListener(new ComponentAdapter(){
 			@Override public void componentResized(ComponentEvent e){
