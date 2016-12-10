@@ -15,7 +15,7 @@ import org.python.util.PythonInterpreter;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 public interface func {
-	public static String Zhalan(String input){//栅栏解码
+	public static String Fence(String input){//栅栏解码
 		String zlstr[]= new String[1024];
 		int num = 0;
 		StringBuffer jg = new StringBuffer();
@@ -131,7 +131,7 @@ public interface func {
 		    }
 	    return jg.toString();
 	  }
-	public static String peigd(String input){//培根规律
+	public static String Baconab(String input){//培根规律
 			char ca[]=input.toCharArray();
 			int pglen = ca.length;
 			StringBuilder jg = new StringBuilder();
@@ -358,7 +358,7 @@ public interface func {
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
-	public static String peigen(String input){
+	public static String Bacon(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\peigen.py");
 	    PyFunction func = (PyFunction)interpreter.get("run",PyFunction.class);
@@ -455,6 +455,14 @@ public interface func {
 	    }
 	    return jg.toString();
 	    
+	}
+	public static String reverse(String input){
+		StringBuilder jg = new StringBuilder();
+		char r[] = input.toCharArray();
+		for (int a= r.length-1;a>-1;a=a-1){
+			jg.append(r[a]);
+		}
+		return jg.toString();
 	}
 	static boolean isLowercase(char c) {//判断是否小写字母
 		return (c >= 'a') && (c <= 'z');
