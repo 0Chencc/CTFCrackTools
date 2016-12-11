@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 import java.io.*;
 import java.awt.*;
@@ -27,9 +29,12 @@ import javax.imageio.*;
 public class CTFcrack{
 	private static String v1 = "v2.0 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
-	JTextArea Shuru = new JTextArea();
+	JTextArea Shuru = new JTextArea(15,50);
 	JTextArea ShuChu = new JTextArea();
     public void CryptoWindow(){//主窗口
+    	JPanel crypto = new JPanel();
+    	JTabbedPane tabbedPane = new JTabbedPane();
+    	SpringLayout slt = new SpringLayout();
 		JFrame jf = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
 		JLabel jl = new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
 		JScrollPane gShuChu = new JScrollPane(ShuChu);
@@ -84,7 +89,7 @@ public class CTFcrack{
 		JMenu girlgif = new JMenu(" 妹子");
 		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
 		Container container = jf.getContentPane();
-		container.setLayout(null);
+		container.setLayout(slt);
 		Menu.add(zifu);
 		zifu.add(caesar);
 		zifu.add(rot13);
@@ -146,25 +151,37 @@ public class CTFcrack{
 			+ "\n懂Java的朋友也请联系我，共同开发。"
 			+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFCrackTools"
 			+ "\n交流群：392613610");
-		//设置Swing的属性
 		jf.setVisible(true);
-		//jf.setResizable(false);
-		jf.setSize(720, 690);//窗口
+		jf.setSize(1000, 800);//窗口
 		jf.setDefaultCloseOperation(3);
-		gShuru  
-		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-		gShuru  
-		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);  
-		gShuChu
-		.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-		gShuChu
-		.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		//弹簧管理器
+		Spring st = Spring.constant(5);
+		container.add(Menu);
+		slt.putConstraint(SpringLayout.NORTH, Menu, 0, SpringLayout.NORTH, container);
+		slt.putConstraint(SpringLayout.WEST, Menu, 0, SpringLayout.WEST, container);
+		slt.putConstraint(SpringLayout.EAST, Menu, 0, SpringLayout.EAST, container);
 		container.add(jl);
+		slt.putConstraint(SpringLayout.NORTH, jl, st, SpringLayout.SOUTH, Menu);
+		slt.putConstraint(SpringLayout.WEST, jl, st, SpringLayout.WEST, container);
 		container.add(gShuru);
-		container.add(AD);
+		slt.putConstraint(SpringLayout.NORTH, gShuru, st, SpringLayout.SOUTH, jl);
+		slt.putConstraint(SpringLayout.WEST, gShuru, st, SpringLayout.WEST, container);
+		slt.putConstraint(SpringLayout.EAST, gShuru, Spring.minus(st), SpringLayout.EAST, container);
 		container.add(JieG);
+		slt.putConstraint(SpringLayout.NORTH, JieG, st, SpringLayout.SOUTH, gShuru);
+		slt.putConstraint(SpringLayout.WEST, JieG, st, SpringLayout.WEST, container);
 		container.add(gShuChu);
-		container.add(Menu,BorderLayout.NORTH);
+		slt.putConstraint(SpringLayout.NORTH, gShuChu, st, SpringLayout.SOUTH, JieG);
+		slt.putConstraint(SpringLayout.WEST, gShuChu, st, SpringLayout.WEST, container);
+		slt.putConstraint(SpringLayout.EAST, gShuChu, Spring.minus(st), SpringLayout.EAST, container);
+		container.add(AD);
+		slt.putConstraint(SpringLayout.SOUTH, gShuChu, Spring.minus(st), SpringLayout.NORTH, AD);
+		slt.putConstraint(SpringLayout.SOUTH, AD, Spring.minus(st), SpringLayout.SOUTH, container);
+		slt.putConstraint(SpringLayout.WEST, AD, st, SpringLayout.WEST, container);
+		//container.add(crypto);
+		//tabbedPane.addTab("Crypto",null,crypto,"First panel");
+		//container.add(tabbedPane);
+		
 		//监听文本框变化
 		Shuru.getDocument().addDocumentListener(new DocumentListener(){
 			int inputlength;
@@ -205,33 +222,6 @@ public class CTFcrack{
 			}
 		});
 		//监听按钮
-		jf.addComponentListener(new ComponentAdapter(){
-			@Override public void componentResized(ComponentEvent e){
-				Menu.setBounds(0,
-						0, 
-						jf.getWidth()-20,
-						20);//菜单
-		    jl.setBounds(3, 
-		    		20, 
-		    		jf.getWidth()-20, 
-		    		20);//第一个标签
-		    gShuru.setBounds(3, 
-		    		40, 
-		    		jf.getWidth()-20, 
-		    		(int)(jf.getHeight()*0.40));//输入框
-		    JieG.setBounds(3, 
-		    		jl.getHeight()+gShuru.getHeight()+20, 
-		    		jf.getWidth()-20, 
-		    		20);//结果标签
-		    gShuChu.setBounds(3, 
-		    		JieG.getY()+20, 
-		    		jf.getWidth()-20,
-		    		(int)(jf.getHeight()*0.42));//输出框
-		    AD.setBounds(3, 
-		    		gShuChu.getHeight()+JieG.getY()+20
-		    		, jf.getWidth()-20
-		    		, 20);//广告
-			}});
 		caesar.addActionListener(new ActionListener() {//当按下凯撒密码
 		    public void actionPerformed(ActionEvent evt) {
 		    	ShuChu.setText(func.Caesar(Shuru.getText()));
