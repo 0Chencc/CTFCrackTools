@@ -32,17 +32,18 @@ public class CTFcrack{
 	JTextArea Shuru = new JTextArea(15,50);
 	JTextArea ShuChu = new JTextArea();
     public void CryptoWindow(){//主窗口
-    	JPanel crypto = new JPanel();
-    	JTabbedPane tabbedPane = new JTabbedPane();
-    	SpringLayout slt = new SpringLayout();
-		JFrame jf = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
-		JLabel jl = new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
-		JScrollPane gShuChu = new JScrollPane(ShuChu);
-		JScrollPane gShuru = new JScrollPane(Shuru);
-		JLabel JieG = new JLabel("结果：(字符数统计：0)");
-		JLabel AD = new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
-		JMenuBar Menu = new JMenuBar();
-		JMenu zifu = new JMenu(" 解码方式");
+		//
+		JFrame jFrame = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
+		jFrame.setDefaultCloseOperation(3);
+		jFrame.setSize(1000, 800);
+		jFrame.setVisible(true);
+		Container frameContainer= jFrame.getContentPane();
+		SpringLayout springLayout = new SpringLayout();
+		frameContainer.setLayout(springLayout);
+		//
+		JMenuBar mainMenuBar = new JMenuBar();
+		JMenu menu1=new JMenu("菜单");
+		JMenu Ascii = new JMenu(" 解码方式");
 		JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
 		JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
 		JMenuItem fence = new JMenuItem(" 栅栏密码>>解码");
@@ -62,7 +63,7 @@ public class CTFcrack{
 		JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>字符串");
 		JMenuItem asciiZUnicode = new JMenuItem(" Ascii>>Unicode");
 		JMenuItem UnicodeZascii = new JMenuItem(" Unicode>>Ascii");
-		JMenu jinz = new JMenu(" 进制转换");
+		JMenu radixchange = new JMenu(" 进制转换");
 		JMenuItem radix = new JMenuItem(" 任意进制转换");
 		JMenuItem j2z8 = new JMenuItem(" 二进制>>八进制");
 		JMenuItem j2z10 = new JMenuItem(" 二进制>>十进制");
@@ -79,7 +80,7 @@ public class CTFcrack{
 		JMenu pulg = new JMenu("其他功能");
 		JMenuItem unzip = new JMenuItem("压缩包");
 		JMenuItem imagewindow = new JMenuItem("图片解码");
-		JMenu chaj = new JMenu(" 插件");
+		JMenu Pulgin = new JMenu(" 插件");
 		JMenuItem rsa = new JMenuItem(" RSAtools");
 		JMenuItem rc4 = new JMenuItem(" RC4tools");
 		JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
@@ -88,197 +89,292 @@ public class CTFcrack{
 		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
 		JMenu girlgif = new JMenu(" 妹子");
 		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
-		Container container = jf.getContentPane();
-		container.setLayout(slt);
-		Menu.add(zifu);
-		zifu.add(caesar);
-		zifu.add(rot13);
-		zifu.add(fence);
-		zifu.add(peig);
-		zifu.add(peigd);
-		zifu.add(zj);
-		zifu.add(base64j);
-		zifu.add(base64c);
-		zifu.add(base64jg);
-		zifu.add(base64cg);
-		zifu.add(morsee);
-		zifu.add(morsed);
-		zifu.add(reverse);
-		zifu.add(UrlCoded);
-		zifu.add(UrlCodee);
-		zifu.add(UnicoderStre);
-		zifu.add(UnicoderStrd);
-		zifu.add(asciiZUnicode);
-		zifu.add(UnicodeZascii);
-		Menu.add(jinz);
-		jinz.add(radix);
-		jinz.add(j2z8);
-		jinz.add(j2z10);
-		jinz.add(j2z16);
-		jinz.add(j8z2);
-		jinz.add(j8z10);
-		jinz.add(j8z16);
-		jinz.add(j10z2);
-		jinz.add(j10z8);
-		jinz.add(j10z16);
-		jinz.add(j16z2);
-		jinz.add(j16z8);
-		jinz.add(j16z10);
-		buildPluginMenu(chaj);//传入要添加菜单的目录
-		Menu.add(chaj);
-		chaj.add(rsa);
-		chaj.add(rc4);
-		chaj.add(b32e);
-		chaj.add(b32d);
-		chaj.add(b16e);
-		chaj.add(b16d);
-		Menu.add(girlgif);
+		JMenuItem menuItem1_1=new JMenuItem("菜单项");
+		menu1.add(menuItem1_1);
+		mainMenuBar.add(Ascii);
+		Ascii.add(caesar);
+		Ascii.add(rot13);
+		Ascii.add(fence);
+		Ascii.add(peig);
+		Ascii.add(peigd);
+		Ascii.add(zj);
+		Ascii.add(base64j);
+		Ascii.add(base64c);
+		Ascii.add(base64jg);
+		Ascii.add(base64cg);
+		Ascii.add(morsee);
+		Ascii.add(morsed);
+		Ascii.add(reverse);
+		Ascii.add(UrlCoded);
+		Ascii.add(UrlCodee);
+		Ascii.add(UnicoderStre);
+		Ascii.add(UnicoderStrd);
+		Ascii.add(asciiZUnicode);
+		Ascii.add(UnicodeZascii);
+		mainMenuBar.add(radixchange);
+		radixchange.add(radix);
+		radixchange.add(j2z8);
+		radixchange.add(j2z10);
+		radixchange.add(j2z16);
+		radixchange.add(j8z2);
+		radixchange.add(j8z10);
+		radixchange.add(j8z16);
+		radixchange.add(j10z2);
+		radixchange.add(j10z8);
+		radixchange.add(j10z16);
+		radixchange.add(j16z2);
+		radixchange.add(j16z8);
+		radixchange.add(j16z10);
+		//buildPluginMenu(Pulgin);//传入要添加菜单的目录
+		mainMenuBar.add(Pulgin);
+		Pulgin.add(rsa);
+		Pulgin.add(rc4);
+		Pulgin.add(b32e);
+		Pulgin.add(b32d);
+		Pulgin.add(b16e);
+		Pulgin.add(b16d);
+		mainMenuBar.add(girlgif);
 		girlgif.add(girlgifw);
-		Menu.add(pulg);
+		mainMenuBar.add(pulg);
 		pulg.add(unzip);
 		pulg.add(imagewindow);
-		//chaj.add(xir);
-		ShuChu.setText("作者注："
-			+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
-			+ "\n备注:十六进制与字符串互相转换即为base16 在插件中可调用"
-			+ "\n正在开发unzip的功能ing"
-			+ "\n工具支持Python插件"
-			+ "\n将写好的py脚本放进Plugin目录即可"
-			+ "\n打开程序后自动遍历完成"
-			+ "\n每次打开程序第一次调用python会稍慢"
-			+ "\n接下来就OK了"
-			+ "\n联系方式:QQ627437686"
-			+ "\n懂Java的朋友也请联系我，共同开发。"
-			+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFCrackTools"
-			+ "\n交流群：392613610");
-		jf.setVisible(true);
-		jf.setSize(1000, 800);//窗口
-		jf.setDefaultCloseOperation(3);
-		//弹簧管理器
-		Spring st = Spring.constant(5);
-		container.add(Menu);
-		slt.putConstraint(SpringLayout.NORTH, Menu, 0, SpringLayout.NORTH, container);
-		slt.putConstraint(SpringLayout.WEST, Menu, 0, SpringLayout.WEST, container);
-		slt.putConstraint(SpringLayout.EAST, Menu, 0, SpringLayout.EAST, container);
-		container.add(jl);
-		slt.putConstraint(SpringLayout.NORTH, jl, st, SpringLayout.SOUTH, Menu);
-		slt.putConstraint(SpringLayout.WEST, jl, st, SpringLayout.WEST, container);
-		container.add(gShuru);
-		slt.putConstraint(SpringLayout.NORTH, gShuru, st, SpringLayout.SOUTH, jl);
-		slt.putConstraint(SpringLayout.WEST, gShuru, st, SpringLayout.WEST, container);
-		slt.putConstraint(SpringLayout.EAST, gShuru, Spring.minus(st), SpringLayout.EAST, container);
-		container.add(JieG);
-		slt.putConstraint(SpringLayout.NORTH, JieG, st, SpringLayout.SOUTH, gShuru);
-		slt.putConstraint(SpringLayout.WEST, JieG, st, SpringLayout.WEST, container);
-		container.add(gShuChu);
-		slt.putConstraint(SpringLayout.NORTH, gShuChu, st, SpringLayout.SOUTH, JieG);
-		slt.putConstraint(SpringLayout.WEST, gShuChu, st, SpringLayout.WEST, container);
-		slt.putConstraint(SpringLayout.EAST, gShuChu, Spring.minus(st), SpringLayout.EAST, container);
-		container.add(AD);
-		slt.putConstraint(SpringLayout.SOUTH, gShuChu, Spring.minus(st), SpringLayout.NORTH, AD);
-		slt.putConstraint(SpringLayout.SOUTH, AD, Spring.minus(st), SpringLayout.SOUTH, container);
-		slt.putConstraint(SpringLayout.WEST, AD, st, SpringLayout.WEST, container);
-		//container.add(crypto);
-		//tabbedPane.addTab("Crypto",null,crypto,"First panel");
-		//container.add(tabbedPane);
-		
-		//监听文本框变化
-		Shuru.getDocument().addDocumentListener(new DocumentListener(){
+		mainMenuBar.add(menu1);
+		frameContainer.add(mainMenuBar);
+		springLayout.putConstraint(SpringLayout.NORTH, mainMenuBar, 0, SpringLayout.NORTH, frameContainer);
+		springLayout.putConstraint(SpringLayout.WEST, mainMenuBar, 0, SpringLayout.WEST, frameContainer);
+		springLayout.putConstraint(SpringLayout.EAST, mainMenuBar, 0, SpringLayout.EAST, frameContainer);
+		//
+		JTabbedPane mainTabbedPane = new JTabbedPane();
+		//
+		JSplitPane crypto=new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		crypto.setDividerLocation(250);
+		JPanel crypto_top=new JPanel();
+		crypto_top.setLayout(springLayout);
+		JLabel inputL=new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
+		crypto_top.add(inputL);
+		springLayout.putConstraint(SpringLayout.NORTH, inputL, 0, SpringLayout.NORTH, crypto_top);
+		JTextArea input=new JTextArea();
+		JScrollPane inputP = new JScrollPane(input);
+		crypto_top.add(inputP);
+		springLayout.putConstraint(SpringLayout.NORTH, inputP, 25, SpringLayout.NORTH, crypto_top);
+		springLayout.putConstraint(SpringLayout.SOUTH, inputP, 0, SpringLayout.SOUTH, crypto_top);
+		springLayout.putConstraint(SpringLayout.WEST, inputP, 0, SpringLayout.WEST, crypto_top);
+		springLayout.putConstraint(SpringLayout.EAST, inputP, 0, SpringLayout.EAST, crypto_top);
+		crypto.setTopComponent(crypto_top);
+		//
+		JPanel crypto_bottom=new JPanel();
+		crypto_bottom.setLayout(springLayout);
+		JLabel outpuL=new JLabel("结果：(字符数统计：0)");
+		crypto_bottom.add(outpuL);
+		springLayout.putConstraint(SpringLayout.NORTH, outpuL, 0, SpringLayout.NORTH, crypto_bottom);
+		JTextArea output=new JTextArea();
+		JScrollPane outputP = new JScrollPane(output);
+		crypto_bottom.add(outputP);
+		output.setText("作者注："
+				+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
+				+ "\n备注:十六进制与字符串互相转换即为base16 在插件中可调用"
+				+ "\n正在开发unzip的功能ing"
+				+ "\n工具支持Python插件"
+				+ "\n将写好的py脚本放进Plugin目录即可"
+				+ "\n打开程序后自动遍历完成"
+				+ "\n每次打开程序第一次调用python会稍慢"
+				+ "\n接下来就OK了"
+				+ "\n联系方式:QQ627437686"
+				+ "\n懂Java的朋友也请联系我，共同开发。"
+				+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFCrackTools"
+				+ "\n交流群：392613610");
+		springLayout.putConstraint(SpringLayout.NORTH, outputP, 25, SpringLayout.NORTH, crypto_bottom);
+		springLayout.putConstraint(SpringLayout.SOUTH, outputP, 0, SpringLayout.SOUTH, crypto_bottom);
+		springLayout.putConstraint(SpringLayout.WEST, outputP, 0, SpringLayout.WEST, crypto_bottom);
+		springLayout.putConstraint(SpringLayout.EAST, outputP, 0, SpringLayout.EAST, crypto_bottom);
+		crypto.setBottomComponent(crypto_bottom);
+		mainTabbedPane.addTab("Crypto", crypto);	
+		//
+		JPanel image=new JPanel();
+    	JButton crack = new JButton("Crack");
+    	JButton infile = new JButton("打开文件");
+    	JCheckBox iskey = new JCheckBox("是否有密文");
+    	JTextArea key = new JTextArea();
+    	key.setText("输入密文，如果你有打钩的话");
+    	JComboBox select = new JComboBox();
+    	JLabel filename = new JLabel("已选中文件名");
+    	JLabel filepath = new JLabel("文件路径");
+    	JLabel selectpydetail = new JLabel("插件详情");
+    	select.addItem("选择插件");
+		image.setLayout(springLayout);
+		image.add(filename);
+    	springLayout.putConstraint(SpringLayout.NORTH, filename, 0, SpringLayout.NORTH, image);
+    	springLayout.putConstraint(SpringLayout.EAST, filename, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, filename, 0, SpringLayout.WEST, image);
+    	image.add(infile);
+    	springLayout.putConstraint(SpringLayout.NORTH, infile, 0, SpringLayout.SOUTH,filename);
+    	springLayout.putConstraint(SpringLayout.EAST, infile, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, infile, 0, SpringLayout.WEST, image);
+    	image.add(filepath);
+    	springLayout.putConstraint(SpringLayout.NORTH, filepath, 0, SpringLayout.SOUTH,infile);
+    	springLayout.putConstraint(SpringLayout.EAST, filepath, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, filepath, 0, SpringLayout.WEST, image);
+    	key.setEditable(false);
+    	image.add(crack);
+    	springLayout.putConstraint(SpringLayout.NORTH, crack, 0, SpringLayout.SOUTH,filepath);
+    	springLayout.putConstraint(SpringLayout.EAST, crack, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, crack, 0, SpringLayout.WEST, image);
+    	image.add(select);
+    	springLayout.putConstraint(SpringLayout.NORTH, select, 0, SpringLayout.SOUTH,crack);
+    	springLayout.putConstraint(SpringLayout.EAST, select, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, select, 0, SpringLayout.WEST, image);
+    	image.add(key);
+    	springLayout.putConstraint(SpringLayout.NORTH, key, 0, SpringLayout.SOUTH,select);
+    	springLayout.putConstraint(SpringLayout.EAST, key, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, key, 0, SpringLayout.WEST, image);
+    	image.add(iskey);
+    	springLayout.putConstraint(SpringLayout.NORTH, iskey, 0, SpringLayout.SOUTH,key);
+    	springLayout.putConstraint(SpringLayout.EAST, iskey, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, iskey, 0, SpringLayout.WEST, image);
+    	image.add(selectpydetail);
+    	springLayout.putConstraint(SpringLayout.NORTH, selectpydetail, 0, SpringLayout.SOUTH,iskey);
+    	springLayout.putConstraint(SpringLayout.EAST, selectpydetail, 0, SpringLayout.EAST, image);
+    	springLayout.putConstraint(SpringLayout.WEST, selectpydetail, 0, SpringLayout.WEST, image);
+		mainTabbedPane.addTab("Image",image);
+		springLayout.putConstraint(SpringLayout.NORTH, image, 0, SpringLayout.NORTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.SOUTH, image, 0, SpringLayout.SOUTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.WEST, image, 0, SpringLayout.WEST, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.EAST, image, 0, SpringLayout.EAST, mainTabbedPane);
+		mainTabbedPane.addTab("Image", image);
+		//
+		frameContainer.add(mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.NORTH, mainTabbedPane, 25, SpringLayout.NORTH, frameContainer);
+		springLayout.putConstraint(SpringLayout.SOUTH, mainTabbedPane, -30, SpringLayout.SOUTH, frameContainer);
+		springLayout.putConstraint(SpringLayout.WEST, mainTabbedPane, 0, SpringLayout.WEST, frameContainer);
+		springLayout.putConstraint(SpringLayout.EAST, mainTabbedPane, 0, SpringLayout.EAST, frameContainer);		
+		//
+		JPanel mainBottomBar =new JPanel();
+		JLabel ad=new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
+		mainBottomBar.add(ad);
+		frameContainer.add(mainBottomBar);
+		springLayout.putConstraint(SpringLayout.SOUTH, mainBottomBar, 0, SpringLayout.SOUTH, frameContainer);
+		//菜单栏点击事件
+		String image_suf[] = {"jpg","png","bmp","pdm"};
+    	String txt[] = {"txt"};
+    	FileNameExtensionFilter filter,filter2;
+    	JFileChooser openfile = new JFileChooser();
+    	openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    	filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image_suf);
+    	openfile.setFileFilter(filter);
+    	filter2 = new FileNameExtensionFilter("文本(.txt)",txt);
+    	openfile.setFileFilter(filter2);
+    	frameContainer.repaint();
+    	infile.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
+    	        if (openframe == JFileChooser.APPROVE_OPTION){
+                File file = openfile.getSelectedFile();//得到选择的文件名
+                filepath.setText(file.toString());
+                filename.setText(openfile.getSelectedFile().getName());
+    	    }
+    		}
+    	});
+    	iskey.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			key.setEditable(iskey.isSelected());
+    		}
+    	});
+    	input.getDocument().addDocumentListener(new DocumentListener(){
 			int inputlength;
 			@Override public void changedUpdate(DocumentEvent evt) {
-				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
-		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+				inputlength = input.getText().replaceAll("\r|\n", "").length();
+		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
 		    }
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
-		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+				inputlength = input.getText().replaceAll("\r|\n", "").length();
+		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				inputlength = Shuru.getText().replaceAll("\r|\n", "").length();
-		    	jl.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+				inputlength = input.getText().replaceAll("\r|\n", "").length();
+		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
 			}
 		});
-		ShuChu.getDocument().addDocumentListener(new DocumentListener(){
+		output.getDocument().addDocumentListener(new DocumentListener(){
 			int inputlength;
 			@Override public void changedUpdate(DocumentEvent evt) {
-				inputlength = ShuChu.getText().replaceAll("\r|\n", "").length();
-		    	JieG.setText("结果：(字符数统计："+inputlength+")");
+				inputlength = output.getText().replaceAll("\r|\n", "").length();
+		    	outpuL.setText("结果：(字符数统计："+inputlength+")");
 		    }
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				inputlength = ShuChu.getText().replaceAll("\r|\n", "").length();
-				JieG.setText("结果：(字符数统计："+inputlength+")");
+				inputlength = output.getText().replaceAll("\r|\n", "").length();
+				outpuL.setText("结果：(字符数统计："+inputlength+")");
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				inputlength = ShuChu.getText().replaceAll("\r|\n", "").length();
-				JieG.setText("结果：(字符数统计："+inputlength+")");
+				inputlength = output.getText().replaceAll("\r|\n", "").length();
+				outpuL.setText("结果：(字符数统计："+inputlength+")");
 			}
 		});
 		//监听按钮
 		caesar.addActionListener(new ActionListener() {//当按下凯撒密码
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Caesar(Shuru.getText()));
+		    	output.setText(func.Caesar(input.getText()));
 		    } } );
 		peig.addActionListener(new ActionListener() {//当按下培根密码
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Baconab(Shuru.getText()));
+		    	output.setText(func.Baconab(input.getText()));
 		    } } );
 		zj.addActionListener(new ActionListener() {//当按下猪圈密码
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.zjd(Shuru.getText()));
+		    	output.setText(func.zjd(input.getText()));
 		    } } );
 		rot13.addActionListener(new ActionListener() {//当按下rot13密码
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Rot13(Shuru.getText()));
+		    	output.setText(func.Rot13(input.getText()));
 		    } } );
 		fence.addActionListener(new ActionListener() {//当按下栅栏密码
 		    public void actionPerformed(ActionEvent evt) {
-		    ShuChu.setText(func.Fence(Shuru.getText()));
+		    output.setText(func.Fence(input.getText()));
 		    } } );
 		base64j.addActionListener(new ActionListener() {//当按下Base64加密时
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Base64j(Shuru.getText()));
+		    	output.setText(func.Base64j(input.getText()));
 		    } } );
 		base64jg.addActionListener(new ActionListener() {//当按下Base64解码时
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Base64jg(Shuru.getText()));
+		    	output.setText(func.Base64jg(input.getText()));
 		    } } );
 		base64cg.addActionListener(new ActionListener() {//当按下Base64解码时
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Base64cg(Shuru.getText()));
+		    	output.setText(func.Base64cg(input.getText()));
 		    } } );
 		base64c.addActionListener(new ActionListener() {//当按下Base64解码时
 		    public void actionPerformed(ActionEvent evt) {
-		    	ShuChu.setText(func.Base64c(Shuru.getText()));
+		    	output.setText(func.Base64c(input.getText()));
 		    } } );
 		morsee.addActionListener(new ActionListener() {//当按下摩斯加密时
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.MorseE(Shuru.getText()));
+				output.setText(func.MorseE(input.getText()));
 			}
 		});
 		morsed.addActionListener(new ActionListener() {//当按下摩斯解密时
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.MorseD(Shuru.getText()));
+				output.setText(func.MorseD(input.getText()));
 			}
 		});
 		reverse.addActionListener(new ActionListener() {//当按下摩斯解密时
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.reverse(Shuru.getText()));
+				output.setText(func.reverse(input.getText()));
 			}
 		});
 		UrlCodee.addActionListener(new ActionListener(){//当按下Url编码
 		public void actionPerformed(ActionEvent evt){
 			try {
-				ShuChu.setText(func.UrlEncoder(Shuru.getText()));
+				output.setText(func.UrlEncoder(input.getText()));
 			} catch (UnsupportedEncodingException e) {
-				// TODO 自动生成的 catch 块
+				// 
 					e.printStackTrace();
 				}
 			}
@@ -286,27 +382,27 @@ public class CTFcrack{
 		UrlCoded.addActionListener(new ActionListener(){//当按下Url编码解码
 		public void actionPerformed(ActionEvent evt){
 			try {
-				ShuChu.setText(func.UrlDecoder(Shuru.getText()));
+				output.setText(func.UrlDecoder(input.getText()));
 			} catch (UnsupportedEncodingException e) {
-				// TODO 自动生成的 catch 块
+				// 
 					e.printStackTrace();
 				}
 			}
 		});
 		UnicoderStre.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.UnicodeStre(Shuru.getText()));
+				output.setText(func.UnicodeStre(input.getText()));
 			}
 		});
 		UnicoderStrd.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.UnicodeStrd(Shuru.getText()));
+				output.setText(func.UnicodeStrd(input.getText()));
 			}
 		});    
 		j2z8.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),2).toString(8));
+					output.setText(new java.math.BigInteger(input.getText(),2).toString(8));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -315,7 +411,7 @@ public class CTFcrack{
 		j2z10.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),2).toString(10));
+					output.setText(new java.math.BigInteger(input.getText(),2).toString(10));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -324,7 +420,7 @@ public class CTFcrack{
 		j2z16.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),2).toString(16));
+					output.setText(new java.math.BigInteger(input.getText(),2).toString(16));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -333,7 +429,7 @@ public class CTFcrack{
 		j8z2.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),8).toString(2));
+					output.setText(new java.math.BigInteger(input.getText(),8).toString(2));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -342,7 +438,7 @@ public class CTFcrack{
 		j8z10.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),8).toString(10));;
+					output.setText(new java.math.BigInteger(input.getText(),8).toString(10));;
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -351,7 +447,7 @@ public class CTFcrack{
 		j8z16.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),8).toString(16));
+					output.setText(new java.math.BigInteger(input.getText(),8).toString(16));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -360,7 +456,7 @@ public class CTFcrack{
 		j10z2.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),10).toString(2));
+					output.setText(new java.math.BigInteger(input.getText(),10).toString(2));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -369,7 +465,7 @@ public class CTFcrack{
 		j10z8.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),10).toString(8));
+					output.setText(new java.math.BigInteger(input.getText(),10).toString(8));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -378,7 +474,7 @@ public class CTFcrack{
 		j10z16.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),10).toString(16));
+					output.setText(new java.math.BigInteger(input.getText(),10).toString(16));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -387,7 +483,7 @@ public class CTFcrack{
 		j16z2.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),16).toString(2));
+					output.setText(new java.math.BigInteger(input.getText(),16).toString(2));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -396,7 +492,7 @@ public class CTFcrack{
 		j16z8.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),16).toString(8));
+					output.setText(new java.math.BigInteger(input.getText(),16).toString(8));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -405,7 +501,7 @@ public class CTFcrack{
 		j16z10.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				try{
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),16).toString(10));
+					output.setText(new java.math.BigInteger(input.getText(),16).toString(10));
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -413,12 +509,12 @@ public class CTFcrack{
 		});
 		UnicodeZascii.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.UnicodeZascii(Shuru.getText()));
+				output.setText(func.UnicodeZascii(input.getText()));
 			}
 		});
 		asciiZUnicode.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.asciiZUnicode(Shuru.getText()));
+				output.setText(func.asciiZUnicode(input.getText()));
 			}
 		});
 		rsa.addActionListener(new ActionListener(){
@@ -433,27 +529,27 @@ public class CTFcrack{
 		});
 		b32e.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.Base32j(Shuru.getText()));
+				output.setText(func.Base32j(input.getText()));
 			}
 		});
 		b32d.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.Base32c(Shuru.getText()));
+				output.setText(func.Base32c(input.getText()));
 			}
 		});
 		b16e.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.Base16j(Shuru.getText()));
+				output.setText(func.Base16j(input.getText()));
 			}
 		});
 		b16d.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.Base16c(Shuru.getText()));
+				output.setText(func.Base16c(input.getText()));
 			}
 		});
 		peigd.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				ShuChu.setText(func.Bacon(Shuru.getText()));
+				output.setText(func.Bacon(input.getText()));
 			}
 		});
 		girlgifw.addActionListener(new ActionListener(){
@@ -670,62 +766,7 @@ public class CTFcrack{
     	});
     }
     private void imagewindow(){//破解图片窗口 未完成
-    	JFrame frame = new JFrame("Image Crack!");
-    	JButton crack = new JButton("Crack");
-    	JButton infile = new JButton("打开文件");
-    	JCheckBox iskey = new JCheckBox("是否有密文");
-    	JTextArea key = new JTextArea();
-    	JComboBox select = new JComboBox();
-    	JLabel filename = new JLabel("已选中文件名");
-    	JLabel filepath = new JLabel("文件路径");
-    	JLabel selectpydetail = new JLabel("插件详情");
-    	select.addItem("选择插件");
-    	filepath.setBounds(80, 40, 3000, 20);
-    	filename.setBounds(235, 20, 150, 20);
-    	infile.setBounds(80, 20, 150, 20);
-    	select.setBounds(80, 60, 150, 20);
-    	selectpydetail.setBounds(80,80,150,20);
-    	iskey.setBounds(80, 100, 150, 20);
-    	key.setBounds(80, 125, 150, 20);
-    	key.setEditable(false);
-    	crack.setBounds(80, 150, 150, 20);
-    	Container container = frame.getContentPane();
-    	container.add(filename);
-    	container.add(filepath);
-    	container.add(crack);
-    	container.add(select);
-    	container.add(key);
-    	container.add(iskey);
-    	container.add(selectpydetail);
-    	container.add(infile);
-    	container.setLayout(null);
-    	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	frame.setBounds(180,200,350,260);
-    	frame.setVisible(true); 
-    	String image[] = {"jpg","png","bmp","pdm"};
-    	String txt[] = {"txt"};
-    	FileNameExtensionFilter filter,filter2;
-    	JFileChooser openfile = new JFileChooser();
-    	openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    	filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image);
-    	openfile.setFileFilter(filter);
-    	filter2 = new FileNameExtensionFilter("文本(.txt)",txt);
-    	openfile.setFileFilter(filter2);
-    	infile.addActionListener(new ActionListener(){
-    		public void actionPerformed(ActionEvent e){
-    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
-    	        if (openframe == JFileChooser.APPROVE_OPTION){
-                File file = openfile.getSelectedFile();//得到选择的文件名
-                filepath.setText(file.toString());
-                filename.setText(openfile.getSelectedFile().getName());
-    	    }
-    		}
-    	});
-    	iskey.addActionListener(new ActionListener(){
-    		public void actionPerformed(ActionEvent e){
-    			key.setEditable(iskey.isSelected());
-    		}
-    	});
+    	
     }
     private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
