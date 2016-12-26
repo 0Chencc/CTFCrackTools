@@ -24,25 +24,31 @@ import javax.script.*;
 import org.python.core.PyFunction;  
 import org.python.core.PyInteger;  
 import org.python.core.PyObject;  
-import org.python.util.PythonInterpreter; 
+import org.python.util.PythonInterpreter;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
 import javax.imageio.*;
 public class CTFcrack{
-	private static String v1 = "v2.0 Beta";//版本号
+	private static String v1 = "v2.1 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
-	JTextArea Shuru = new JTextArea(15,50);
-	JTextArea ShuChu = new JTextArea();
+	public JTextArea input=new JTextArea();
+	public JTextArea output=new JTextArea();
     public void CryptoWindow(){//主窗口
 		//
+    	CTFcrack_json json = new CTFcrack_json();//自写json接口
+    	//
 		JFrame jFrame = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
-		jFrame.setDefaultCloseOperation(3);
-		jFrame.setSize(1000, 800);
-		jFrame.setVisible(true);
 		Container frameContainer= jFrame.getContentPane();
 		SpringLayout springLayout = new SpringLayout();
 		frameContainer.setLayout(springLayout);
 		//
 		JMenuBar mainMenuBar = new JMenuBar();
-		JMenu menu1=new JMenu("菜单");
 		JMenu Ascii = new JMenu(" 解码方式");
 		JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
 		JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
@@ -77,10 +83,8 @@ public class CTFcrack{
 		JMenuItem j16z2 = new JMenuItem(" 十六进制>>二进制");
 		JMenuItem j16z8 = new JMenuItem(" 十六进制>>八进制");
 		JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
-		JMenu pulg = new JMenu("其他功能");
-		JMenuItem unzip = new JMenuItem("压缩包");
-		JMenuItem imagewindow = new JMenuItem("图片解码");
-		JMenu Pulgin = new JMenu(" 插件");
+		JMenu Plugin = new JMenu(" 插件");
+		JMenuItem addplugin = new JMenuItem(" 添加插件");
 		JMenuItem rsa = new JMenuItem(" RSAtools");
 		JMenuItem rc4 = new JMenuItem(" RC4tools");
 		JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
@@ -89,8 +93,6 @@ public class CTFcrack{
 		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
 		JMenu girlgif = new JMenu(" 妹子");
 		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
-		JMenuItem menuItem1_1=new JMenuItem("菜单项");
-		menu1.add(menuItem1_1);
 		mainMenuBar.add(Ascii);
 		Ascii.add(caesar);
 		Ascii.add(rot13);
@@ -112,7 +114,7 @@ public class CTFcrack{
 		Ascii.add(asciiZUnicode);
 		Ascii.add(UnicodeZascii);
 		mainMenuBar.add(radixchange);
-		radixchange.add(radix);
+		//radixchange.add(radix);   //BUG功能....等有空修复
 		radixchange.add(j2z8);
 		radixchange.add(j2z10);
 		radixchange.add(j2z16);
@@ -125,20 +127,17 @@ public class CTFcrack{
 		radixchange.add(j16z2);
 		radixchange.add(j16z8);
 		radixchange.add(j16z10);
-		//buildPluginMenu(Pulgin);//传入要添加菜单的目录
-		mainMenuBar.add(Pulgin);
-		Pulgin.add(rsa);
-		Pulgin.add(rc4);
-		Pulgin.add(b32e);
-		Pulgin.add(b32d);
-		Pulgin.add(b16e);
-		Pulgin.add(b16d);
+		buildPluginMenu(Plugin);//传入要添加菜单的目录
+		mainMenuBar.add(Plugin);
+		Plugin.add(addplugin);
+		Plugin.add(rsa);
+		Plugin.add(rc4);
+		Plugin.add(b32e);
+		Plugin.add(b32d);
+		Plugin.add(b16e);
+		Plugin.add(b16d);
 		mainMenuBar.add(girlgif);
 		girlgif.add(girlgifw);
-		mainMenuBar.add(pulg);
-		pulg.add(unzip);
-		pulg.add(imagewindow);
-		mainMenuBar.add(menu1);
 		frameContainer.add(mainMenuBar);
 		springLayout.putConstraint(SpringLayout.NORTH, mainMenuBar, 0, SpringLayout.NORTH, frameContainer);
 		springLayout.putConstraint(SpringLayout.WEST, mainMenuBar, 0, SpringLayout.WEST, frameContainer);
@@ -153,7 +152,6 @@ public class CTFcrack{
 		JLabel inputL=new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
 		crypto_top.add(inputL);
 		springLayout.putConstraint(SpringLayout.NORTH, inputL, 0, SpringLayout.NORTH, crypto_top);
-		JTextArea input=new JTextArea();
 		JScrollPane inputP = new JScrollPane(input);
 		crypto_top.add(inputP);
 		springLayout.putConstraint(SpringLayout.NORTH, inputP, 25, SpringLayout.NORTH, crypto_top);
@@ -167,7 +165,6 @@ public class CTFcrack{
 		JLabel outpuL=new JLabel("结果：(字符数统计：0)");
 		crypto_bottom.add(outpuL);
 		springLayout.putConstraint(SpringLayout.NORTH, outpuL, 0, SpringLayout.NORTH, crypto_bottom);
-		JTextArea output=new JTextArea();
 		JScrollPane outputP = new JScrollPane(output);
 		crypto_bottom.add(outputP);
 		output.setText("作者注："
@@ -190,95 +187,228 @@ public class CTFcrack{
 		crypto.setBottomComponent(crypto_bottom);
 		mainTabbedPane.addTab("Crypto", crypto);	
 		//
-		JPanel image=new JPanel();
-    	JButton crack = new JButton("Crack");
-    	JButton infile = new JButton("打开文件");
-    	JCheckBox iskey = new JCheckBox("是否有密文");
-    	JTextArea key = new JTextArea();
-    	key.setText("输入密文，如果你有打钩的话");
-    	JComboBox select = new JComboBox();
-    	JLabel filename = new JLabel("已选中文件名");
-    	JLabel filepath = new JLabel("文件路径");
-    	JLabel selectpydetail = new JLabel("插件详情");
-    	select.addItem("选择插件");
-		image.setLayout(springLayout);
-		image.add(filename);
-    	springLayout.putConstraint(SpringLayout.NORTH, filename, 0, SpringLayout.NORTH, image);
-    	springLayout.putConstraint(SpringLayout.EAST, filename, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, filename, 0, SpringLayout.WEST, image);
-    	image.add(infile);
-    	springLayout.putConstraint(SpringLayout.NORTH, infile, 0, SpringLayout.SOUTH,filename);
-    	springLayout.putConstraint(SpringLayout.EAST, infile, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, infile, 0, SpringLayout.WEST, image);
-    	image.add(filepath);
-    	springLayout.putConstraint(SpringLayout.NORTH, filepath, 0, SpringLayout.SOUTH,infile);
-    	springLayout.putConstraint(SpringLayout.EAST, filepath, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, filepath, 0, SpringLayout.WEST, image);
-    	key.setEditable(false);
-    	image.add(crack);
-    	springLayout.putConstraint(SpringLayout.NORTH, crack, 0, SpringLayout.SOUTH,filepath);
-    	springLayout.putConstraint(SpringLayout.EAST, crack, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, crack, 0, SpringLayout.WEST, image);
-    	image.add(select);
-    	springLayout.putConstraint(SpringLayout.NORTH, select, 0, SpringLayout.SOUTH,crack);
-    	springLayout.putConstraint(SpringLayout.EAST, select, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, select, 0, SpringLayout.WEST, image);
-    	image.add(key);
-    	springLayout.putConstraint(SpringLayout.NORTH, key, 0, SpringLayout.SOUTH,select);
-    	springLayout.putConstraint(SpringLayout.EAST, key, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, key, 0, SpringLayout.WEST, image);
-    	image.add(iskey);
-    	springLayout.putConstraint(SpringLayout.NORTH, iskey, 0, SpringLayout.SOUTH,key);
-    	springLayout.putConstraint(SpringLayout.EAST, iskey, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, iskey, 0, SpringLayout.WEST, image);
-    	image.add(selectpydetail);
-    	springLayout.putConstraint(SpringLayout.NORTH, selectpydetail, 0, SpringLayout.SOUTH,iskey);
-    	springLayout.putConstraint(SpringLayout.EAST, selectpydetail, 0, SpringLayout.EAST, image);
-    	springLayout.putConstraint(SpringLayout.WEST, selectpydetail, 0, SpringLayout.WEST, image);
-		mainTabbedPane.addTab("Image",image);
-		springLayout.putConstraint(SpringLayout.NORTH, image, 0, SpringLayout.NORTH, mainTabbedPane);
-		springLayout.putConstraint(SpringLayout.SOUTH, image, 0, SpringLayout.SOUTH, mainTabbedPane);
-		springLayout.putConstraint(SpringLayout.WEST, image, 0, SpringLayout.WEST, mainTabbedPane);
-		springLayout.putConstraint(SpringLayout.EAST, image, 0, SpringLayout.EAST, mainTabbedPane);
-		mainTabbedPane.addTab("Image", image);
+		String image_suf[] = {"jpg","png","bmp","pdm"};
+    	String image_txt[] = {"txt"};
+    	FileNameExtensionFilter image_filter,image_filter2;
+    	JFileChooser image_openfile = new JFileChooser();
+    	image_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    	image_filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image_suf);
+    	image_openfile.setFileFilter(image_filter);
+    	image_filter2 = new FileNameExtensionFilter("文本(.txt)",image_txt);
+    	image_openfile.setFileFilter(image_filter2);
+		JPanel image_Panel=new JPanel();
+    	JButton image_crack = new JButton("Crack");
+    	JButton image_infile = new JButton("打开文件");
+    	JCheckBox image_iskey = new JCheckBox("是否有密文");
+    	JTextArea image_key = new JTextArea();
+    	image_key.setText("输入密文，如果你有打钩的话");
+    	JComboBox image_select = new JComboBox();
+    	JLabel image_filename = new JLabel("已选中文件名");
+    	JLabel image_filepath = new JLabel("文件路径");
+    	JLabel image_selectpydetail = new JLabel("插件详情");
+    	JLabel image_selectlabel = new JLabel("选择插件");
+    	JLabel image_iskeylabel = new JLabel("是否有密文，勾选");
+    	image_select.addItem("选择插件");
+    	buildImagePluginSelectItem(image_select);
+    	image_Panel.setLayout(springLayout);
+		image_Panel.add(image_filename);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_filename, 0, SpringLayout.NORTH, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_filename, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_filename, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_infile);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_infile, 0, SpringLayout.SOUTH,image_filename);
+    	springLayout.putConstraint(SpringLayout.EAST, image_infile, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_infile, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_filepath);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_filepath, 0, SpringLayout.SOUTH,image_infile);
+    	springLayout.putConstraint(SpringLayout.EAST, image_filepath, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_filepath, 0, SpringLayout.WEST, image_Panel);
+    	image_key.setEditable(false);
+    	image_Panel.add(image_selectlabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_selectlabel, 5, SpringLayout.SOUTH,image_filepath);
+    	springLayout.putConstraint(SpringLayout.EAST, image_selectlabel, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_selectlabel, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_select);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_select, 0, SpringLayout.SOUTH,image_selectlabel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_select, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_select, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_iskeylabel, 0, SpringLayout.SOUTH,image_select);
+    	springLayout.putConstraint(SpringLayout.EAST, image_iskeylabel, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_iskeylabel, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_iskey);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_iskey, 5, SpringLayout.SOUTH,image_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_iskey, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_iskey, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_key);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_key, 0, SpringLayout.SOUTH,image_iskey);
+    	springLayout.putConstraint(SpringLayout.EAST, image_key, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_key, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_crack);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_crack, 0, SpringLayout.SOUTH,image_key);
+    	springLayout.putConstraint(SpringLayout.EAST, image_crack, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_crack, 0, SpringLayout.WEST, image_Panel);
+    	image_Panel.add(image_selectpydetail);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_selectpydetail, 0, SpringLayout.SOUTH,image_crack);
+    	springLayout.putConstraint(SpringLayout.EAST, image_selectpydetail, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_selectpydetail, 0, SpringLayout.WEST, image_Panel);
+    	//
+		springLayout.putConstraint(SpringLayout.NORTH, image_Panel, 0, SpringLayout.NORTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.SOUTH, image_Panel, 0, SpringLayout.SOUTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.EAST, image_Panel, -300, SpringLayout.EAST, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.WEST, image_Panel, 0, SpringLayout.WEST, mainTabbedPane);
+		mainTabbedPane.addTab("Image", image_Panel);
+		//
+		String zip_suf[] = {"rar","zip"};
+    	FileNameExtensionFilter zip_filter;
+    	JFileChooser zip_openfile = new JFileChooser();
+    	zip_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    	zip_filter = new FileNameExtensionFilter("压缩包(.rar;.zip)",zip_suf);
+    	zip_openfile.setFileFilter(zip_filter);
+		JPanel zip_Panel=new JPanel();
+    	JButton zip_crack = new JButton("Crack");
+    	JButton zip_infile = new JButton("打开文件");
+    	JCheckBox zip_iskey = new JCheckBox("是否有密文");
+    	JTextArea zip_key = new JTextArea();
+    	zip_key.setText("输入密文，如果你有打钩的话");
+    	JComboBox zip_select = new JComboBox();
+    	JLabel zip_filename = new JLabel("已选中文件名");
+    	JLabel zip_filepath = new JLabel("文件路径");
+    	JLabel zip_selectpydetail = new JLabel("插件详情");
+    	JLabel zip_selectlabel = new JLabel("选择插件");
+    	JLabel zip_iskeylabel = new JLabel("是否有密文，勾选");
+    	zip_select.addItem("选择插件");
+    	buildZipPluginSelectItem(zip_select);
+    	zip_Panel.setLayout(springLayout);
+		zip_Panel.add(zip_filename);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_filename, 0, SpringLayout.NORTH, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_filename, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_filename, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_infile);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_infile, 0, SpringLayout.SOUTH,zip_filename);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_infile, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_infile, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_filepath);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_filepath, 0, SpringLayout.SOUTH,zip_infile);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_filepath, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_filepath, 0, SpringLayout.WEST, zip_Panel);
+    	zip_key.setEditable(false);
+    	zip_Panel.add(zip_selectlabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_selectlabel, 5, SpringLayout.SOUTH,zip_filepath);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_selectlabel, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_selectlabel, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_select);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_select, 0, SpringLayout.SOUTH,zip_selectlabel);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_select, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_select, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_iskeylabel, 0, SpringLayout.SOUTH,zip_select);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_iskeylabel, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_iskeylabel, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_iskey);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_iskey, 5, SpringLayout.SOUTH,zip_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_iskey, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_iskey, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_key);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_key, 0, SpringLayout.SOUTH,zip_iskey);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_key, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_key, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_crack);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_crack, 0, SpringLayout.SOUTH,zip_key);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_crack, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_crack, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_selectpydetail);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_selectpydetail, 0, SpringLayout.SOUTH,zip_crack);
+    	springLayout.putConstraint(SpringLayout.EAST, zip_selectpydetail, -300, SpringLayout.EAST, zip_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_selectpydetail, 0, SpringLayout.WEST, zip_Panel);
+    	//
+		springLayout.putConstraint(SpringLayout.NORTH, zip_Panel, 0, SpringLayout.NORTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.SOUTH, zip_Panel, 0, SpringLayout.SOUTH, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.EAST, zip_Panel, -300, SpringLayout.EAST, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.WEST, zip_Panel, 0, SpringLayout.WEST, mainTabbedPane);
+		mainTabbedPane.addTab("UnZip", zip_Panel);
 		//
 		frameContainer.add(mainTabbedPane);
 		springLayout.putConstraint(SpringLayout.NORTH, mainTabbedPane, 25, SpringLayout.NORTH, frameContainer);
 		springLayout.putConstraint(SpringLayout.SOUTH, mainTabbedPane, -30, SpringLayout.SOUTH, frameContainer);
+		springLayout.putConstraint(SpringLayout.EAST, mainTabbedPane, 0, SpringLayout.EAST, frameContainer);
 		springLayout.putConstraint(SpringLayout.WEST, mainTabbedPane, 0, SpringLayout.WEST, frameContainer);
-		springLayout.putConstraint(SpringLayout.EAST, mainTabbedPane, 0, SpringLayout.EAST, frameContainer);		
 		//
 		JPanel mainBottomBar =new JPanel();
 		JLabel ad=new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
 		mainBottomBar.add(ad);
 		frameContainer.add(mainBottomBar);
 		springLayout.putConstraint(SpringLayout.SOUTH, mainBottomBar, 0, SpringLayout.SOUTH, frameContainer);
-		//菜单栏点击事件
-		String image_suf[] = {"jpg","png","bmp","pdm"};
-    	String txt[] = {"txt"};
-    	FileNameExtensionFilter filter,filter2;
-    	JFileChooser openfile = new JFileChooser();
-    	openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    	filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image_suf);
-    	openfile.setFileFilter(filter);
-    	filter2 = new FileNameExtensionFilter("文本(.txt)",txt);
-    	openfile.setFileFilter(filter2);
-    	frameContainer.repaint();
-    	infile.addActionListener(new ActionListener(){
+		//
+		jFrame.setDefaultCloseOperation(3);
+		jFrame.setSize(1000, 800);
+		jFrame.setVisible(true);
+		//
+    	image_infile.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
-    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
-    	        if (openframe == JFileChooser.APPROVE_OPTION){
-                File file = openfile.getSelectedFile();//得到选择的文件名
-                filepath.setText(file.toString());
-                filename.setText(openfile.getSelectedFile().getName());
+    	        int image_openframe = image_openfile.showDialog(new JLabel(), "选择"); 
+    	        if (image_openframe == JFileChooser.APPROVE_OPTION){
+                File image_file = image_openfile.getSelectedFile();//得到选择的文件名
+                image_filepath.setText(image_file.toString());
+                image_filename.setText(image_openfile.getSelectedFile().getName());
     	    }
     		}
     	});
-    	iskey.addActionListener(new ActionListener(){
+    	image_iskey.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
-    			key.setEditable(iskey.isSelected());
+    			image_key.setEditable(image_iskey.isSelected());
+    			if(image_iskey.isSelected()){
+    				image_key.setText("");
+    			}else{
+    				image_key.setText("输入密文，如果你有打钩的话");
+    			}
     		}
     	});
+    	zip_infile.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    	        int zip_openframe = zip_openfile.showDialog(new JLabel(), "选择"); 
+    	        if (zip_openframe == JFileChooser.APPROVE_OPTION){
+                File zip_file = zip_openfile.getSelectedFile();//得到选择的文件名
+                zip_filepath.setText(zip_file.toString());
+                zip_filename.setText(zip_openfile.getSelectedFile().getName());
+    	    }
+    		}
+    	});
+    	zip_iskey.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+    			zip_key.setEditable(zip_iskey.isSelected());
+    			if(zip_iskey.isSelected()){
+    				zip_key.setText("");
+    			}else{
+    				zip_key.setText("输入密文，如果你有打钩的话");
+    			}
+    		}
+    	});
+    	zip_crack.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+		        PythonInterpreter interpreter = new PythonInterpreter();
+		        interpreter.execfile(json.getPath(zip_select.getSelectedItem().toString()));
+		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
+        		if(zip_iskey.isSelected()){
+        			PyObject res = func.__call__(new PyString(zip_key.getText()));
+        		}else{
+        			PyObject res = func.__call__();
+        		}
+    		}
+    	});
+    	image_crack.addActionListener(new ActionListener(){
+    		public void actionPerformed(ActionEvent e){
+		        PythonInterpreter interpreter = new PythonInterpreter();
+		        interpreter.execfile(json.getPath(image_select.getSelectedItem().toString()));
+		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
+        		if(image_iskey.isSelected()){
+        			PyObject res = func.__call__(new PyString(image_key.getText()));
+        		}else{
+        			PyObject res = func.__call__();
+        		}
+    		}
+    	});
+    	//
     	input.getDocument().addDocumentListener(new DocumentListener(){
 			int inputlength;
 			@Override public void changedUpdate(DocumentEvent evt) {
@@ -558,26 +688,63 @@ public class CTFcrack{
 				
 			}
 		});	
-		unzip.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e) {
-			new CTFcrack().unzipgui();
-			
-		}
-	});	
-		imagewindow.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e) {
-			new CTFcrack().imagewindow();
-			
-		}
-	});	
 		radix.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
-			new CTFcrack().radix();
-			
+			//debug
+			System.out.println(input.getText());
+			new CTFcrack().radix(input.getText());
 		}
 	});	
+		image_select.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int index = image_select.getSelectedIndex();
+				if(index != 0 ){
+					try {
+						image_selectpydetail.setText(json.getDetail(image_select.getSelectedItem().toString()));
+					} catch (Exception e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		zip_select.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int index = zip_select.getSelectedIndex();
+				if(index != 0 ){
+					try {
+						zip_selectpydetail.setText(json.getDetail(zip_select.getSelectedItem().toString()));
+					} catch (Exception e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		//
+		String py_suf[] = {"py"};
+    	FileNameExtensionFilter py_filter;
+    	JFileChooser py_openfile = new JFileChooser();
+    	py_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    	py_filter = new FileNameExtensionFilter("Python插件(.py)",py_suf);
+    	py_openfile.setFileFilter(py_filter);
+		addplugin.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+	        int py_openframe = py_openfile.showDialog(new JLabel(), "选择"); 
+	        if (py_openframe == JFileChooser.APPROVE_OPTION){
+            File py_file = py_openfile.getSelectedFile();//得到选择的文件名
+            try {
+				json.createJSON(py_file.toString());
+				buildPluginMenu(Plugin);//传入要添加菜单的目录
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+	       }
+		}
+	});	
+		//
     }
-    private void radix(){
+    public void radix(String input){
     	JFrame Radixgui = new JFrame("任意进制转换");
     	Radixgui.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     	Radixgui.setLayout(null);
@@ -604,10 +771,12 @@ public class CTFcrack{
 				try{
 		   			//int waitradixint = Integer.parseInt(waitradix.getText());
 					//int resradixint = Integer.parseInt(waitradix.getText());
-					ShuChu.setText(new java.math.BigInteger(Shuru.getText(),2).toString(10));
+					//output.setText(new java.math.BigInteger(input,2).toString(10)); //debug
 				}catch(Exception e){
+					//debug
 					e.printStackTrace();
 				}
+				System.out.println(output.getText());
     		}
     	});
     }
@@ -710,64 +879,6 @@ public class CTFcrack{
         frame.pack(); 
         frame.setVisible(true); 
     }
-    private void unzipgui(){//破解压缩包窗口 未完成
-    	JFrame frame = new JFrame("Zip Crack!");
-    	JButton crack = new JButton("Crack");
-    	JButton infile = new JButton("打开文件");
-    	JCheckBox iskey = new JCheckBox("是否有密文");
-    	JTextArea key = new JTextArea();
-    	JComboBox select = new JComboBox();
-    	JLabel filename = new JLabel("已选中文件名");
-    	JLabel filepath = new JLabel("文件路径");
-    	JLabel selectpydetail = new JLabel("插件详情");
-    	select.addItem("选择插件");
-    	filepath.setBounds(80, 40, 3000, 20);
-    	filename.setBounds(235, 20, 150, 20);
-    	infile.setBounds(80, 20, 150, 20);
-    	select.setBounds(80, 60, 150, 20);
-    	selectpydetail.setBounds(80,80,150,20);
-    	iskey.setBounds(80, 100, 150, 20);
-    	key.setBounds(80, 125, 150, 20);
-    	key.setEditable(false);
-    	crack.setBounds(80, 150, 150, 20);
-    	Container container = frame.getContentPane();
-    	container.add(filename);
-    	container.add(filepath);
-    	container.add(crack);
-    	container.add(select);
-    	container.add(key);
-    	container.add(iskey);
-    	container.add(selectpydetail);
-    	container.add(infile);
-    	container.setLayout(null);
-    	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    	frame.setBounds(180,200,350,260);
-    	frame.setVisible(true); 
-    	String zip[] = {"zip","rar"};
-    	FileNameExtensionFilter filter;
-    	filter = new FileNameExtensionFilter("压缩包(.zip;.rar)",zip);
-    	infile.addActionListener(new ActionListener(){
-    		public void actionPerformed(ActionEvent e){
-    	    	JFileChooser openfile = new JFileChooser();
-    	    	openfile.setFileFilter(filter);
-    	    	openfile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-    	        int openframe = openfile.showDialog(new JLabel(), "选择"); 
-    	        if (openframe == JFileChooser.APPROVE_OPTION){
-                File file = openfile.getSelectedFile();//得到选择的文件名
-                filepath.setText(file.toString());
-                filename.setText(openfile.getSelectedFile().getName());
-    	    }
-    		}
-    	});
-    	iskey.addActionListener(new ActionListener(){
-    		public void actionPerformed(ActionEvent e){
-    			key.setEditable(iskey.isSelected());
-    		}
-    	});
-    }
-    private void imagewindow(){//破解图片窗口 未完成
-    	
-    }
     private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
 		  for (Enumeration<Object> keys = UIManager.getDefaults().keys();  
@@ -839,32 +950,124 @@ public class CTFcrack{
 	 }
 	 new CTFcrack().CryptoWindow();//创建主窗口CryptoWindow
 	}
-	// ********由团队核心 z13表哥编写的自动遍历python插件********
-	  private void buildPluginMenu(JMenu menu) {
-		    File[] dir = new File(System.getProperty("user.dir") + "\\Plugin").listFiles();
-		    for (File file : dir) {
-		      String fileName = file.getName();
-		      if (fileName.endsWith(".py"))
-		        menu.add(buildPluginMenuItem(" " + fileName));
+	//菜单
+	private void buildPluginMenu(JMenu menu) {
+		    //
+		    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+		    if(jsonfile.isFile()&&jsonfile.exists()){
+		    	JsonParser parser = new JsonParser(); 
+		    	JsonObject object = null;
+		    	try {
+		    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+		    	} catch (JsonIOException e) {
+		    		// TODO 自动生成的 catch 块
+		    		e.printStackTrace();
+		    	} catch (JsonSyntaxException e) {
+		    		// TODO 自动生成的 catch 块
+		    		e.printStackTrace();
+		    	} catch (FileNotFoundException e) {
+		    		// TODO 自动生成的 catch 块
+		    		e.printStackTrace();
+		    	}
+		    	JsonArray Plugins = object.getAsJsonArray("Plugins");
+		    	for (JsonElement jsonElement : Plugins) {
+		    		JsonObject Plugin = jsonElement.getAsJsonObject();
+		    		String a=null;
+		    		if(Plugin.get("type").getAsString().equalsIgnoreCase("crypto")){
+		    			menu.add(buildPluginMenuItem(" " + Plugin.get("title").getAsString()));
+		    		}
+		    	}
 		    }
 		  }
+	private void buildZipPluginSelectItem(JComboBox Item) {
+	    //
+	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    if(jsonfile.isFile()&&jsonfile.exists()){
+	    	JsonParser parser = new JsonParser(); 
+	    	JsonObject object = null;
+	    	try {
+	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    	} catch (JsonIOException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (JsonSyntaxException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (FileNotFoundException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	}
+	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
+		    	for (JsonElement jsonElement : Plugins) {
+		    		JsonObject Plugin = jsonElement.getAsJsonObject();
+		    		if(Plugin.get("type").getAsString().equalsIgnoreCase("zip")){
+		    			Item.addItem(Plugin.get("title").getAsString());
+		    	}
+		    }
+	    }
+	  }
+	private void buildImagePluginSelectItem(JComboBox Item) {
+	    //
+	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    if(jsonfile.isFile()&&jsonfile.exists()){
+	    	JsonParser parser = new JsonParser(); 
+	    	JsonObject object = null;
+	    	try {
+	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    	} catch (JsonIOException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (JsonSyntaxException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (FileNotFoundException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	}
+	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
+		    	for (JsonElement jsonElement : Plugins) {
+		    		JsonObject Plugin = jsonElement.getAsJsonObject();
+		    		if(Plugin.get("type").getAsString().equalsIgnoreCase("image")){
+		    			Item.addItem(Plugin.get("title").getAsString());
+		    		}
+	    	}
+	    }
+	  }
 	public JMenuItem buildPluginMenuItem(String filename) {
+		JsonParser parser = new JsonParser(); 
+	    JsonObject object = null;
+		try {
+			object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+		} catch (JsonIOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+	    JsonArray Plugins = object.getAsJsonArray("Plugins");
+	    //
 	    JMenuItem item = new JMenuItem(filename);
 	    item.setActionCommand(filename);
-	    item.addActionListener(new ActionListener()
-	    {
+	    item.addActionListener(new ActionListener(){
 	      public void actionPerformed(ActionEvent arg0) {
-	        String input = CTFcrack.this.Shuru.getText();
+	        String input = CTFcrack.this.input.getText();
 	        PythonInterpreter interpreter = new PythonInterpreter();
-	        interpreter.execfile(System.getProperty("user.dir") + 
-	          "\\Plugin\\" + arg0.getActionCommand().subSequence(1, arg0.getActionCommand().length()));
-	        PyFunction func = (PyFunction)interpreter.get("run", 
-	          PyFunction.class);
-	        PyObject jg = func.__call__(new PyString(input));
-	        CTFcrack.this.ShuChu.setText(jg.toString());
+	        for (JsonElement jsonElement : Plugins) {
+		        JsonObject Plugin = jsonElement.getAsJsonObject();
+		        if(Plugin.get("title").getAsString().equalsIgnoreCase(arg0.getActionCommand().substring(1, arg0.getActionCommand().length()))){
+		        	interpreter.execfile(Plugin.get("path").getAsString());
+		        }
+		    }
+	        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
+	        PyObject res = func.__call__(new PyString(input));
+	        CTFcrack.this.output.setText(res.toString());
 	      }
 	    });
 	    return item;
 	  }
-	//**********************************************************
+		//
 }
