@@ -952,37 +952,39 @@ public class CTFcrack{
 	}
 	//菜单
 	private void buildPluginMenu(JMenu menu) {
-		    //
-		    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
-		    if(jsonfile.isFile()&&jsonfile.exists()){
-		    	JsonParser parser = new JsonParser(); 
-		    	JsonObject object = null;
-		    	try {
-		    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
-		    	} catch (JsonIOException e) {
-		    		// TODO 自动生成的 catch 块
-		    		e.printStackTrace();
-		    	} catch (JsonSyntaxException e) {
-		    		// TODO 自动生成的 catch 块
-		    		e.printStackTrace();
-		    	} catch (FileNotFoundException e) {
-		    		// TODO 自动生成的 catch 块
-		    		e.printStackTrace();
-		    	}
-		    	JsonArray Plugins = object.getAsJsonArray("Plugins");
-		    	for (JsonElement jsonElement : Plugins) {
-		    		JsonObject Plugin = jsonElement.getAsJsonObject();
-		    		String a=null;
-		    		if(Plugin.get("type").getAsString().equalsIgnoreCase("crypto")){
-		    			menu.add(buildPluginMenuItem(" " + Plugin.get("title").getAsString()));
-		    		}
-		    	}
-		    }
-		  }
+		//
+		CTFcrack_json json = new CTFcrack_json();
+	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
+	    	JsonParser parser = new JsonParser(); 
+	    	JsonObject object = null;
+	    	try {
+	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    	} catch (JsonIOException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (JsonSyntaxException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	} catch (FileNotFoundException e) {
+	    		// TODO 自动生成的 catch 块
+	    		e.printStackTrace();
+	    	}
+	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
+	    	for (JsonElement jsonElement : Plugins) {
+	    		JsonObject Plugin = jsonElement.getAsJsonObject();
+	    		String a=null;
+	    		if(Plugin.get("type").getAsString().equalsIgnoreCase("crypto")){
+	    			menu.add(buildPluginMenuItem(" " + Plugin.get("title").getAsString()));
+	    		}
+	    	}
+	    }
+	}
 	private void buildZipPluginSelectItem(JComboBox Item) {
 	    //
+		CTFcrack_json json = new CTFcrack_json();
 	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
-	    if(jsonfile.isFile()&&jsonfile.exists()){
+	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
 	    	JsonParser parser = new JsonParser(); 
 	    	JsonObject object = null;
 	    	try {
@@ -1008,8 +1010,9 @@ public class CTFcrack{
 	  }
 	private void buildImagePluginSelectItem(JComboBox Item) {
 	    //
+		CTFcrack_json json = new CTFcrack_json();
 	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
-	    if(jsonfile.isFile()&&jsonfile.exists()){
+	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
 	    	JsonParser parser = new JsonParser(); 
 	    	JsonObject object = null;
 	    	try {

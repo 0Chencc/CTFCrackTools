@@ -126,4 +126,24 @@ public class CTFcrack_json{
 	    }
 		return path;
 	}
+	public boolean isJSON(){
+		File jsonfile = new File(System.getProperty("user.dir")+"\\test2.json");
+		InputStreamReader readjson = null;
+		try {
+			readjson = new InputStreamReader(new FileInputStream(jsonfile));
+		} catch (FileNotFoundException e1) {
+			// TODO 自动生成的 catch 块
+			e1.printStackTrace();
+		}
+    	BufferedReader jsonread = new BufferedReader(readjson);
+    	String jsonText=null;
+    	boolean isjson=true;
+    	try {
+    		isjson = (jsonread.readLine()==null);
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+    	return isjson;
+	}
 }
