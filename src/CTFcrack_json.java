@@ -62,7 +62,7 @@ public class CTFcrack_json{
 	    }catch(Exception e1){
 	    	e1.printStackTrace();
 	    }
-	    File jsonfile = new File(System.getProperty("user.dir")+"\\test2.json");
+	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
     	JsonObject object = null;
     	JsonArray Plugins = null;
     	if(jsonfile.isFile()&&jsonfile.exists()){
@@ -72,7 +72,7 @@ public class CTFcrack_json{
     		if ((jsonText = jsonread.readLine())!=null){
     			//爬一下原有的json数据 以免被重写
     			JsonParser parser = new JsonParser(); 
-    			object =  (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\test2.json"));
+    			object =  (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
     			Plugins = object.getAsJsonArray("Plugins");
     			for (JsonElement jsonElement : Plugins) {
     				JsonObject Plugin = jsonElement.getAsJsonObject();
@@ -127,7 +127,7 @@ public class CTFcrack_json{
 		return path;
 	}
 	public boolean isJSON(){
-		File jsonfile = new File(System.getProperty("user.dir")+"\\test2.json");
+		File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
 		InputStreamReader readjson = null;
 		try {
 			readjson = new InputStreamReader(new FileInputStream(jsonfile));
