@@ -188,14 +188,11 @@ public class CTFcrack{
 		mainTabbedPane.addTab("Crypto", crypto);	
 		//
 		String image_suf[] = {"jpg","png","bmp","pdm"};
-    	String image_txt[] = {"txt"};
-    	FileNameExtensionFilter image_filter,image_filter2;
+    	FileNameExtensionFilter image_filter;
     	JFileChooser image_openfile = new JFileChooser();
     	image_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
     	image_filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image_suf);
     	image_openfile.setFileFilter(image_filter);
-    	image_filter2 = new FileNameExtensionFilter("文本(.txt)",image_txt);
-    	image_openfile.setFileFilter(image_filter2);
 		JPanel image_Panel=new JPanel();
     	JButton image_crack = new JButton("Crack");
     	JButton image_infile = new JButton("打开文件");
@@ -208,54 +205,61 @@ public class CTFcrack{
     	JLabel image_selectpydetail = new JLabel("插件详情");
     	JLabel image_selectlabel = new JLabel("选择插件");
     	JLabel image_iskeylabel = new JLabel("是否有密文，勾选");
+    	JLabel image_setimage=new JLabel("<html>打开的图片以及破解完毕的图片会在这里显示<br/>菜鸡不会写自适应，自行调节窗口大小再打开图片</html>");
     	image_select.addItem("选择插件");
     	buildImagePluginSelectItem(image_select);
     	image_Panel.setLayout(springLayout);
 		image_Panel.add(image_filename);
     	springLayout.putConstraint(SpringLayout.NORTH, image_filename, 0, SpringLayout.NORTH, image_Panel);
-    	springLayout.putConstraint(SpringLayout.EAST, image_filename, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_filename, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_filename, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_infile);
     	springLayout.putConstraint(SpringLayout.NORTH, image_infile, 0, SpringLayout.SOUTH,image_filename);
-    	springLayout.putConstraint(SpringLayout.EAST, image_infile, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_infile, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_infile, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_filepath);
     	springLayout.putConstraint(SpringLayout.NORTH, image_filepath, 0, SpringLayout.SOUTH,image_infile);
-    	springLayout.putConstraint(SpringLayout.EAST, image_filepath, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_filepath, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_filepath, 0, SpringLayout.WEST, image_Panel);
     	image_key.setEditable(false);
     	image_Panel.add(image_selectlabel);
     	springLayout.putConstraint(SpringLayout.NORTH, image_selectlabel, 5, SpringLayout.SOUTH,image_filepath);
-    	springLayout.putConstraint(SpringLayout.EAST, image_selectlabel, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_selectlabel, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_selectlabel, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_select);
     	springLayout.putConstraint(SpringLayout.NORTH, image_select, 0, SpringLayout.SOUTH,image_selectlabel);
-    	springLayout.putConstraint(SpringLayout.EAST, image_select, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_select, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_select, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_iskeylabel);
     	springLayout.putConstraint(SpringLayout.NORTH, image_iskeylabel, 0, SpringLayout.SOUTH,image_select);
-    	springLayout.putConstraint(SpringLayout.EAST, image_iskeylabel, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_iskeylabel, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_iskeylabel, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_iskey);
     	springLayout.putConstraint(SpringLayout.NORTH, image_iskey, 5, SpringLayout.SOUTH,image_iskeylabel);
-    	springLayout.putConstraint(SpringLayout.EAST, image_iskey, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_iskey, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_iskey, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_key);
     	springLayout.putConstraint(SpringLayout.NORTH, image_key, 0, SpringLayout.SOUTH,image_iskey);
-    	springLayout.putConstraint(SpringLayout.EAST, image_key, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_key, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_key, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_crack);
     	springLayout.putConstraint(SpringLayout.NORTH, image_crack, 0, SpringLayout.SOUTH,image_key);
-    	springLayout.putConstraint(SpringLayout.EAST, image_crack, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_crack, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_crack, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_selectpydetail);
     	springLayout.putConstraint(SpringLayout.NORTH, image_selectpydetail, 0, SpringLayout.SOUTH,image_crack);
-    	springLayout.putConstraint(SpringLayout.EAST, image_selectpydetail, -300, SpringLayout.EAST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_selectpydetail, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_selectpydetail, 0, SpringLayout.WEST, image_Panel);
+    	//
+    	image_Panel.add(image_setimage);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_setimage, 0, SpringLayout.NORTH, image_Panel);
+    	springLayout.putConstraint(SpringLayout.SOUTH, image_setimage, 0, SpringLayout.SOUTH, image_Panel);
+    	springLayout.putConstraint(SpringLayout.WEST, image_setimage, 420, SpringLayout.WEST, image_Panel);
+    	springLayout.putConstraint(SpringLayout.EAST, image_setimage,-5, SpringLayout.EAST, image_Panel);
     	//
 		springLayout.putConstraint(SpringLayout.NORTH, image_Panel, 0, SpringLayout.NORTH, mainTabbedPane);
 		springLayout.putConstraint(SpringLayout.SOUTH, image_Panel, 0, SpringLayout.SOUTH, mainTabbedPane);
-		springLayout.putConstraint(SpringLayout.EAST, image_Panel, -300, SpringLayout.EAST, mainTabbedPane);
+		springLayout.putConstraint(SpringLayout.EAST, image_Panel, 0, SpringLayout.EAST, mainTabbedPane);
 		springLayout.putConstraint(SpringLayout.WEST, image_Panel, 0, SpringLayout.WEST, mainTabbedPane);
 		mainTabbedPane.addTab("Image", image_Panel);
 		//
@@ -351,6 +355,10 @@ public class CTFcrack{
                 File image_file = image_openfile.getSelectedFile();//得到选择的文件名
                 image_filepath.setText(image_file.toString());
                 image_filename.setText(image_openfile.getSelectedFile().getName());
+                ImageIcon newimage = new ImageIcon(image_file.toString());
+                newimage.setImage(newimage.getImage().getScaledInstance(image_setimage.getWidth(),image_setimage.getHeight(), Image.SCALE_DEFAULT));
+                image_setimage.setText("");
+                image_setimage.setIcon(newimage);
     	    }
     		}
     	});
@@ -403,8 +411,10 @@ public class CTFcrack{
 		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
         		if(image_iskey.isSelected()){
         			PyObject res = func.__call__(new PyString(image_key.getText()));
+        			image_setimage.setIcon(new ImageIcon(res.toString()));
         		}else{
         			PyObject res = func.__call__();
+        			image_setimage.setIcon(new ImageIcon(res.toString()));
         		}
     		}
     	});
