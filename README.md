@@ -1,5 +1,7 @@
 # 中国国内首个CTFcrack框架
-不出意外，应该是国内首个CTFcrack框架。希望有朋友共同维护
+不出意外，应该是国内首个CTFcrack框架。希望有朋友共同维护<br/>
+已经编译完成的包：[点击此处即可下载](https://github.com/0Linchen/CTFCrackTools/raw/master/CTFtools.zip)<br/>
+[直接跳到开发文档](#python插件开发文档)<br/>
 # CTFCrack工具说明
 本工具由米斯特安全团队开发<br/>
 集成摩斯电码，凯撒密码，栅栏密码，Rot13密码以及各种编码互换等CTF中常见密码加解<br/>
