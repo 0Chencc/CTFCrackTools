@@ -139,7 +139,7 @@ public class CTFcrack_json{
     	String jsonText=null;
     	boolean isjson=true;
     	try {
-    		isjson = (jsonread.readLine()==null);
+    		isjson = (jsonread.readLine()!=null);
 		} catch (IOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();

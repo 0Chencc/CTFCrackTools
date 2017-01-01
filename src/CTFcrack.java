@@ -281,6 +281,7 @@ public class CTFcrack{
     	JLabel zip_selectpydetail = new JLabel("插件详情");
     	JLabel zip_selectlabel = new JLabel("选择插件");
     	JLabel zip_iskeylabel = new JLabel("是否有密文，勾选");
+    	JLabel zip_return = new JLabel("Crack后的压缩包地址");
     	zip_select.addItem("选择插件");
     	buildZipPluginSelectItem(zip_select);
     	zip_Panel.setLayout(springLayout);
@@ -321,6 +322,9 @@ public class CTFcrack{
     	springLayout.putConstraint(SpringLayout.NORTH, zip_crack, 0, SpringLayout.SOUTH,zip_key);
     	springLayout.putConstraint(SpringLayout.EAST, zip_crack, 400, SpringLayout.WEST, zip_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, zip_crack, 0, SpringLayout.WEST, zip_Panel);
+    	zip_Panel.add(zip_return);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_return, 0, SpringLayout.SOUTH,zip_key);
+    	springLayout.putConstraint(SpringLayout.WEST, zip_return, 5, SpringLayout.EAST, zip_crack);
     	zip_Panel.add(zip_selectpydetail);
     	springLayout.putConstraint(SpringLayout.NORTH, zip_selectpydetail, 0, SpringLayout.SOUTH,zip_crack);
     	springLayout.putConstraint(SpringLayout.EAST, zip_selectpydetail, 400, SpringLayout.WEST, zip_Panel);
@@ -398,8 +402,10 @@ public class CTFcrack{
 		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
         		if(zip_iskey.isSelected()){
         			PyObject res = func.__call__(new PyString(zip_key.getText()));
+        			zip_return.setText(res.toString());
         		}else{
         			PyObject res = func.__call__();
+        			zip_return.setText(res.toString());
         		}
     		}
     	});
@@ -410,10 +416,15 @@ public class CTFcrack{
 		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
         		if(image_iskey.isSelected()){
         			PyObject res = func.__call__(new PyString(image_key.getText()));
-        			image_setimage.setIcon(new ImageIcon(res.toString()));
+                    ImageIcon newimage = new ImageIcon(res.toString());
+                    newimage.setImage(newimage.getImage().getScaledInstance(image_setimage.getWidth(),image_setimage.getHeight(), Image.SCALE_DEFAULT));
+                    image_setimage.setIcon(newimage);
+        			
         		}else{
         			PyObject res = func.__call__();
-        			image_setimage.setIcon(new ImageIcon(res.toString()));
+                    ImageIcon newimage = new ImageIcon(res.toString());
+                    newimage.setImage(newimage.getImage().getScaledInstance(image_setimage.getWidth(),image_setimage.getHeight(), Image.SCALE_DEFAULT));
+                    image_setimage.setIcon(newimage);
         		}
     		}
     	});
