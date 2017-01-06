@@ -15,6 +15,19 @@ import com.google.gson.reflect.TypeToken;
 public class CTFcrack_json{
 	String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");
 	//Json解析
+	public String getType(String title) throws Exception{
+	    JsonParser parser = new JsonParser(); 
+	    JsonObject object =  (JsonObject) parser.parse(new FileReader(JsonPath));
+	    String type=null;
+	    JsonArray Plugins = object.getAsJsonArray("Plugins");
+	    for (JsonElement jsonElement : Plugins) {
+	        JsonObject Plugin = jsonElement.getAsJsonObject();
+	        if(Plugin.get("title").getAsString().equalsIgnoreCase(title)){
+	        	type =  Plugin.get("type").getAsString();
+	        }
+	    }
+		return type;
+	}
 	public String getDetail(String title) throws Exception{
 	    // 创建json解析器
 	    JsonParser parser = new JsonParser(); 
@@ -29,7 +42,7 @@ public class CTFcrack_json{
 	        if(Plugin.get("title").getAsString().equalsIgnoreCase(title)){
 	        	detailStr = "<html>"
 	        				+ "插件名："+Plugin.get("title").getAsString()+"<br/>"
-	        				+"作者："+Plugin.get("autor").getAsString()+"<br/>"
+	        				+"作者："+Plugin.get("author").getAsString()+"<br/>"
 	        				+"插件详情："+Plugin.get("detail").getAsString()+"<br/>"
 	        				+"插件地址："+Plugin.get("path").getAsString()
 	        				+ "</html>";
@@ -37,10 +50,10 @@ public class CTFcrack_json{
 	    }
 	    return detailStr;
 	}
-	//Json写入
-	public void createJSON(String path) throws IOException{
+	//对添加的插件进行解析，然后添加至菜单栏。并调用写入配置方法
+	public String createJSON(String path) throws IOException{
 		File file = new File(path);
-		String title=null,type=null,autor=null,detail=null;
+		String title=null,type=null,author=null,detail=null;
 	    try{
 	    	InputStreamReader readpy = new InputStreamReader(new FileInputStream(file));
 	    	BufferedReader pyPluginread = new BufferedReader(readpy);
@@ -51,8 +64,8 @@ public class CTFcrack_json{
 	    			title = lineText.substring(lineText.indexOf("title:")+6, lineText.length());
 	    		}else if(lineText.contains("type:")){
 	    			type = lineText.substring(lineText.indexOf("type:")+5, lineText.length());
-	    		}else if(lineText.contains("autor:")){
-	    			autor = lineText.substring(lineText.indexOf("autor:")+6, lineText.length());
+	    		}else if(lineText.contains("author:")){
+	    			author = lineText.substring(lineText.indexOf("author:")+6, lineText.length());
 	    		}else if(lineText.contains("detail:")){
 	    			detail = lineText.substring(lineText.indexOf("detail:")+7, lineText.length());
 	    		}else if(lineText.contains("}")){
@@ -91,12 +104,17 @@ public class CTFcrack_json{
 		JsonObject Plugin = new JsonObject();
 	    Plugin.addProperty("title", title);
 	    Plugin.addProperty("type", type);
-	    Plugin.addProperty("autor", autor);
+	    Plugin.addProperty("author", author);
 	    Plugin.addProperty("detail", detail);
 	    Plugin.addProperty("path", path);
 	    Plugins.add(Plugin);               // 将json对象添加到数组  
 	    object.add("Plugins", Plugins);   // 将数组添加到json对象
 	    String jsonStr = object.toString();   // 将json对象转化成json字符串
+	    inputJson(jsonStr);
+	    return title;
+	}
+	//将配置写入
+	public void	inputJson(String jsonStr) throws IOException{
 	    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(JsonPath)));
 	    pw.print(jsonStr);
 	    pw.flush();

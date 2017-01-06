@@ -37,11 +37,11 @@ import javax.imageio.*;
 public class CTFcrack{
 	private static String v1 = "v2.1 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
+	private static String Jsonpath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
+	CTFcrack_json json = new CTFcrack_json();
 	public JTextArea input=new JTextArea();
 	public JTextArea output=new JTextArea();
     public void CryptoWindow(){//主窗口
-		//
-    	CTFcrack_json json = new CTFcrack_json();//自写json接口
     	//
 		JFrame jFrame = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
 		Container frameContainer= jFrame.getContentPane();
@@ -755,9 +755,23 @@ public class CTFcrack{
 	        if (py_openframe == JFileChooser.APPROVE_OPTION){
             File py_file = py_openfile.getSelectedFile();//得到选择的文件名
             try {
-				json.createJSON(py_file.toString());
-				buildPluginMenu(Plugin);//传入要添加菜单的目录
+				String title = json.createJSON(py_file.toString());
+				switch (json.getType(title)){
+				case "crypto":
+					Plugin.add(buildPluginMenuItem(" " + title));
+					break;
+				case "zip":
+					zip_select.addItem(title);
+					break;
+				case "image":
+					image_select.addItem(title);
+					break;
+				}
+				buildPluginMenu(Plugin);
 			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (Exception e1) {
+				// TODO 自动生成的 catch 块
 				e1.printStackTrace();
 			}
 	       }
@@ -913,7 +927,6 @@ public class CTFcrack{
 	}  
 	public static void main(String[] args){//主方法 
 	 InitGlobalFont(Zt);//赋值字体
-	 
 	 String help = (  "*****************************************************"
 			    +   "\n*                                                   *"
 			    +   "\n*                                                   *"
@@ -971,16 +984,16 @@ public class CTFcrack{
 	 }
 	 new CTFcrack().CryptoWindow();//创建主窗口CryptoWindow
 	}
+
 	//菜单
 	private void buildPluginMenu(JMenu menu) {
 		//
-		CTFcrack_json json = new CTFcrack_json();
-	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    File jsonfile = new File(Jsonpath);
 	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
 	    	JsonParser parser = new JsonParser(); 
 	    	JsonObject object = null;
 	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
 	    	} catch (JsonIOException e) {
 	    		// TODO 自动生成的 catch 块
 	    		e.printStackTrace();
@@ -994,7 +1007,6 @@ public class CTFcrack{
 	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    	for (JsonElement jsonElement : Plugins) {
 	    		JsonObject Plugin = jsonElement.getAsJsonObject();
-	    		String a=null;
 	    		if(Plugin.get("type").getAsString().equalsIgnoreCase("crypto")){
 	    			menu.add(buildPluginMenuItem(" " + Plugin.get("title").getAsString()));
 	    		}
@@ -1003,13 +1015,12 @@ public class CTFcrack{
 	}
 	private void buildZipPluginSelectItem(JComboBox Item) {
 	    //
-		CTFcrack_json json = new CTFcrack_json();
-	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    File jsonfile = new File(Jsonpath);
 	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
 	    	JsonParser parser = new JsonParser(); 
 	    	JsonObject object = null;
 	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
 	    	} catch (JsonIOException e) {
 	    		// TODO 自动生成的 catch 块
 	    		e.printStackTrace();
@@ -1029,15 +1040,14 @@ public class CTFcrack{
 		    }
 	    }
 	  }
-	private void buildImagePluginSelectItem(JComboBox Item) {
+	public void buildImagePluginSelectItem(JComboBox Item) {
 	    //
-		CTFcrack_json json = new CTFcrack_json();
-	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    File jsonfile = new File(Jsonpath);
 	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
 	    	JsonParser parser = new JsonParser(); 
 	    	JsonObject object = null;
 	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
 	    	} catch (JsonIOException e) {
 	    		// TODO 自动生成的 catch 块
 	    		e.printStackTrace();
@@ -1057,11 +1067,12 @@ public class CTFcrack{
 	    	}
 	    }
 	  }
+	
 	public JMenuItem buildPluginMenuItem(String filename) {
 		JsonParser parser = new JsonParser(); 
 	    JsonObject object = null;
 		try {
-			object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+			object = (JsonObject) parser.parse(new FileReader(Jsonpath));
 		} catch (JsonIOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
