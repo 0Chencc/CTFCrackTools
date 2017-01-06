@@ -110,9 +110,9 @@ public interface func {
 	          }
 	          else
 	          {
-	            int tmp66_64 = j;
-	            char[] tmp66_63 = ca; 
-	            tmp66_63[tmp66_64] = ((char)(tmp66_63[tmp66_64] + '\001'));
+	            int tmp_1 = j;
+	            char[] tmp_2 = ca; 
+	            tmp_2[tmp_1] = ((char)(tmp_2[tmp_1] + '\001'));
 	          }
 	        } else if (isLowercase(ca[j])){
 	          if (ca[j] == 'z') {
@@ -120,9 +120,9 @@ public interface func {
 	          }
 	          else
 	          {
-	            int tmp106_104 = j;
-	            char[] tmp106_103 = ca; 
-	            tmp106_103[tmp106_104] = ((char)(tmp106_103[tmp106_104] + '\001'));
+	            int tmp_3 = j;
+	            char[] tmp_4 = ca; 
+	            tmp_4[tmp_3] = ((char)(tmp_4[tmp_3] + '\001'));
 	          }
 	        }
 	    }

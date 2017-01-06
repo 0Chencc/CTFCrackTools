@@ -13,12 +13,13 @@ import org.json.JSONObject;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 public class CTFcrack_json{
+	String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");
 	//Json解析
 	public String getDetail(String title) throws Exception{
 	    // 创建json解析器
 	    JsonParser parser = new JsonParser(); 
 	    // 使用解析器解析json数据，返回值是JsonElement，强制转化为其子类JsonObject类型
-	    JsonObject object =  (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+	    JsonObject object =  (JsonObject) parser.parse(new FileReader(JsonPath));
 	    // 使用JsonObject的get(String memeberName)方法返回JsonElement，再使用JsonElement的getAsXXX方法得到真实类型
 	    // 遍历JSON数组
 	    String detailStr=null;
@@ -62,7 +63,7 @@ public class CTFcrack_json{
 	    }catch(Exception e1){
 	    	e1.printStackTrace();
 	    }
-	    File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+	    File jsonfile = new File(JsonPath);
     	JsonObject object = null;
     	JsonArray Plugins = null;
     	if(jsonfile.isFile()&&jsonfile.exists()){
@@ -72,7 +73,7 @@ public class CTFcrack_json{
     		if ((jsonText = jsonread.readLine())!=null){
     			//爬一下原有的json数据 以免被重写
     			JsonParser parser = new JsonParser(); 
-    			object =  (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+    			object =  (JsonObject) parser.parse(new FileReader(JsonPath));
     			Plugins = object.getAsJsonArray("Plugins");
     			for (JsonElement jsonElement : Plugins) {
     				JsonObject Plugin = jsonElement.getAsJsonObject();
@@ -96,7 +97,7 @@ public class CTFcrack_json{
 	    Plugins.add(Plugin);               // 将json对象添加到数组  
 	    object.add("Plugins", Plugins);   // 将数组添加到json对象
 	    String jsonStr = object.toString();   // 将json对象转化成json字符串
-	    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(System.getProperty("user.dir")+"\\Setting.json")));
+	    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(JsonPath)));
 	    pw.print(jsonStr);
 	    pw.flush();
 	    pw.close();
@@ -106,7 +107,7 @@ public class CTFcrack_json{
 	    JsonObject object = null;
 	    String path=null;
 		try {
-			object = (JsonObject) parser.parse(new FileReader(System.getProperty("user.dir")+"\\Setting.json"));
+			object = (JsonObject) parser.parse(new FileReader(JsonPath));
 		} catch (JsonIOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -127,7 +128,7 @@ public class CTFcrack_json{
 		return path;
 	}
 	public boolean isJSON(){
-		File jsonfile = new File(System.getProperty("user.dir")+"\\Setting.json");
+		File jsonfile = new File(JsonPath);
 		InputStreamReader readjson = null;
 		try {
 			readjson = new InputStreamReader(new FileInputStream(jsonfile));

@@ -467,6 +467,7 @@ public class CTFcrack{
 				outpuL.setText("结果：(字符数统计："+inputlength+")");
 			}
 		});
+		
 		//监听按钮
 		caesar.addActionListener(new ActionListener() {//当按下凯撒密码
 		    public void actionPerformed(ActionEvent evt) {
