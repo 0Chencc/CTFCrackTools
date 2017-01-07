@@ -280,25 +280,38 @@ public interface func {
 	    
 	}
 	public static String Base64c(String input){//base64解密utf-8
-		StringBuffer jg = new StringBuffer();
-		String jiami = null;
-		try{
-			jiami = new String(new BASE64Decoder().decodeBuffer(input));
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-		jg.append(jiami);
-		return jg.toString();
-		
+		StringBuffer res = new StringBuffer();
+		String result = null;
+		byte[] b = null;
+	    if (input != null) {  
+	        BASE64Decoder decoder = new BASE64Decoder();  
+	        try {  
+	            b = decoder.decodeBuffer(input);  
+	            result = new String(b, "utf-8");  
+	        } catch (Exception e) {  
+	            e.printStackTrace();  
+	        }  
+	    }  
+	    res.append(result);
+		return res.toString();
 	}
 	public static String Base64j(String input){//base64加密utf-8
-		StringBuffer jg = new StringBuffer();
-		jg.append(new BASE64Encoder().encode(input.getBytes()));
-		return jg.toString();
-		
+		StringBuffer res = new StringBuffer();
+	    byte[] b = null;  
+	    String s = null;  
+	    try {  
+	        b = input.getBytes("utf-8");  
+	    } catch (UnsupportedEncodingException e) {  
+	        e.printStackTrace();  
+	    }  
+	    if (b != null) {  
+	        s = new BASE64Encoder().encode(b);  
+	    } 
+	    res.append(s);
+		return res.toString();
 	}
 	public static String Base64jg(String input){//base64加密gbk
-		StringBuffer jg = new StringBuffer();
+		StringBuffer res = new StringBuffer();
 	    byte[] b = null;  
 	    String s = null;  
 	    try {  
@@ -309,12 +322,11 @@ public interface func {
 	    if (b != null) {  
 	        s = new BASE64Encoder().encode(b);  
 	    } 
-	    jg.append(s);
-		return jg.toString();
-		
+	    res.append(s);
+		return res.toString();
 	}
 	public static String Base64cg(String input){//base64解密gbk
-		StringBuffer jg = new StringBuffer();
+		StringBuffer res = new StringBuffer();
 		String result = null;
 		byte[] b = null;
 	    if (input != null) {  
@@ -326,9 +338,8 @@ public interface func {
 	            e.printStackTrace();  
 	        }  
 	    }  
-	    jg.append(result);
-		return jg.toString();
-		
+	    res.append(result);
+		return res.toString();
 	}
 	public static String Base32j(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
