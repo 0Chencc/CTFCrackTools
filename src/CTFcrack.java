@@ -37,7 +37,7 @@ import javax.imageio.*;
 public class CTFcrack{
 	private static String v1 = "v2.1 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
-	private static String Jsonpath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
+	private static String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
 	CTFcrack_json json = new CTFcrack_json();
 	public JTextArea input=new JTextArea();
 	public JTextArea output=new JTextArea();
@@ -127,7 +127,12 @@ public class CTFcrack{
 		radixchange.add(j16z2);
 		radixchange.add(j16z8);
 		radixchange.add(j16z10);
-		buildPluginMenu(Plugin);//传入要添加菜单的目录
+		try {
+			buildPluginMenu(Plugin);
+		} catch (Exception e2) {
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
+		}//传入要添加菜单的目录
 		mainMenuBar.add(Plugin);
 		Plugin.add(addplugin);
 		Plugin.add(rsa);
@@ -207,7 +212,12 @@ public class CTFcrack{
     	JLabel image_iskeylabel = new JLabel("是否有密文，勾选");
     	JLabel image_setimage=new JLabel("<html>打开的图片以及破解完毕的图片会在这里显示<br/>菜鸡不会写自适应，自行调节窗口大小再打开图片</html>");
     	image_select.addItem("选择插件");
-    	buildImagePluginSelectItem(image_select);
+    	try {
+			buildImagePluginSelectItem(image_select);
+		} catch (Exception e2) {
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
+		}
     	image_Panel.setLayout(springLayout);
 		image_Panel.add(image_filename);
     	springLayout.putConstraint(SpringLayout.NORTH, image_filename, 0, SpringLayout.NORTH, image_Panel);
@@ -283,7 +293,12 @@ public class CTFcrack{
     	JLabel zip_iskeylabel = new JLabel("是否有密文，勾选");
     	JLabel zip_return = new JLabel("Crack后的压缩包地址");
     	zip_select.addItem("选择插件");
-    	buildZipPluginSelectItem(zip_select);
+    	try {
+			buildZipPluginSelectItem(zip_select);
+		} catch (Exception e2) {
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
+		}
     	zip_Panel.setLayout(springLayout);
 		zip_Panel.add(zip_filename);
     	springLayout.putConstraint(SpringLayout.NORTH, zip_filename, 0, SpringLayout.NORTH, zip_Panel);
@@ -398,7 +413,12 @@ public class CTFcrack{
     	zip_crack.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
 		        PythonInterpreter interpreter = new PythonInterpreter();
-		        interpreter.execfile(json.getPath(zip_select.getSelectedItem().toString()));
+		        try {
+					interpreter.execfile(json.getPath(zip_select.getSelectedItem().toString()));
+				} catch (Exception e1) {
+					// TODO 自动生成的 catch 块
+					e1.printStackTrace();
+				}
 		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
         		if(zip_iskey.isSelected()){
         			PyObject res = func.__call__(new PyString(zip_key.getText()));
@@ -412,7 +432,12 @@ public class CTFcrack{
     	image_crack.addActionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
 		        PythonInterpreter interpreter = new PythonInterpreter();
-		        interpreter.execfile(json.getPath(image_select.getSelectedItem().toString()));
+		        try {
+					interpreter.execfile(json.getPath(image_select.getSelectedItem().toString()));
+				} catch (Exception e1) {
+					// TODO 自动生成的 catch 块
+					e1.printStackTrace();
+				}
 		        PyFunction func = (PyFunction)interpreter.get("run", PyFunction.class);
         		if(image_iskey.isSelected()){
         			PyObject res = func.__call__(new PyString(image_key.getText()));
@@ -986,24 +1011,13 @@ public class CTFcrack{
 	}
 
 	//菜单
-	private void buildPluginMenu(JMenu menu) {
+	private void buildPluginMenu(JMenu menu) throws Exception{
 		//
-	    File jsonfile = new File(Jsonpath);
-	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
-	    	JsonParser parser = new JsonParser(); 
-	    	JsonObject object = null;
-	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
-	    	} catch (JsonIOException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (JsonSyntaxException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (FileNotFoundException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	}
+	    if(new File(JsonPath).isFile()&&new File(JsonPath).exists()&&json.isJSON()){
+	    	FileInputStream jsonfile = new FileInputStream(JsonPath);
+			InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+		    JsonParser parser = new JsonParser(); 
+		    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    	for (JsonElement jsonElement : Plugins) {
 	    		JsonObject Plugin = jsonElement.getAsJsonObject();
@@ -1013,24 +1027,13 @@ public class CTFcrack{
 	    	}
 	    }
 	}
-	private void buildZipPluginSelectItem(JComboBox Item) {
+	private void buildZipPluginSelectItem(JComboBox Item) throws Exception{
 	    //
-	    File jsonfile = new File(Jsonpath);
-	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
-	    	JsonParser parser = new JsonParser(); 
-	    	JsonObject object = null;
-	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
-	    	} catch (JsonIOException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (JsonSyntaxException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (FileNotFoundException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	}
+	    if(new File(JsonPath).isFile()&&new File(JsonPath).exists()&&json.isJSON()){
+	    	FileInputStream jsonfile = new FileInputStream(JsonPath);
+			InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+		    JsonParser parser = new JsonParser(); 
+		    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
 		    	for (JsonElement jsonElement : Plugins) {
 		    		JsonObject Plugin = jsonElement.getAsJsonObject();
@@ -1040,24 +1043,13 @@ public class CTFcrack{
 		    }
 	    }
 	  }
-	public void buildImagePluginSelectItem(JComboBox Item) {
+	public void buildImagePluginSelectItem(JComboBox Item) throws Exception{
 	    //
-	    File jsonfile = new File(Jsonpath);
-	    if(jsonfile.isFile()&&jsonfile.exists()&&json.isJSON()){
-	    	JsonParser parser = new JsonParser(); 
-	    	JsonObject object = null;
-	    	try {
-	    		object = (JsonObject) parser.parse(new FileReader(Jsonpath));
-	    	} catch (JsonIOException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (JsonSyntaxException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	} catch (FileNotFoundException e) {
-	    		// TODO 自动生成的 catch 块
-	    		e.printStackTrace();
-	    	}
+	    if(new File(JsonPath).isFile()&&new File(JsonPath).exists()&&json.isJSON()){
+	    	FileInputStream jsonfile = new FileInputStream(JsonPath);
+			InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+		    JsonParser parser = new JsonParser(); 
+		    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    	JsonArray Plugins = object.getAsJsonArray("Plugins");
 		    	for (JsonElement jsonElement : Plugins) {
 		    		JsonObject Plugin = jsonElement.getAsJsonObject();
@@ -1068,21 +1060,12 @@ public class CTFcrack{
 	    }
 	  }
 	
-	public JMenuItem buildPluginMenuItem(String filename) {
-		JsonParser parser = new JsonParser(); 
-	    JsonObject object = null;
-		try {
-			object = (JsonObject) parser.parse(new FileReader(Jsonpath));
-		} catch (JsonIOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
+	public JMenuItem buildPluginMenuItem(String filename) throws Exception{
+		//
+		FileInputStream jsonfile = new FileInputStream(JsonPath);
+		InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+	    JsonParser parser = new JsonParser(); 
+	    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    //
 	    JMenuItem item = new JMenuItem(filename);

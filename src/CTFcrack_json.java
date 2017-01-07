@@ -3,21 +3,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.*;
-import org.json.JSONObject;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 public class CTFcrack_json{
 	String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");
 	//Json解析
 	public String getType(String title) throws Exception{
+		FileInputStream jsonfile = new FileInputStream(JsonPath);
+		InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
 	    JsonParser parser = new JsonParser(); 
-	    JsonObject object =  (JsonObject) parser.parse(new FileReader(JsonPath));
+	    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    String type=null;
 	    JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    for (JsonElement jsonElement : Plugins) {
@@ -30,11 +33,10 @@ public class CTFcrack_json{
 	}
 	public String getDetail(String title) throws Exception{
 	    // 创建json解析器
+		FileInputStream jsonfile = new FileInputStream(JsonPath);
+		InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
 	    JsonParser parser = new JsonParser(); 
-	    // 使用解析器解析json数据，返回值是JsonElement，强制转化为其子类JsonObject类型
-	    JsonObject object =  (JsonObject) parser.parse(new FileReader(JsonPath));
-	    // 使用JsonObject的get(String memeberName)方法返回JsonElement，再使用JsonElement的getAsXXX方法得到真实类型
-	    // 遍历JSON数组
+	    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    String detailStr=null;
 	    JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    for (JsonElement jsonElement : Plugins) {
@@ -52,10 +54,10 @@ public class CTFcrack_json{
 	}
 	//对添加的插件进行解析，然后添加至菜单栏。并调用写入配置方法
 	public String createJSON(String path) throws IOException{
-		File file = new File(path);
 		String title=null,type=null,author=null,detail=null;
 	    try{
-	    	InputStreamReader readpy = new InputStreamReader(new FileInputStream(file));
+	    	FileInputStream pypath = new FileInputStream(path);
+			InputStreamReader readpy = new InputStreamReader(pypath,"UTF-8");
 	    	BufferedReader pyPluginread = new BufferedReader(readpy);
 	    	String lineText=null;
 	    	while((lineText = pyPluginread.readLine())!=null){
@@ -76,12 +78,13 @@ public class CTFcrack_json{
 	    }catch(Exception e1){
 	    	e1.printStackTrace();
 	    }
-	    File jsonfile = new File(JsonPath);
+	    //
+	    FileInputStream jsonfile = new FileInputStream(path);
     	JsonObject object = null;
     	JsonArray Plugins = null;
-    	if(jsonfile.isFile()&&jsonfile.exists()){
-    		InputStreamReader readjson = new InputStreamReader(new FileInputStream(jsonfile));
-        	BufferedReader jsonread = new BufferedReader(readjson);
+    	if(new File(JsonPath).isFile()&&new File(JsonPath).exists()){
+    		InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+        	BufferedReader jsonread = new BufferedReader(jsonreadcoding);
         	String jsonText=null;
     		if ((jsonText = jsonread.readLine())!=null){
     			//爬一下原有的json数据 以免被重写
@@ -95,9 +98,9 @@ public class CTFcrack_json{
     			object = new JsonObject();
     			Plugins = new JsonArray();
     		}
-    		readjson.close();
+    		jsonreadcoding.close();
     	}else{
-    		file.createNewFile();
+    		new File(JsonPath).createNewFile();
     		object = new JsonObject();
 			Plugins = new JsonArray();
     	}
@@ -110,32 +113,18 @@ public class CTFcrack_json{
 	    Plugins.add(Plugin);               // 将json对象添加到数组  
 	    object.add("Plugins", Plugins);   // 将数组添加到json对象
 	    String jsonStr = object.toString();   // 将json对象转化成json字符串
-	    inputJson(jsonStr);
+	    FileOutputStream outfile = new FileOutputStream(JsonPath);
+	    OutputStreamWriter outprint = new OutputStreamWriter(outfile,"UTF-8");
+	    outprint.write(jsonStr);
+	    outprint.flush();
 	    return title;
 	}
-	//将配置写入
-	public void	inputJson(String jsonStr) throws IOException{
-	    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(JsonPath)));
-	    pw.print(jsonStr);
-	    pw.flush();
-	    pw.close();
-	}
-	public String getPath(String title){
-		JsonParser parser = new JsonParser(); 
-	    JsonObject object = null;
+	public String getPath(String title) throws Exception{
 	    String path=null;
-		try {
-			object = (JsonObject) parser.parse(new FileReader(JsonPath));
-		} catch (JsonIOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
+		FileInputStream jsonfile = new FileInputStream(JsonPath);
+		InputStreamReader jsonreadcoding = new InputStreamReader(jsonfile,"UTF-8");
+	    JsonParser parser = new JsonParser(); 
+	    JsonObject object =  (JsonObject) parser.parse(new BufferedReader(jsonreadcoding));
 	    JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    for (JsonElement jsonElement : Plugins) {
 	        JsonObject Plugin = jsonElement.getAsJsonObject();
