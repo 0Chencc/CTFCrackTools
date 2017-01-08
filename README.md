@@ -30,7 +30,7 @@ git上的是源码，需要下载后导入javaIDE编译<br/>
 在声明之后，延续Java的花括号写法<br/>
 title:（标题）<br/>
 type:（针对类型） Crypto对应crypto Image对应image Zip对应zip<br/>
-autor：（作者ID）<br/>
+author：（作者ID）<br/>
 detail：（程序详情）<br/>
 用}结束<br/>
 在Python中def run(String)一个方法，样式：<br/>
