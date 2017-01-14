@@ -127,12 +127,6 @@ public class CTFcrack{
 		radixchange.add(j16z2);
 		radixchange.add(j16z8);
 		radixchange.add(j16z10);
-		try {
-			buildPluginMenu(Plugin);
-		} catch (Exception e2) {
-			// TODO 自动生成的 catch 块
-			e2.printStackTrace();
-		}//传入要添加菜单的目录
 		mainMenuBar.add(Plugin);
 		Plugin.add(addplugin);
 		Plugin.add(rsa);
@@ -141,6 +135,12 @@ public class CTFcrack{
 		Plugin.add(b32d);
 		Plugin.add(b16e);
 		Plugin.add(b16d);
+		try {
+			buildPluginMenu(Plugin);
+		} catch (Exception e2) {
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
+		}//传入要添加菜单的目录
 		mainMenuBar.add(girlgif);
 		girlgif.add(girlgifw);
 		frameContainer.add(mainMenuBar);
@@ -792,7 +792,6 @@ public class CTFcrack{
 					image_select.addItem(title);
 					break;
 				}
-				buildPluginMenu(Plugin);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (Exception e1) {
