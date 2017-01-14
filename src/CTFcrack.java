@@ -91,6 +91,8 @@ public class CTFcrack{
 		JMenuItem b32d = new JMenuItem(" Base32>>字符串");
 		JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
 		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
+		JMenuItem r162ascii = new JMenuItem(" 16进制>>字符串");
+		JMenuItem ascii216 = new JMenuItem(" 字符串>>16进制");
 		JMenu girlgif = new JMenu(" 妹子");
 		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
 		JMenu Help = new JMenu(" 帮助");
@@ -137,6 +139,8 @@ public class CTFcrack{
 		Plugin.add(b32d);
 		Plugin.add(b16e);
 		Plugin.add(b16d);
+		Plugin.add(r162ascii);
+		Plugin.add(ascii216);
 		try {
 			buildPluginMenu(Plugin);
 		} catch (Exception e2) {
@@ -730,6 +734,16 @@ public class CTFcrack{
 		peigd.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				output.setText(func.Bacon(input.getText()));
+			}
+		});
+		r162ascii.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				output.setText(func.r162ascii(input.getText()));
+			}
+		});
+		ascii216.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				output.setText(func.ascii216(input.getText()));
 			}
 		});
 		girlgifw.addActionListener(new ActionListener(){

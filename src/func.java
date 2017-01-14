@@ -369,6 +369,20 @@ public interface func {
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
+	public static String r162ascii(String input){
+	    PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\16andascii.py");
+	    PyFunction func = (PyFunction)interpreter.get("r162ascii",PyFunction.class);
+	    PyObject rsadstr = func.__call__(new PyString(input));  
+	    return (rsadstr.toString());
+	}
+	public static String ascii216(String input){
+	    PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\16andascii.py");
+	    PyFunction func = (PyFunction)interpreter.get("ascii216",PyFunction.class);
+	    PyObject rsadstr = func.__call__(new PyString(input));  
+	    return (rsadstr.toString());
+	}
 	public static String Bacon(String input){
 	    PythonInterpreter interpreter = new PythonInterpreter();
 		interpreter.execfile(System.getProperty("user.dir")+"\\Plugin\\OS\\peigen.py");
