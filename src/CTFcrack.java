@@ -93,6 +93,8 @@ public class CTFcrack{
 		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
 		JMenu girlgif = new JMenu(" 妹子");
 		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
+		JMenu Help = new JMenu(" 帮助");
+		JMenuItem aboutme = new JMenuItem(" 关于本程序");
 		mainMenuBar.add(Ascii);
 		Ascii.add(caesar);
 		Ascii.add(rot13);
@@ -143,6 +145,8 @@ public class CTFcrack{
 		}//传入要添加菜单的目录
 		mainMenuBar.add(girlgif);
 		girlgif.add(girlgifw);
+		mainMenuBar.add(Help);
+		Help.add(aboutme);
 		frameContainer.add(mainMenuBar);
 		springLayout.putConstraint(SpringLayout.NORTH, mainMenuBar, 0, SpringLayout.NORTH, frameContainer);
 		springLayout.putConstraint(SpringLayout.WEST, mainMenuBar, 0, SpringLayout.WEST, frameContainer);
@@ -767,6 +771,11 @@ public class CTFcrack{
 				}
 			}
 		});
+		aboutme.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evt){
+				aboutMe();
+			}
+		});
 		//
 		String py_suf[] = {"py"};
     	FileNameExtensionFilter py_filter;
@@ -937,6 +946,31 @@ public class CTFcrack{
         frame.add(label); 
         frame.pack(); 
         frame.setVisible(true); 
+    }
+    private void aboutMe(){
+    	JFrame jframe = new JFrame("帮助");
+    	Container frame = jframe.getContentPane();
+    	jframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    	SpringLayout sp = new SpringLayout();
+    	JTextArea help = new JTextArea();
+    	help.setText("本框架为开源框架，已在Github上开源。\n\n"+
+				"切勿以收费等形式“出售”本框架。\n\n"+
+				"已经在Plugin文件夹中更新了一部分插件，用户可以自行添加\n\n"+
+				"如无需要可不添加。\n\n"+
+				"如有更好的建议可以联系本人QQ/WeChat：627437686\n\n"+
+				"QQ群：392613610（已满）\n\n"+
+				"      432683259\n\n"+
+				"Github开源地址：https://github.com/0Linchen/CTFCrackTools\n\n"+
+				"插件开发文档：https://github.com/0Linchen/CTFCrackTools#python插件开发文档\n\n"+
+				"请注意关注Github更新动态");
+    	frame.setLayout(sp);
+    	frame.add(help);
+    	sp.putConstraint(SpringLayout.NORTH, help, 0, SpringLayout.NORTH, frame);
+    	sp.putConstraint(SpringLayout.SOUTH, help, 0, SpringLayout.SOUTH, frame);
+    	sp.putConstraint(SpringLayout.EAST, help, 0, SpringLayout.EAST, frame);
+    	sp.putConstraint(SpringLayout.WEST, help, 0, SpringLayout.WEST, frame);
+    	jframe.setSize(700, 500);
+    	jframe.setVisible(true);
     }
     private static void InitGlobalFont(Font font) {//设置全局统一字体
 		  FontUIResource fontRes = new FontUIResource(font);  
