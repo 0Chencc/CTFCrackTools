@@ -1,3 +1,4 @@
+package org.CTFcrackTools.Core;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

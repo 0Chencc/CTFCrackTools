@@ -1,102 +1,94 @@
+package org.CTFcrackTools.Core;
 /* 米斯特安全团队 Www.Hi-OurLife.Com
- * 作者：A先森_林晨、Z13
+ * 作者：A先森_林晨,z13
  * Mail:admin@hi-ourlife.com
  * QQ：627437686
  */
+
+/* MSEC Team Www.Hi-OurLife.Com
+ * Author:0chen,z13
+ * Mail:mrsafea@gmail.com
+ * FaceBook:0chencc
+ */
 import java.math.BigInteger;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Enumeration;
+import java.awt.event.*;
+import java.util.*;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
-//导入了Jython包 可调用python
 import org.python.core.*;
-import javax.script.*;  
-import org.python.core.PyFunction;  
-import org.python.core.PyInteger;  
-import org.python.core.PyObject;  
 import org.python.util.PythonInterpreter;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-
-import javax.imageio.*;
+import com.google.gson.*;
 public class CTFcrack{
-	private static String v1 = "v2.1 Beta";//版本号
+	private static String v1 = "v2.2 Beta";//版本号
 	private static Font Zt = new Font("楷体", Font.PLAIN, 15);//字体
 	private static String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
 	CTFcrack_json json = new CTFcrack_json();
 	public JTextArea input=new JTextArea();
 	public JTextArea output=new JTextArea();
     public void CryptoWindow(){//主窗口
-    	//
-		JFrame jFrame = new JFrame("米斯特安全团队 CTFCrakTools pro "+v1);
+        Locale language = Locale.getDefault();
+        ResourceBundle RB = ResourceBundle.getBundle("info",language);
+		JFrame jFrame = new JFrame(RB.getString("AppTitle")+v1);
 		Container frameContainer= jFrame.getContentPane();
 		SpringLayout springLayout = new SpringLayout();
 		frameContainer.setLayout(springLayout);
 		//
 		JMenuBar mainMenuBar = new JMenuBar();
-		JMenu Ascii = new JMenu(" 解码方式");
-		JMenuItem caesar = new JMenuItem(" 凯撒密码>>解码");;
-		JMenuItem rot13 = new JMenuItem(" Rot13>>解码");
-		JMenuItem fence = new JMenuItem(" 栅栏密码>>解码");
-		JMenuItem peig = new JMenuItem(" 培根密码>>大小写转换AB");
-		JMenuItem peigd = new JMenuItem(" 培根密码>>解码");
-		JMenuItem zj = new JMenuItem(" 猪圈密码>>解码");
-		JMenuItem base64jg = new JMenuItem(" 字符串>>Base64(gbk)");
-		JMenuItem base64cg = new JMenuItem(" Base64>>字符串(gbk)");
-		JMenuItem base64j = new JMenuItem(" 字符串>>Base64(utf-8)");
-		JMenuItem base64c = new JMenuItem(" Base64>>字符串(utf-8)");
-		JMenuItem morsee = new JMenuItem(" 字符串>>摩斯密码");
-		JMenuItem morsed = new JMenuItem(" 摩斯密码>>字符串");
-		JMenuItem reverse = new JMenuItem(" 字符串>>反转");
-		JMenuItem UrlCoded = new JMenuItem(" Url编码>>字符串");
-		JMenuItem UrlCodee = new JMenuItem(" 字符串>>Url编码");
-		JMenuItem UnicoderStre = new JMenuItem(" 字符串>>Unicode");
-		JMenuItem UnicoderStrd = new JMenuItem(" Unicode>>字符串");
-		JMenuItem asciiZUnicode = new JMenuItem(" Ascii>>Unicode");
-		JMenuItem UnicodeZascii = new JMenuItem(" Unicode>>Ascii");
-		JMenu radixchange = new JMenu(" 进制转换");
-		JMenuItem radix = new JMenuItem(" 任意进制转换");
-		JMenuItem j2z8 = new JMenuItem(" 二进制>>八进制");
-		JMenuItem j2z10 = new JMenuItem(" 二进制>>十进制");
-		JMenuItem j2z16 = new JMenuItem(" 二进制>>十六进制");
-		JMenuItem j8z2 = new JMenuItem(" 八进制>>二进制");
-		JMenuItem j8z10 = new JMenuItem(" 八进制>>十进制");
-		JMenuItem j8z16 = new JMenuItem(" 八进制>>十六进制");
-		JMenuItem j10z2 = new JMenuItem(" 十进制>>二进制");
-		JMenuItem j10z8 = new JMenuItem(" 十进制>>八进制");
-		JMenuItem j10z16 = new JMenuItem(" 十进制>>十六进制");
-		JMenuItem j16z2 = new JMenuItem(" 十六进制>>二进制");
-		JMenuItem j16z8 = new JMenuItem(" 十六进制>>八进制");
-		JMenuItem j16z10 = new JMenuItem(" 十六进制>>十进制");
-		JMenu Plugin = new JMenu(" 插件");
-		JMenuItem addplugin = new JMenuItem(" 添加插件");
-		JMenuItem rsa = new JMenuItem(" RSAtools");
-		JMenuItem rc4 = new JMenuItem(" RC4tools");
-		JMenuItem b32e = new JMenuItem(" 字符串>>Base32");
-		JMenuItem b32d = new JMenuItem(" Base32>>字符串");
-		JMenuItem b16e = new JMenuItem(" 字符串>>Base16");
-		JMenuItem b16d = new JMenuItem(" Base16>>字符串");
-		JMenuItem r162ascii = new JMenuItem(" 16进制>>字符串");
-		JMenuItem ascii216 = new JMenuItem(" 字符串>>16进制");
-		JMenu girlgif = new JMenu(" 妹子");
-		JMenuItem girlgifw = new JMenuItem(" 召唤妹子");
-		JMenu Help = new JMenu(" 帮助");
-		JMenuItem aboutme = new JMenuItem(" 关于本程序");
+		JMenu Ascii = new JMenu(RB.getString("MenuCode"));
+		JMenuItem caesar = new JMenuItem(RB.getString("MenuCodeCaesar"));;
+		JMenuItem rot13 = new JMenuItem(RB.getString("MenuCodeRot13"));
+		JMenuItem fence = new JMenuItem(RB.getString("MenuCodeFence"));
+		JMenuItem peig = new JMenuItem(RB.getString("MenuCodeBaconab"));
+		JMenuItem peigd = new JMenuItem(RB.getString("MenuCodeBaconDecode"));
+		JMenuItem zj = new JMenuItem(RB.getString("MenuCodePig"));
+		JMenuItem base64jg = new JMenuItem(RB.getString("MenuCodeBase64gbkEn"));
+		JMenuItem base64cg = new JMenuItem(RB.getString("MenuCodeBase64gbkDe"));
+		JMenuItem base64j = new JMenuItem(RB.getString("MenuCodeBase64utf8En"));
+		JMenuItem base64c = new JMenuItem(RB.getString("MenuCodeBase64utf8De"));
+		JMenuItem morsee = new JMenuItem(RB.getString("MenuCodeMorseEn"));
+		JMenuItem morsed = new JMenuItem(RB.getString("MenuCodeMorseDe"));
+		JMenuItem reverse = new JMenuItem(RB.getString("MenuCodeReverse"));
+		JMenuItem UrlCodee = new JMenuItem(RB.getString("MenuCodeURLEn"));
+		JMenuItem UrlCoded = new JMenuItem(RB.getString("MenuCodeURLDe"));
+		JMenuItem UnicoderStre = new JMenuItem(RB.getString("MenuCodeUnicodeEn"));
+		JMenuItem UnicoderStrd = new JMenuItem(RB.getString("MenuCodeUnicodeDe"));
+		JMenuItem asciiZUnicode = new JMenuItem(RB.getString("MenuCodeAsciitoUnicode"));
+		JMenuItem UnicodeZascii = new JMenuItem(RB.getString("MenuCodeUnicodetoAscii"));
+		//
+		JMenu radixchange = new JMenu(RB.getString("MenuRadix"));
+		//JMenuItem radix = new JMenuItem(" 任意进制转换");
+		JMenuItem j2z8 = new JMenuItem(RB.getString("MenuRadix2to8"));
+		JMenuItem j2z10 = new JMenuItem(RB.getString("MenuRadix2to10"));
+		JMenuItem j2z16 = new JMenuItem(RB.getString("MenuRadix2to16"));
+		JMenuItem j8z2 = new JMenuItem(RB.getString("MenuRadix8to2"));
+		JMenuItem j8z10 = new JMenuItem(RB.getString("MenuRadix8to10"));
+		JMenuItem j8z16 = new JMenuItem(RB.getString("MenuRadix8to16"));
+		JMenuItem j10z2 = new JMenuItem(RB.getString("MenuRadix10to2"));
+		JMenuItem j10z8 = new JMenuItem(RB.getString("MenuRadix10to8"));
+		JMenuItem j10z16 = new JMenuItem(RB.getString("MenuRadix10to16"));
+		JMenuItem j16z2 = new JMenuItem(RB.getString("MenuRadix16to2"));
+		JMenuItem j16z8 = new JMenuItem(RB.getString("MenuRadix16to8"));
+		JMenuItem j16z10 = new JMenuItem(RB.getString("MenuRadix16to10"));
+		//
+		JMenu Plugin = new JMenu(RB.getString("MenuPlugins"));
+		JMenuItem addplugin = new JMenuItem(RB.getString("MenuPluginsAdd"));
+		JMenuItem rsa = new JMenuItem(RB.getString("MenuPluginRSA"));
+		JMenuItem rc4 = new JMenuItem(RB.getString("MenuPluginRC4"));
+		JMenuItem b32e = new JMenuItem(RB.getString("MenuPluginBase32En"));
+		JMenuItem b32d = new JMenuItem(RB.getString("MenuPluginBase32De"));
+		JMenuItem b16e = new JMenuItem(RB.getString("MenuPluginBase16En"));
+		JMenuItem b16d = new JMenuItem(RB.getString("MenuPluginBase16De"));
+		JMenuItem r162ascii = new JMenuItem(RB.getString("MenuPlugin16toAscii"));
+		JMenuItem ascii216 = new JMenuItem(RB.getString("MenuPluginAsciito16"));
+		//
+		JMenu girlgif = new JMenu(RB.getString("MenuGirl"));
+		JMenuItem girlgifw = new JMenuItem(RB.getString("MenuGirlShow"));
+		JMenu Help = new JMenu(RB.getString("MenuHelp"));
+		JMenuItem aboutme = new JMenuItem(RB.getString("MenuHelpAbout"));
 		mainMenuBar.add(Ascii);
 		Ascii.add(caesar);
 		Ascii.add(rot13);
@@ -162,7 +154,7 @@ public class CTFcrack{
 		crypto.setDividerLocation(250);
 		JPanel crypto_top=new JPanel();
 		crypto_top.setLayout(springLayout);
-		JLabel inputL=new JLabel("填写所需检测的密码：(已输入字符数统计：0)");
+		JLabel inputL=new JLabel(RB.getString("AppInputLabel")+"0");
 		crypto_top.add(inputL);
 		springLayout.putConstraint(SpringLayout.NORTH, inputL, 0, SpringLayout.NORTH, crypto_top);
 		JScrollPane inputP = new JScrollPane(input);
@@ -175,24 +167,12 @@ public class CTFcrack{
 		//
 		JPanel crypto_bottom=new JPanel();
 		crypto_bottom.setLayout(springLayout);
-		JLabel outpuL=new JLabel("结果：(字符数统计：0)");
+		JLabel outpuL=new JLabel(RB.getString("AppOutputLabel")+"0");
 		crypto_bottom.add(outpuL);
 		springLayout.putConstraint(SpringLayout.NORTH, outpuL, 0, SpringLayout.NORTH, crypto_bottom);
 		JScrollPane outputP = new JScrollPane(output);
 		crypto_bottom.add(outputP);
-		output.setText("作者注："
-				+ "\n集合栅栏 凯撒 摩斯 Base64 Url编码 Unicode等多种解码方式"
-				+ "\n备注:十六进制与字符串互相转换即为base16 在插件中可调用"
-				+ "\n正在开发unzip的功能ing"
-				+ "\n工具支持Python插件"
-				+ "\n将写好的py脚本放进Plugin目录即可"
-				+ "\n打开程序后自动遍历完成"
-				+ "\n每次打开程序第一次调用python会稍慢"
-				+ "\n接下来就OK了"
-				+ "\n联系方式:QQ627437686"
-				+ "\n懂Java的朋友也请联系我，共同开发。"
-				+ "\n程序已开源 github地址：https://github.com/0Linchen/CTFCrackTools"
-				+ "\n交流群：392613610");
+		output.setText(RB.getString("AppRemarks"));
 		springLayout.putConstraint(SpringLayout.NORTH, outputP, 25, SpringLayout.NORTH, crypto_bottom);
 		springLayout.putConstraint(SpringLayout.SOUTH, outputP, 0, SpringLayout.SOUTH, crypto_bottom);
 		springLayout.putConstraint(SpringLayout.WEST, outputP, 0, SpringLayout.WEST, crypto_bottom);
@@ -204,22 +184,21 @@ public class CTFcrack{
     	FileNameExtensionFilter image_filter;
     	JFileChooser image_openfile = new JFileChooser();
     	image_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    	image_filter = new FileNameExtensionFilter("图片(.jpg;.png;.bmp;.pdm)",image_suf);
+    	image_filter = new FileNameExtensionFilter(RB.getString("ImageFileter"),image_suf);
     	image_openfile.setFileFilter(image_filter);
 		JPanel image_Panel=new JPanel();
     	JButton image_crack = new JButton("Crack");
-    	JButton image_infile = new JButton("打开文件");
-    	JCheckBox image_iskey = new JCheckBox("是否有密文");
+    	JButton image_infile = new JButton(RB.getString("ImageInfile"));
+    	JCheckBox image_iskey = new JCheckBox(RB.getString("ImageIskey"));
     	JTextArea image_key = new JTextArea();
-    	image_key.setText("输入密文，如果你有打钩的话");
+    	image_key.setText(RB.getString("ImageSetkey"));
     	JComboBox image_select = new JComboBox();
-    	JLabel image_filename = new JLabel("已选中文件名");
-    	JLabel image_filepath = new JLabel("文件路径");
-    	JLabel image_selectpydetail = new JLabel("插件详情");
-    	JLabel image_selectlabel = new JLabel("选择插件");
-    	JLabel image_iskeylabel = new JLabel("是否有密文，勾选");
-    	JLabel image_setimage=new JLabel("<html>打开的图片以及破解完毕的图片会在这里显示<br/>菜鸡不会写自适应，自行调节窗口大小再打开图片</html>");
-    	image_select.addItem("选择插件");
+    	JLabel image_filename = new JLabel(RB.getString("ImageFilename"));
+    	JLabel image_filepath = new JLabel(RB.getString("ImageFilepath"));
+    	JLabel image_selectpydetail = new JLabel(RB.getString("ImageDetail"));
+    	JLabel image_selectlabel = new JLabel(RB.getString("ImageSelectPlugin"));
+    	JLabel image_setimage=new JLabel(RB.getString("ImageSetImage"));
+    	image_select.addItem(RB.getString("ImageChoosePlugin"));
     	try {
 			buildImagePluginSelectItem(image_select);
 		} catch (Exception e2) {
@@ -248,12 +227,8 @@ public class CTFcrack{
     	springLayout.putConstraint(SpringLayout.NORTH, image_select, 0, SpringLayout.SOUTH,image_selectlabel);
     	springLayout.putConstraint(SpringLayout.EAST, image_select, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_select, 0, SpringLayout.WEST, image_Panel);
-    	image_Panel.add(image_iskeylabel);
-    	springLayout.putConstraint(SpringLayout.NORTH, image_iskeylabel, 0, SpringLayout.SOUTH,image_select);
-    	springLayout.putConstraint(SpringLayout.EAST, image_iskeylabel, 400, SpringLayout.WEST, image_Panel);
-    	springLayout.putConstraint(SpringLayout.WEST, image_iskeylabel, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_iskey);
-    	springLayout.putConstraint(SpringLayout.NORTH, image_iskey, 5, SpringLayout.SOUTH,image_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, image_iskey, 5, SpringLayout.SOUTH,image_select);
     	springLayout.putConstraint(SpringLayout.EAST, image_iskey, 400, SpringLayout.WEST, image_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, image_iskey, 0, SpringLayout.WEST, image_Panel);
     	image_Panel.add(image_key);
@@ -285,22 +260,21 @@ public class CTFcrack{
     	FileNameExtensionFilter zip_filter;
     	JFileChooser zip_openfile = new JFileChooser();
     	zip_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    	zip_filter = new FileNameExtensionFilter("压缩包(.rar;.zip)",zip_suf);
+    	zip_filter = new FileNameExtensionFilter(RB.getString("ZipFileter"),zip_suf);
     	zip_openfile.setFileFilter(zip_filter);
 		JPanel zip_Panel=new JPanel();
     	JButton zip_crack = new JButton("Crack");
-    	JButton zip_infile = new JButton("打开文件");
-    	JCheckBox zip_iskey = new JCheckBox("是否有密文");
+    	JButton zip_infile = new JButton(RB.getString("ZipInfile"));
+    	JCheckBox zip_iskey = new JCheckBox(RB.getString("ZipIskey"));
     	JTextArea zip_key = new JTextArea();
-    	zip_key.setText("输入密文，如果你有打钩的话");
+    	zip_key.setText(RB.getString("ZipSetkey"));
     	JComboBox zip_select = new JComboBox();
-    	JLabel zip_filename = new JLabel("已选中文件名");
-    	JLabel zip_filepath = new JLabel("文件路径");
-    	JLabel zip_selectpydetail = new JLabel("插件详情");
-    	JLabel zip_selectlabel = new JLabel("选择插件");
-    	JLabel zip_iskeylabel = new JLabel("是否有密文，勾选");
-    	JLabel zip_return = new JLabel("Crack后的压缩包地址");
-    	zip_select.addItem("选择插件");
+    	JLabel zip_filename = new JLabel(RB.getString("ZipFilename"));
+    	JLabel zip_filepath = new JLabel(RB.getString("ZipFilepath"));
+    	JLabel zip_selectpydetail = new JLabel(RB.getString("ZipDetail"));
+    	JLabel zip_selectlabel = new JLabel(RB.getString("ZipSelectPlugin"));
+    	JLabel zip_return = new JLabel(RB.getString("ZipReturnPath"));
+    	zip_select.addItem(RB.getString("ZipChoosePlugin"));
     	try {
 			buildZipPluginSelectItem(zip_select);
 		} catch (Exception e2) {
@@ -329,12 +303,8 @@ public class CTFcrack{
     	springLayout.putConstraint(SpringLayout.NORTH, zip_select, 0, SpringLayout.SOUTH,zip_selectlabel);
     	springLayout.putConstraint(SpringLayout.EAST, zip_select, 400, SpringLayout.WEST, zip_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, zip_select, 0, SpringLayout.WEST, zip_Panel);
-    	zip_Panel.add(zip_iskeylabel);
-    	springLayout.putConstraint(SpringLayout.NORTH, zip_iskeylabel, 0, SpringLayout.SOUTH,zip_select);
-    	springLayout.putConstraint(SpringLayout.EAST, zip_iskeylabel, 400, SpringLayout.WEST, zip_Panel);
-    	springLayout.putConstraint(SpringLayout.WEST, zip_iskeylabel, 0, SpringLayout.WEST, zip_Panel);
     	zip_Panel.add(zip_iskey);
-    	springLayout.putConstraint(SpringLayout.NORTH, zip_iskey, 5, SpringLayout.SOUTH,zip_iskeylabel);
+    	springLayout.putConstraint(SpringLayout.NORTH, zip_iskey, 5, SpringLayout.SOUTH,zip_select);
     	springLayout.putConstraint(SpringLayout.EAST, zip_iskey, 400, SpringLayout.WEST, zip_Panel);
     	springLayout.putConstraint(SpringLayout.WEST, zip_iskey, 0, SpringLayout.WEST, zip_Panel);
     	zip_Panel.add(zip_key);
@@ -365,7 +335,7 @@ public class CTFcrack{
 		springLayout.putConstraint(SpringLayout.WEST, mainTabbedPane, 0, SpringLayout.WEST, frameContainer);
 		//
 		JPanel mainBottomBar =new JPanel();
-		JLabel ad=new JLabel("米斯特安全团队网址:www.hi-ourlife.com          程序作者:米斯特_A先森");
+		JLabel ad=new JLabel(RB.getString("AppCopyright"));
 		mainBottomBar.add(ad);
 		frameContainer.add(mainBottomBar);
 		springLayout.putConstraint(SpringLayout.SOUTH, mainBottomBar, 0, SpringLayout.SOUTH, frameContainer);
@@ -394,7 +364,7 @@ public class CTFcrack{
     			if(image_iskey.isSelected()){
     				image_key.setText("");
     			}else{
-    				image_key.setText("输入密文，如果你有打钩的话");
+    				image_key.setText(RB.getString("ImageSetkey"));
     			}
     		}
     	});
@@ -414,7 +384,7 @@ public class CTFcrack{
     			if(zip_iskey.isSelected()){
     				zip_key.setText("");
     			}else{
-    				zip_key.setText("输入密文，如果你有打钩的话");
+    				zip_key.setText(RB.getString("ZipSetkey"));
     			}
     		}
     	});
@@ -466,41 +436,36 @@ public class CTFcrack{
 			int inputlength;
 			@Override public void changedUpdate(DocumentEvent evt) {
 				inputlength = input.getText().replaceAll("\r|\n", "").length();
-		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+		    	inputL.setText(RB.getString("AppInputLabel")+inputlength);
 		    }
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				inputlength = input.getText().replaceAll("\r|\n", "").length();
-		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+		    	inputL.setText(RB.getString("AppInputLabel")+inputlength);
 			}
-
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				inputlength = input.getText().replaceAll("\r|\n", "").length();
-		    	inputL.setText("填写所需检测的密码：(已输入字符数统计："+inputlength+")");
+		    	inputL.setText(RB.getString("AppInputLabel")+inputlength);
 			}
 		});
 		output.getDocument().addDocumentListener(new DocumentListener(){
-			int inputlength;
+			int outputlength;
 			@Override public void changedUpdate(DocumentEvent evt) {
-				inputlength = output.getText().replaceAll("\r|\n", "").length();
-		    	outpuL.setText("结果：(字符数统计："+inputlength+")");
+				outputlength = output.getText().replaceAll("\r|\n", "").length();
+		    	outpuL.setText(RB.getString("AppOutputLabel")+outputlength);
 		    }
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				inputlength = output.getText().replaceAll("\r|\n", "").length();
-				outpuL.setText("结果：(字符数统计："+inputlength+")");
+				outputlength = output.getText().replaceAll("\r|\n", "").length();
+				outpuL.setText(RB.getString("AppOutputLabel")+outputlength);
 			}
-
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				inputlength = output.getText().replaceAll("\r|\n", "").length();
-				outpuL.setText("结果：(字符数统计："+inputlength+")");
+				outputlength = output.getText().replaceAll("\r|\n", "").length();
+				outpuL.setText(RB.getString("AppOutputLabel")+outputlength);
 			}
 		});
-		
 		//监听按钮
 		caesar.addActionListener(new ActionListener() {//当按下凯撒密码
 		    public void actionPerformed(ActionEvent evt) {
@@ -752,13 +717,13 @@ public class CTFcrack{
 				
 			}
 		});	
-		radix.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e) {
+/*		radix.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
 			//debug
 			System.out.println(input.getText());
 			new CTFcrack().radix(input.getText());
-		}
-	});	
+			}
+	});	*/
 		image_select.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				int index = image_select.getSelectedIndex();
@@ -795,11 +760,11 @@ public class CTFcrack{
     	FileNameExtensionFilter py_filter;
     	JFileChooser py_openfile = new JFileChooser();
     	py_openfile.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    	py_filter = new FileNameExtensionFilter("Python插件(.py)",py_suf);
+    	py_filter = new FileNameExtensionFilter("Python(.py)",py_suf);
     	py_openfile.setFileFilter(py_filter);
 		addplugin.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
-	        int py_openframe = py_openfile.showDialog(new JLabel(), "选择"); 
+	        int py_openframe = py_openfile.showDialog(new JLabel(), "选择/Choose"); 
 	        if (py_openframe == JFileChooser.APPROVE_OPTION){
             File py_file = py_openfile.getSelectedFile();//得到选择的文件名
             try {
@@ -863,7 +828,7 @@ public class CTFcrack{
     	});
     }
     private void rsatools(){//rsatools窗口
-        JFrame Rsatools = new JFrame("RsaTools--Python插件");
+        JFrame Rsatools = new JFrame("RsaTools--PythonPlugin");
         JTextArea rsap = new JTextArea();
         JTextArea rsaq = new JTextArea();
         JTextArea rsae = new JTextArea();
@@ -911,7 +876,7 @@ public class CTFcrack{
     	});
     }
     private void rc4tools(){//rsatools窗口
-        JFrame Rc4tools = new JFrame("rc4--Python插件");
+        JFrame Rc4tools = new JFrame("rc4--PythonPlugin");
         JTextArea datat = new JTextArea();
         JTextArea keyt = new JTextArea();
         JTextArea rest = new JTextArea();
@@ -951,8 +916,10 @@ public class CTFcrack{
     		}
     	});
     }
-    private void girl(){//妹子窗口
-        JFrame frame = new JFrame("可爱的我来啦！"); 
+    private void girl(){//Girl
+        Locale language = Locale.getDefault();
+        ResourceBundle RB = ResourceBundle.getBundle("info",language);
+        JFrame frame = new JFrame(RB.getString("MenuGirlTitle")); 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); 
         File imgadd = new File(System.getProperty("user.dir")+"\\girl\\girl1.gif");
         ImageIcon imageIcon = new ImageIcon(imgadd.toString()); 
@@ -962,28 +929,21 @@ public class CTFcrack{
         frame.setVisible(true); 
     }
     private void aboutMe(){
-    	JFrame jframe = new JFrame("帮助");
+        Locale language = Locale.getDefault();
+        ResourceBundle RB = ResourceBundle.getBundle("info",language);
+    	JFrame jframe = new JFrame("Help");
     	Container frame = jframe.getContentPane();
     	jframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     	SpringLayout sp = new SpringLayout();
     	JTextArea help = new JTextArea();
-    	help.setText("本框架为开源框架，已在Github上开源。\n\n"+
-				"切勿以收费等形式“出售”本框架。\n\n"+
-				"已经在Plugin文件夹中更新了一部分插件，用户可以自行添加\n\n"+
-				"如无需要可不添加。\n\n"+
-				"如有更好的建议可以联系本人QQ/WeChat：627437686\n\n"+
-				"QQ群：392613610（已满）\n\n"+
-				"      432683259\n\n"+
-				"Github开源地址：https://github.com/0Linchen/CTFCrackTools\n\n"+
-				"插件开发文档：https://github.com/0Linchen/CTFCrackTools#python插件开发文档\n\n"+
-				"请注意关注Github更新动态");
+    	help.setText(RB.getString("MenuHelpAboutText"));
     	frame.setLayout(sp);
     	frame.add(help);
     	sp.putConstraint(SpringLayout.NORTH, help, 0, SpringLayout.NORTH, frame);
     	sp.putConstraint(SpringLayout.SOUTH, help, 0, SpringLayout.SOUTH, frame);
     	sp.putConstraint(SpringLayout.EAST, help, 0, SpringLayout.EAST, frame);
     	sp.putConstraint(SpringLayout.WEST, help, 0, SpringLayout.WEST, frame);
-    	jframe.setSize(700, 500);
+    	jframe.setSize(940, 500);
     	jframe.setVisible(true);
     }
     private static void InitGlobalFont(Font font) {//设置全局统一字体
@@ -1004,7 +964,7 @@ public class CTFcrack{
 			    +   "\n*                                                   *"
 			    +   "\n*             Weclome to CTFcrackTools              *"
 			    +   "\n*             Autor:0chen                           *"
-			    +   "\n*             Team:Mr Sec Team                      *"
+			    +   "\n*             Team:MSEC Team                        *"
 			    +   "\n*             Site:www.hi-ourlife.com               *"
 			    +   "\n*                                                   *"
 			    +   "\n*                                                   *"
@@ -1056,7 +1016,6 @@ public class CTFcrack{
 	 }
 	 new CTFcrack().CryptoWindow();//创建主窗口CryptoWindow
 	}
-
 	//菜单
 	private void buildPluginMenu(JMenu menu) throws Exception{
 		//
@@ -1106,7 +1065,6 @@ public class CTFcrack{
 	    	}
 	    }
 	  }
-	
 	public JMenuItem buildPluginMenuItem(String filename) throws Exception{
 		//
 		FileInputStream jsonfile = new FileInputStream(JsonPath);
@@ -1134,5 +1092,4 @@ public class CTFcrack{
 	    });
 	    return item;
 	  }
-		//
 }
