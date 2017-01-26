@@ -23,7 +23,7 @@ git上的是源码，需要下载后导入javaIDE编译<br/>
 ![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/6.png)
 ![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/7.png)
 # Python插件开发文档
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/8.png)
+![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/8.png)<br/>
 图中是一个我用来debug的程序的插件。也是插件样式。<br/>
 我想保护开发者的版权，所以会要求开发者在autor上填写自己的ID。<br/>
 因为程序整体都是utf-8编码，所以插件的要求也应该是utf-8<br/>
