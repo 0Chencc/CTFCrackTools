@@ -34,8 +34,10 @@ author：（作者ID）<br/>
 detail：（程序详情）<br/>
 用}结束<br/>
 在Python中def run(String)一个方法，样式：<br/>
-def run(string)<br/>
-    return string<br/>
+```Python
+def run(string)
+    return string
+ ```
 因为程序会传入字符，所以return的也应该是String类型<br/>
 Image和Zip的，是通过程序传入文件路径，然后再让插件crack后返回crack之后的文件路径。也就是说，尽可能生成在比较容易查找的目录。<br/>
 Crypto则是返回Crack之后的字符串。也同样是String类型<br/>
