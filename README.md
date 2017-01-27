@@ -1,4 +1,4 @@
-# README语言/README Language
+# README 语言/README Language
 [中文](https://github.com/0Linchen/CTFCrackTools/blob/master/README.md)
 <br/>
 [English](https://github.com/0Linchen/CTFCrackTools/blob/master/README_en.md)
