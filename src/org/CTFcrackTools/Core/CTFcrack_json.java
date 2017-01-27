@@ -15,6 +15,8 @@ import java.util.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 public class CTFcrack_json{
+	Locale language = Locale.getDefault();
+	ResourceBundle RB = ResourceBundle.getBundle("info",language);
 	String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");
 	//Json解析
 	public String getType(String title) throws Exception{
@@ -44,10 +46,10 @@ public class CTFcrack_json{
 	        JsonObject Plugin = jsonElement.getAsJsonObject();
 	        if(Plugin.get("title").getAsString().equalsIgnoreCase(title)){
 	        	detailStr = "<html>"
-	        				+ "插件名："+Plugin.get("title").getAsString()+"<br/>"
-	        				+"作者："+Plugin.get("author").getAsString()+"<br/>"
-	        				+"插件详情："+Plugin.get("detail").getAsString()+"<br/>"
-	        				+"插件地址："+Plugin.get("path").getAsString()
+	        				+ RB.getString("JsonTitle")+Plugin.get("title").getAsString()+"<br/>"
+	        				+ RB.getString("JsonAuthor")+Plugin.get("author").getAsString()+"<br/>"
+	        				+ RB.getString("JsonDetail")+Plugin.get("detail").getAsString()+"<br/>"
+	        				+ RB.getString("JsonPath")+Plugin.get("path").getAsString()
 	        				+ "</html>";
 	        }
 	    }
@@ -68,7 +70,7 @@ public class CTFcrack_json{
 	    		}else if(lineText.contains("type:")){
 	    			type = lineText.substring(lineText.indexOf("type:")+5, lineText.length());
 	    		}else if(lineText.contains("author:")){
-	    			author = lineText.substring(lineText.indexOf("author:")+6, lineText.length());
+	    			author = lineText.substring(lineText.indexOf("author:")+7, lineText.length());
 	    		}else if(lineText.contains("detail:")){
 	    			detail = lineText.substring(lineText.indexOf("detail:")+7, lineText.length());
 	    		}else if(lineText.contains("}")){
