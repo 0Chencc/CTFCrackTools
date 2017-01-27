@@ -1,3 +1,7 @@
+# README 语言/README Language
+[中文](https://github.com/0Linchen/CTFCrackTools/blob/master/README.md)
+<br/>
+[English](https://github.com/0Linchen/CTFCrackTools/blob/master/README_en.md)
 # China's first CTFcrack framework
 Should be the first CTFcrack framework. Hope that a friend to maintain together<br/>
 Compiled packages: [Download here] (https://github.com/0Linchen/CTFCrackTools/raw/master/CTFtools.zip)
