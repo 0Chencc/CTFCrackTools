@@ -2,8 +2,8 @@
 [中文](https://github.com/0Linchen/CTFCrackTools/blob/master/README.md)
 <br/>
 [English](https://github.com/0Linchen/CTFCrackTools/blob/master/README_en.md)
-# China's first CTFcrack framework
-Should be the first CTFcrack framework. Hope that a friend to maintain together<br/>
+# China's first CTFtools framework
+Should be the first CTFtools framework. Hope that a friend to maintain together<br/>
 Compiled packages: [Download here] (https://github.com/0Linchen/CTFCrackTools/raw/master/CTFtools.zip)
 [Jump directly to the development documentation] (# python plugin development documentation)
 # CTFCrack tool description
