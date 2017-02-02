@@ -2,7 +2,7 @@
 [中文](https://github.com/0Linchen/CTFCrackTools/blob/master/README.md)
 <br/>
 [English](https://github.com/0Linchen/CTFCrackTools/blob/master/README_en.md)
-# 中国国内首个CTFcrack框架
+# 中国国内首个CTF工具框架
 应该是国内首个CTFcrack框架。希望有朋友共同维护<br/>
 已经编译完成的包：[点击此处即可下载](https://github.com/0Linchen/CTFCrackTools/raw/master/CTFtools.zip)<br/>
 [直接跳到开发文档](#python插件开发文档)<br/>
