@@ -426,7 +426,7 @@ public interface func {
 	public static String UrlEncoder(String input) throws UnsupportedEncodingException{//Url编码
 		StringBuilder jg = new StringBuilder();
 		String jm;
-		jm = URLEncoder.encode(input,"utf-8");
+		jm = URLEncoder.encode(input,"utf-8").replace("+", "%20");
 		jg.append(jm);
 		return jg.toString();
 		
