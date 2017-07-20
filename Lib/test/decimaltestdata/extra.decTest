@@ -1,0 +1,2 @@
+-- FIXME: The original of this file hangs test_decimal.py - possibly because of
+-- the upgrade to jline 1.0 as I noticed it shortly after I upgraded jline.

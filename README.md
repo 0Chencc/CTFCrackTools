@@ -1,53 +1,101 @@
-# README 语言/README Language
-[中文](https://github.com/0Linchen/CTFCrackTools/blob/master/README.md)
-<br/>
-[English](https://github.com/0Linchen/CTFCrackTools/blob/master/README_en.md)
-# 中国国内首个CTF工具框架
-应该是国内首个CTF工具框架。希望有朋友共同维护<br/>
-已经编译完成的包：[点击此处即可下载](https://github.com/0Linchen/CTFCrackTools/raw/master/CTFtools.zip)<br/>
-[直接跳到开发文档](#python插件开发文档)<br/>
-# CTFCrack工具说明
-本工具由米斯特安全团队开发<br/>
-集成摩斯电码，凯撒密码，栅栏密码，Rot13密码以及各种编码互换等CTF中常见密码加解<br/>
-旨在于帮助CTFer攻克CTF中crypto类、Image、zip难关<br/>
-本程序支持Python插件，允许使用者自建插件，可直接将py脚本放进Plugin目录中<br/>
-程序运行时将自动遍历Plugin目录中的py脚本<br/>
-每次程序打开时第一次调用脚本时，会稍卡，因为在加载调用py的插件。大概2秒<br/>
-须知：OS目录为程序自带插件，勿删。<br/>
-删除了将调用不了某些功能，误删的朋友可到github上下载<br/>
-## 使用须知
-git上的是源码，需要下载后导入javaIDE编译<br/>
-推荐Eclipse导入编译。
-# 附上程序截图
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/1.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/2.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/3.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/4.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/5.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/6.png)
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/7.png)
-# Python插件开发文档
-![image](https://github.com/0Linchen/CTFcryptoCrack/blob/master/images-folder/8.png)<br/>
-图中是一个我用来debug的程序的插件。也是插件样式。<br/>
-我想保护开发者的版权，所以会要求开发者在autor上填写自己的ID。<br/>
-因为程序整体都是utf-8编码，所以插件的要求也应该是utf-8<br/>
-在声明之后，延续Java的花括号写法<br/>
-title:（标题）<br/>
-type:（针对类型） Crypto对应crypto Image对应image Zip对应zip<br/>
-author：（作者ID）<br/>
-detail：（程序详情）<br/>
-用}结束<br/>
-在Python中def run(String)一个方法，样式：<br/>
+# CTFcrackTools-V3
+
+> CTFcrackTools重置版
+>
+> 作者：米斯特安全-林晨、摇摆、奶权
+>
+> 米斯特安全团队首页：[http://www.hi-ourlife.com/](http://www.hi-ourlife.com/)
+>
+> 部分插件来源：希望团队-nMask
+
+## 框架介绍
+
+这大概是国内首个应用于CTF的工具框架。
+
+可以被应用于CTF中的Crypto，Misc...
+
+内置目前主流密码（包括但不限于维吉利亚密码，凯撒密码，栅栏密码······）
+
+用户可自主编写插件，但仅支持Python编写插件。编写方法也极为简单。
+
+该项目一直在增强，这一次的重置只保留了部分核心代码，而将UI及优化代码重构，使这个框架支持更多功能。
+
+项目地址：[https://github.com/0Chencc/CTFCrackTools](https://github.com/0Chencc/CTFCrackTools)
+
+## 插件编写
+
 ```Python
-def run(string)
-    return string
- ```
-因为程序会传入字符，所以return的也应该是String类型<br/>
-Image和Zip的，是通过程序传入文件路径，然后再让插件crack后返回crack之后的文件路径。也就是说，尽可能生成在比较容易查找的目录。<br/>
-Crypto则是返回Crack之后的字符串。也同样是String类型<br/>
-# 鸣谢：
-米斯特安全团队：我擦咧什么鬼，z13，Mrlyn<br/>
-网友：Void.<br/>
-# 末：
-“好风凭借力，送我上青云”<br/>
-希望能成为你们的好风，早日助你们上青云。
+#-*- coding:utf-8 -*-
+'''
+{
+  title:程序标题
+  type:程序类型
+  author:作者昵称
+  dialog:变量
+  detail:插件详情
+}
+'''
+def main(a):
+    return a
+```
+
+现在来具体讲下这些插件的用法，具体应该将下框架的调用方法。
+
+> 编码类型当然是utf-8啦
+>
+> Type:Crypto是一个硬性要求，因为我目前只写了Crypto的类，我打算在后期加上压缩包，图片的分类出来，慢慢完善。
+>
+> main的方法中，至少有一个变量，至多有四个变量。
+>
+> 除了第一个变量以外的，都应该在Dialog后标明。
+>
+> Example：我们团队的奶权写了一个维基利亚密码的插件
+
+```Python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+{
+Title:VigenereDecrypto
+Author:naiquan
+Type:crypto
+Dialog:key
+Detail:维吉利亚密码解码
+}
+'''
+def vigenereDecrypto(ciphertext,key):
+    ascii='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    keylen=len(key)
+    ctlen=len(ciphertext)
+    plaintext = ''
+    i = 0
+    while i < ctlen:
+        j = i % keylen
+        k = ascii.index(key[j])
+        m = ascii.index(ciphertext[i])
+        if m < k:
+            m += 26
+        plaintext += ascii[m-k]
+        i += 1
+    return plaintext
+def main(ciphertext,key):
+    return vigenereDecrypto(ciphertext.replace(" ","").upper(),key.replace(" ","").upper())
+```
+
+这样写的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。而ciphertext则是直接传入。
+
+如图：![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200626242.png)
+
+![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200644681.png)
+
+![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200655482.png)
+
+```Python
+def vigenereDecrypto(ciphertext,key)
+```
+
+ciphertext即是输入的内容，key是由弹窗出来由用户填写的。
+
+## 界面介绍
+
+![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/195650029.gif)
