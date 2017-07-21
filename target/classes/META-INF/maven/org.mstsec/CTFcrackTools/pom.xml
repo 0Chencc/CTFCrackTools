@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.mstsec</groupId>
-  <artifactId>CTFcrackTools</artifactId>
+  <artifactId>CTFCrackTools</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>CTFcrackTools</name>
+  <name>CTFCrackTools</name>
   <url>http://www.hi-ourlife.com</url>
 
   <properties>
