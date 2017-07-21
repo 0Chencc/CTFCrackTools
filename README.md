@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
 # CTFcrackTools-V3
 
 > CTFcrackTools重置版
