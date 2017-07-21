@@ -1,4 +1,4 @@
-package org.mstsec.CTFcrackTools;
+package org.mstsec.CTFCrackTools;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -106,7 +106,7 @@ public class Core extends JFrame {
 	 * Create the frame.
 	 */
 	public Core() {
-		setTitle("MSTTEM-CTFcrackTools-v3.0");
+		setTitle("MSTTEM-CTFCrackTools-v3.0");
 	    try{
 	        //设置本属性将改变窗口边框样式定义
 	        BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;

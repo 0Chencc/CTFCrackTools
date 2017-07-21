@@ -1,4 +1,4 @@
-package org.mstsec.CTFcrackTools;
+package org.mstsec.CTFCrackTools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

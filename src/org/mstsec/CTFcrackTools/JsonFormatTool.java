@@ -1,4 +1,4 @@
-package org.mstsec.CTFcrackTools;
+package org.mstsec.CTFCrackTools;
 //美化json
 public class JsonFormatTool  
 {  

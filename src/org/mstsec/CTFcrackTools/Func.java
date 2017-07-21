@@ -1,4 +1,4 @@
-package org.mstsec.CTFcrackTools;
+package org.mstsec.CTFCrackTools;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
