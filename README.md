@@ -87,11 +87,11 @@ def main(ciphertext,key):
 
 这样写的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。而ciphertext则是直接传入。
 
-如图：![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200626242.png)
+如图：![mark](/img/1.png)
 
-![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200644681.png)
+![mark](/img/2.png)
 
-![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200655482.png)
+![mark](/img/3.png)
 
 ```Python
 def vigenereDecrypto(ciphertext,key)
@@ -101,4 +101,4 @@ ciphertext即是输入的内容，key是由弹窗出来由用户填写的。
 
 ## 界面介绍
 
-![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/195650029.gif)
+![mark](/img/use.gif)
