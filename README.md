@@ -87,7 +87,9 @@ def main(ciphertext,key):
 
 这样写的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。而ciphertext则是直接传入。
 
-如图：![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200626242.png)
+如图：
+
+![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200626242.png)
 
 ![mark](http://oqz4ehyp7.bkt.clouddn.com/blog/20170720/200644681.png)
 
