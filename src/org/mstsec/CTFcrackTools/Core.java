@@ -106,7 +106,7 @@ public class Core extends JFrame {
 	 * Create the frame.
 	 */
 	public Core() {
-		setTitle("MSTTEAM-CTFCrackTools-v3.0");
+		setTitle("MSTTEAM-CTFCrackTools-v3.0.1");
 	    try{
 	        //设置本属性将改变窗口边框样式定义
 	        BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;
@@ -866,7 +866,7 @@ public class Core extends JFrame {
 	        PythonInterpreter interpreter = new PythonInterpreter();
 	        PySystemState sys = Py.getSystemState();
 	        //sys.path.add("C:\\Users\\0chen\\Desktop\\Lib");
-	        sys.path.add(System.getProperty("user.dir")+"\\Lib");
+	        //sys.path.add(System.getProperty("user.dir")+"\\Lib");
 	        try {
 	        	interpreter.execfile(json.getPath(arg0.getActionCommand()));
 			} catch (Exception e) {

@@ -4,7 +4,7 @@
 
   <groupId>org.mstsec</groupId>
   <artifactId>CTFCrackTools</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>3.0.1</version>
   <packaging>jar</packaging>
 
   <name>CTFCrackTools</name>
@@ -24,8 +24,8 @@
     <!-- https://mvnrepository.com/artifact/org.python/jython -->
     <dependency>
     	<groupId>org.python</groupId>
-    	<artifactId>jython</artifactId>
-    	<version>2.5.4-rc1</version>
+    	<artifactId>jython-standalone</artifactId>
+    	<version>2.7.1</version>
     </dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>

@@ -143,10 +143,11 @@ public class Json{
     		if ((jsonText = jsonread.readLine())!=null){
     			//爬一下原有的json数据 以免被重写
     			JsonParser parser = new JsonParser(); 
-    			object =  (JsonObject) parser.parse(new FileReader(JsonPath));
+    			object =  (JsonObject)parser.parse(new InputStreamReader(new FileInputStream(JsonPath),"UTF-8"));
     			Plugins = object.getAsJsonArray("Plugins");
     			for (JsonElement jsonElement : Plugins) {
     				JsonObject Plugin = jsonElement.getAsJsonObject();
+    				System.out.println(Plugin.get("path").getAsString()); //--debug
     			}
     		}else{
     			object = new JsonObject();
@@ -186,7 +187,7 @@ public class Json{
     		if ((jsonText = jsonread.readLine())!=null){
     			//爬一下原有的json数据 以免被重写
     			JsonParser parser = new JsonParser(); 
-    			object =  (JsonObject) parser.parse(new FileReader(JsonPath));
+    			object =  (JsonObject)parser.parse(new InputStreamReader(new FileInputStream(JsonPath),"UTF-8"));
     			Plugins = object.getAsJsonArray("Plugins");
     			for (JsonElement jsonElement : Plugins) {
     				JsonObject Plugin = jsonElement.getAsJsonObject();
