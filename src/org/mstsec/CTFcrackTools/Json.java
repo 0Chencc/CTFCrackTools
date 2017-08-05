@@ -147,7 +147,6 @@ public class Json{
     			Plugins = object.getAsJsonArray("Plugins");
     			for (JsonElement jsonElement : Plugins) {
     				JsonObject Plugin = jsonElement.getAsJsonObject();
-    				System.out.println(Plugin.get("path").getAsString()); //--debug
     			}
     		}else{
     			object = new JsonObject();
