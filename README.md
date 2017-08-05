@@ -25,6 +25,8 @@
 
 项目地址：[https://github.com/0Chencc/CTFCrackTools](https://github.com/0Chencc/CTFCrackTools)
 
+下载编译好的版本：https://github.com/0Chencc/CTFCrackTools/releases/
+
 ## 插件编写
 
 ```Python
