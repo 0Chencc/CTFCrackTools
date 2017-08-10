@@ -3,5 +3,5 @@ description:
     <-国内首个CTF工具框架->
     <-China's first CTFTools framework->
     <-旨在帮助CTFer快速攻克CTF难题->
-theme: jekyll-theme-architect
+theme: next
 show_downloads: true
