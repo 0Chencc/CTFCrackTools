@@ -1,5 +1,3 @@
-*.class
-
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -62,3 +60,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 Setting.json
+target/classes/org/mstsec/CTFCrackTools/*.class
