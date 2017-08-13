@@ -20,6 +20,8 @@ except ImportError:
 
 from test.test_support import strip_python_stderr
 
+_IS_JYTHON_WINDOWS = sys.platform.startswith('java') and os._name == 'nt'
+
 # Executing the interpreter in a subprocess
 def _assert_python(expected_success, *args, **env_vars):
     cmd_line = [sys.executable]
@@ -101,7 +103,9 @@ def temp_dir():
     try:
         yield dirname
     finally:
-        shutil.rmtree(dirname)
+        # On Windows, unlink failures within rmtree often mask the true nature
+        # of a failing test (or sometimes a passing one).
+        shutil.rmtree(dirname, ignore_errors=_IS_JYTHON_WINDOWS)
 
 def make_script(script_dir, script_basename, source):
     script_filename = script_basename+os.extsep+'py'

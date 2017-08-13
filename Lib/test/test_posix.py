@@ -217,6 +217,9 @@ class PosixTester(unittest.TestCase):
         if hasattr(posix, 'stat'):
             self.assertTrue(posix.stat(test_support.TESTFN))
 
+    def test_stat_tuple(self):
+        self.assertEqual(tuple(posix.stat(".")), posix.stat("."))
+
     def _test_all_chown_common(self, chown_func, first_param):
         """Common code for chown, fchown and lchown tests."""
         if os.getuid() == 0:

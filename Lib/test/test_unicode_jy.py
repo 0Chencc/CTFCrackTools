@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Misc unicode tests
 
-Made for Jython.
+Made for Jython. (But it will run for CPython.)
 """
 import itertools
 import random
@@ -11,7 +11,6 @@ import sys
 import unittest
 from StringIO import StringIO
 from test import test_support
-from java.lang import StringBuilder
 
 class UnicodeTestCase(unittest.TestCase):
 
@@ -108,6 +107,7 @@ class UnicodeTestCase(unittest.TestCase):
     def test_repr(self):
         self.assert_(isinstance('%r' % u'foo', str))
 
+    @unittest.skipUnless(test_support.is_jython, "Specific to Jython")
     def test_unicode_lone_surrogate(self):
         # http://bugs.jython.org/issue2190
         self.assertRaises(ValueError, unichr, 0xd800)
@@ -167,7 +167,11 @@ class UnicodeMaterial(object):
     '''
 
     base = tuple(u'abcdefghijklmnopqrstuvwxyz')
-    supp = tuple(map(unichr, range(0x10000, 0x1000c)))
+    if sys.maxunicode < 0x10000:
+        # This is here to prevent error messages on a narrow CPython build.
+        supp = (u'NOT SUPPORTED',)
+    else:
+        supp = tuple(map(unichr, range(0x10000, 0x1000c)))
     used = sorted(set(base+supp))
 
     def __init__(self, size=20, pred=None, ran=None):
@@ -225,6 +229,7 @@ class UnicodeMaterial(object):
         self.text = u''.join(self.ref)
 
 
+@unittest.skipUnless(test_support.is_jython, "Specific to Jython")
 class UnicodeIndexMixTest(unittest.TestCase):
     # Test indexing where there may be more than one code unit per code point.
     # See Jython Issue #2100.
@@ -367,6 +372,8 @@ class UnicodeIndexMixTest(unittest.TestCase):
                 check_rfind_str(m, t)
 
     def test_surrogate_validation(self):
+
+        from java.lang import StringBuilder
 
         def insert_sb(text, c1, c2):
             # Insert code points c1, c2 in the text, as a Java StringBuilder
@@ -845,6 +852,54 @@ class StringModuleUnicodeTest(unittest.TestCase):
         self.assertRaises(ValueError, fmt.format, u"{0}", 10, 20, i=100)
         self.assertRaises(ValueError, fmt.format, u"{i}", 10, 20, i=100)
 
+class UnicodeSpaceTest(unittest.TestCase):
+    # Test classification of characters as whitespace (some Jython divergence)
+
+    def checkequal(self, expected, obj, methodname, *args):
+        "check that object.method() returns expected result"
+        realresult = getattr(obj, methodname)()
+        grumble = "%r.%s() returned %r" % (obj, methodname, realresult)
+        self.assertEqual(expected, realresult, grumble)
+        # print grumble, 'x' if realresult != expected else '.'
+
+    # The set of Unicode characters that are spaces according to CPython 2.7.8
+    SPACE = u'\t\n\x0b\x0c\r\x1c\x1d\x1e\x1f\x20\x85\xa0\u1680\u180e' + \
+            u'\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a' + \
+            u'\u2028\u2029\u202f\u205f\u3000'
+    if test_support.is_jython:
+        # Not whitespace in Jython based on java.lang.Character.isWhitespace.
+        # This test documents the divergence, until we decide to remove it.
+        for c in u'\x85\xa0\u2007\u202f':
+            SPACE = SPACE.replace(c, u'')
+
+    def test_isspace(self):
+        for c in self.SPACE:
+            self.checkequal(True, c, 'isspace')
+            self.checkequal(True, u'\t' + c + u' ', 'isspace')
+
+    # *strip() tests to supplement string_tests with non-ascii examples,
+    # using characters that are spaces in latin-1 but not in ascii.
+
+    def test_strip(self):
+        for c in self.SPACE:
+            # These should be stripped of c at left or right
+            sp = u" " + c + u" "
+            h = u"hello"
+            s = sp + h + sp
+            self.checkequal( h, s, 'strip')
+            self.checkequal( h, c + s + c, 'strip')
+            self.checkequal( sp + h, s, 'rstrip')
+            self.checkequal( sp + h, s + c, 'rstrip')
+            self.checkequal( h + sp, s, 'lstrip')
+            self.checkequal( h + sp, c + s, 'lstrip')
+
+    def test_split(self):
+        for c in self.SPACE:
+            # These should be split at c
+            s = u"AAA" + c + u"BBB"
+            self.assertEqual(2, len(s.split()), "no split made in " + repr(s))
+            self.assertEqual(2, len(s.rsplit()), "no rsplit made in " + repr(s))
+
 
 def test_main():
     test_support.run_unittest(
@@ -854,6 +909,7 @@ def test_main():
                 UnicodeStdIOTestCase,
                 UnicodeFormatStrTest,
                 StringModuleUnicodeTest,
+                UnicodeSpaceTest,
             )
 
 

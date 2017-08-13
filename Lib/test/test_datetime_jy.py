@@ -6,7 +6,7 @@ from datetime import tzinfo
 from datetime import time
 from datetime import date, datetime
 
-from java.util import Calendar, GregorianCalendar
+from java.util import Calendar, GregorianCalendar, TimeZone
 from java.sql import Date, Time, Timestamp
 
 
@@ -109,7 +109,12 @@ class TestSQL(unittest.TestCase):
         x = date(2007, 1, 3)
         y = x.__tojava__(Date)
         self.assertIsInstance(y, Date)
-        self.assertEqual(y.getTime(), (x - date(1970, 1, 1)).total_seconds() * 1000)
+        # Note that java.sql.Date operates regarding to default timezone, so adjust offset
+        off = TimeZone.getDefault().getRawOffset()
+        # It's sufficient for the date to fit; we modulo away the time, so this test
+        # won't run into TimeZone issues.
+        self.assertEqual((y.getTime()+off)//(1000*60*60*24),
+                (x - date(1970, 1, 1)).total_seconds()//(60*60*24))
 
     def test_time(self):
         self.assertTrue(hasattr(time, "__tojava__"))

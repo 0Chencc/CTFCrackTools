@@ -4,6 +4,7 @@
 
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import threading, xmlrpclib, unittest
+from test import test_support
 
 HOST = "127.0.0.1"
 PORT = 7218
@@ -82,7 +83,9 @@ class SimpleXMLRPCServerTestCase(unittest.TestCase):
         self.assertEqual(client.squared(10), 100)
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_main():
+    test_support.run_unittest(SimpleXMLRPCServerTestCase)
 
-# vim:et:ts=4:sw=4:
+
+if __name__ == "__main__":
+    test_main()

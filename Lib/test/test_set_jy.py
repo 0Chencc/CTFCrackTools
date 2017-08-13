@@ -109,6 +109,90 @@ class TestJavaHashSet(TestJavaSet):
 class TestJavaLinkedHashSet(TestJavaSet):
     thetype = LinkedHashSet
 
+class SetSubclassCallsSuperMethods(set):
+
+    # Used to verify all call paths where there is more than one way
+    # to call the super method, such as (union, __or__), etc
+    
+    def _valid_op_args(f):
+        def _screener(*args):
+            if len(args) != 2:
+                raise TypeError()
+            for arg in args:
+                if not (isinstance(arg, set) or isinstance(arg, frozenset)):
+                    raise TypeError()
+            return f(*args)
+        return _screener
+
+    def _call_for_side_effects(f):
+        def _mutating_convention(*args):
+            f(*args)
+            return None
+        return _mutating_convention
+
+    def issubset(self, other):
+        return super(SetSubclassCallsSuperMethods, self).issubset(other)
+        
+    __le__ = issubset
+
+    def issuperset(self, other):
+        return super(SetSubclassCallsSuperMethods, self).issuperset(other)
+        
+    __ge__ = issuperset
+
+    def union(self, *others):
+        return super(SetSubclassCallsSuperMethods, self).union(*others)
+
+    __or__ = _valid_op_args(union)
+
+    def intersection(self, *others):
+        return super(SetSubclassCallsSuperMethods, self).intersection(*others)
+
+    __and__ = _valid_op_args(intersection)
+
+    def difference(self, *others):
+        return super(SetSubclassCallsSuperMethods, self).difference(*others)
+
+    __sub__ = _valid_op_args(difference)
+
+    def symmetric_difference(self, *others):
+        return super(SetSubclassCallsSuperMethods, self).symmetric_difference(*others)
+
+    __xor__ = _valid_op_args(symmetric_difference)
+
+    def _update(self, *others):
+        super(SetSubclassCallsSuperMethods, self).update(*others)
+        return self
+
+    update = _call_for_side_effects(_update)
+    __ior__ = _update
+        
+    def _difference_update(self, *others):
+        super(SetSubclassCallsSuperMethods, self).difference_update(*others)
+        return self
+
+    difference_update = _call_for_side_effects(_difference_update)
+    __isub__ = _difference_update
+
+    def _intersection_update(self, *others):
+        super(SetSubclassCallsSuperMethods, self).intersection_update(*others)
+        return self
+
+    intersection_update = _call_for_side_effects(_intersection_update)
+    __iand__ = _intersection_update
+
+    def _symmetric_difference_update(self, other):
+        super(SetSubclassCallsSuperMethods, self).symmetric_difference_update(other)
+        return self
+
+    symmetric_difference_update = _call_for_side_effects(_symmetric_difference_update)
+    __ixor__ = _symmetric_difference_update
+
+
+class TestSetSubclassCallsSuperMethods(test_set.TestSet):
+    # verifies fix for http://bugs.jython.org/issue2357
+    thetype = SetSubclassCallsSuperMethods
+
 
 def test_main():
     tests = [
@@ -116,6 +200,7 @@ def test_main():
         SetInJavaTestCase,
         TestJavaHashSet,
         TestJavaLinkedHashSet,
+        TestSetSubclassCallsSuperMethods
     ]
     test_support.run_unittest(*tests)
 

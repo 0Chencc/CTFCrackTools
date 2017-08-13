@@ -4,6 +4,7 @@ import os
 import sys
 import signal
 import time
+import errno
 from test import test_support
 from subprocess import PIPE, Popen, _cmdline2list
 
@@ -143,13 +144,24 @@ class Cmdline2ListTestCase(unittest.TestCase):
             self.assertEqual(_cmdline2list(cmdline), argv)
 
 
+class ExceptionsTestCase(unittest.TestCase):
+
+    def test_oserror_raised_with_errno_no_such_file_or_directory(self):
+        try:
+            Popen('a-file-that-should-never-exist-subprocess-test')
+        except OSError as err:
+            self.assertEquals(err.errno, errno.ENOENT)
+
+
 def test_main():
     test_support.run_unittest(
         TerminationAndSignalTest,
         PidTest,
         EnvironmentInheritanceTest,
         JythonOptsTest,
-        Cmdline2ListTestCase)
+        Cmdline2ListTestCase,
+        ExceptionsTestCase,
+    )
 
 
 if __name__ == '__main__':

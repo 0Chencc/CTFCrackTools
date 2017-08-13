@@ -47,12 +47,14 @@ class SyspathZipimportTest(unittest.TestCase):
 class ZipImporterDictTest(unittest.TestCase):
     def test_subclass_assign_attribute(self):
         class A(zipimporter): pass
-        path = os.path.abspath('tests/modjy/lib_python_folder/test_modules.zip')
+        path = test_support.findfile("zipdir.zip")
         A(path).somevar = 1
 
 def test_main():
-    test_support.run_unittest(SyspathZipimportTest)
-    test_support.run_unittest(ZipImporterDictTest)
+    test_support.run_unittest(
+        SyspathZipimportTest,
+        ZipImporterDictTest
+    )
 
 if __name__ == "__main__":
     test_main()

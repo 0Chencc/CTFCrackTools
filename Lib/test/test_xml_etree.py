@@ -349,7 +349,7 @@ def xinclude():
 
 def test_main():
     from test import test_xml_etree
-    test_support.run_doctest(test_xml_etree, verbosity=True)
+    test_support.run_doctest(test_xml_etree)
 
 if __name__ == '__main__':
-    test_main()
+    doctest.testmod()

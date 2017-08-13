@@ -234,6 +234,10 @@ class TimeTestCase(unittest.TestCase):
         t1 = time.mktime(gt1)
         self.assertTrue(0 <= (t1-t0) < 0.2)
 
+    def test_gmtime_tmetuple(self):
+        t = time.gmtime()
+        self.assertEqual(tuple(t), t)
+
     def test_localtime_without_arg(self):
         lt0 = time.localtime()
         lt1 = time.localtime(None)

@@ -16,6 +16,67 @@ class SortTest(unittest.TestCase):
 
         assert len(a_set - a_sorted_set) == len(a_sorted_set - a_set) == 0
 
+
+    def test_bug1767(self):
+        'Test bug 1767 sorting when __cmp__ inconsistent with __eq__'
+        
+        class Tricky:
+                
+            def __init__(self, pair):
+                self.key0, self.key1 = pair
+                
+            def __cmp__(self, other):
+                # Duplicates standard sort for pairs
+                if self.key0 != other.key0:
+                    return cmp(self.key0, other.key0)
+                return cmp(self.key1, other.key1)
+                
+            def __eq__(self,other):
+                # Compare only on second key: inconsistent with __cmp__()==0
+                return self.key1 == other.key1
+
+            def __repr__(self):
+                return "(%d, %d)" %(self.key0, self.key1)
+
+        def slowSorted(qq) :
+            'Reference sort peformed by insertion using only <'
+            rr = list()
+            for q in qq :
+                i = 0
+                for i in range(len(rr)) :
+                    if q < rr[i] :
+                        rr.insert(i,q)
+                        break
+                else :
+                    rr.append(q)
+            return rr
+
+        def check(trick, answer):
+            'Check list of Tricky matches list of pairs in order'
+            assert len(trick)==len(answer)
+            for t, a in zip(trick,answer) :
+                # print q, a
+                assert t.key0==a[0] and t.key1==a[1]
+
+        # Test material
+        question = [(2, 5), (1, 3), (3, 0), (2, 3), (1, 1), (2, 3),
+                    (3, 5), (1, 0), (2, 0), (2, 1), (1, 4), (2, 5),
+                    (1, 1), (3, 5), (2, 5), (1, 0), (3, 2), (1, 1),
+                    (2, 2), (2, 2), (1, 0), (2, 3), (2, 1), (3, 2)]
+        answer = slowSorted(question)
+
+        # Test library function
+        que = [Tricky(p) for p in question]
+        que.sort()
+        check(que, answer)
+
+        # Test library function in reverse
+        que = [Tricky(p) for p in question]
+        que.sort(reverse=True)
+        check(que, list(reversed(answer)))
+
+
+
 def test_main():
     test_support.run_unittest(SortTest)
 

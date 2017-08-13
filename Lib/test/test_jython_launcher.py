@@ -31,7 +31,6 @@ def get_launcher(executable):
         # by the installer
         return executable
 
-
 def get_uname():
     _uname = None
     try:
@@ -49,9 +48,8 @@ def classpath_delimiter():
 
 
 class TestLauncher(unittest.TestCase):
-    
-    def get_cmdline(self, cmd, env):
 
+    def get_cmdline(self, cmd, env):
         output = subprocess.check_output(cmd, env=env).rstrip()
         if is_windows:
             return subprocess._cmdline2list(output)
@@ -76,7 +74,7 @@ class TestLauncher(unittest.TestCase):
                 k, v = arg[2:].split("=")
                 props[k] = v
         return props
-            
+
     def test_classpath_env(self):
         env = self.get_newenv()
         env["CLASSPATH"] = some_jar
@@ -105,7 +103,7 @@ class TestLauncher(unittest.TestCase):
         args = self.get_cmdline([launcher, "--print"], env)
         self.assertEqual(args[0], os.path.join(my_java, "bin", "java"))
         self.assertEqual(args[1], "-Xmx512m")
-        self.assertEqual(args[2], "-Xss1024k")
+        self.assertEqual(args[2], "-Xss2560k")
         self.assertEqual(args[-1], "org.python.util.jython")
 
     def test_java_opts(self):
@@ -115,7 +113,7 @@ class TestLauncher(unittest.TestCase):
         props = self.get_properties(args)
         self.assertEqual(args[0], "java")
         self.assertEqual(args[1], "-Xmx2g")
-        self.assertEqual(args[2], "-Xss1024k")
+        self.assertEqual(args[2], "-Xss2560k")
         self.assertEqual(args[3], "-classpath", args)
         self.assertEqual(args[4].split(classpath_delimiter())[-1], some_jar)
         self.assertEqual(args[-1], "org.python.util.jython")
@@ -128,7 +126,7 @@ class TestLauncher(unittest.TestCase):
         props = self.get_properties(args)
         self.assertEqual(args[0], "java")
         self.assertEqual(args[1], "-Xmx512m")
-        self.assertEqual(args[2], "-Xss1024k")
+        self.assertEqual(args[2], "-Xss2560k")
         self.assertEqual(args[-1], "org.python.util.jython")
         self.assertIn("python.home", props)
         self.assertIn("python.executable", props)
@@ -159,7 +157,7 @@ class TestLauncher(unittest.TestCase):
         args = self.get_cmdline([launcher, "--print"], env)
         self.assertEqual(args[0], "java")
         self.assertEqual(args[1], "-Xmx512m")
-        self.assertEqual(args[2], "-Xss1024k")
+        self.assertEqual(args[2], "-Xss2560k")
         self.assertEqual(args[-3], "org.python.util.jython")
         self.assertEqual(args[-2], "-c")
         self.assertEqual(args[-1], "print 47")
@@ -207,7 +205,7 @@ class TestLauncher(unittest.TestCase):
 
     def test_file(self):
         self.assertCommand(['test.py'])
-    
+
     def test_dash(self):
         self.assertCommand(['-i'])
 

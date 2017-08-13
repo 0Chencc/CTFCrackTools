@@ -94,8 +94,6 @@ resources to test.  Currently only the following are defined:
     curses -    Tests that use curses and will modify the terminal's
                 state and output modes.
 
-    lib2to3 -   Run the tests for 2to3 (They take a while.)
-
     largefile - It is okay to run some test that may create huge
                 files.  These tests can take a long time and may
                 consume >2GB of disk space temporarily.
@@ -217,11 +215,11 @@ def main(tests=None, testdir=None, verbose=0, quiet=False,
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hvqxsSrf:lu:t:TD:NLR:wM:em:j:',
                                    ['help', 'verbose', 'quiet', 'exclude',
-                                    'single', 'slow', 'random', 'fromfile',
+                                    'single', 'slow', 'random', 'fromfile=',
                                     'findleaks', 'use=', 'threshold=', 'trace',
                                     'coverdir=', 'nocoverdir', 'runleaks',
                                     'huntrleaks=', 'verbose2', 'memlimit=',
-                                    'expected', 'memo'
+                                    'expected', 'memo=', 'junit-xml='
                                     ])
     except getopt.error, msg:
         usage(2, msg)
@@ -347,9 +345,9 @@ def main(tests=None, testdir=None, verbose=0, quiet=False,
         tests = []
         fp = open(fromfile)
         for line in fp:
-            guts = line.split() # assuming no test has whitespace in its name
-            if guts and not guts[0].startswith('#'):
-                tests.extend(guts)
+            # Potentially multiple names and a comment on one line of the file
+            trunc_line = line.split('#', 1)[0]
+            tests.extend(trunc_line.split())
         fp.close()
 
     # Strip .py extensions.
@@ -399,6 +397,22 @@ def main(tests=None, testdir=None, verbose=0, quiet=False,
     # Prevent reporting unexpected success in things we failed to try
     failures.keep_only(tests)
     skips.keep_only(tests)
+
+    # Output some platform information. Loosely based on CPython 3.6 regrtest.
+    if (verbose or len(tests)>1) and not (quiet or single):
+        # Print basic platform information
+        for t in sys.version.splitlines():
+            print "==", t
+        print "== platform:", sys.platform
+        print "== encodings: stdin=%s, stdout=%s, FS=%s" % (
+            sys.stdin.encoding, sys.stdout.encoding,
+            sys.getfilesystemencoding())
+        try:
+            import locale
+            print "== locale: default=%s, actual=%s" % (
+                locale.getdefaultlocale(), locale.getlocale())
+        except ImportError:
+            pass
 
     for test in tests:
         if not quiet:
@@ -500,7 +514,7 @@ def main(tests=None, testdir=None, verbose=0, quiet=False,
         os.system("leaks %d" % os.getpid())
 
     if memo:
-        savememo(memo,good,bad,skipped)
+        savememo(memo, good, failures, bad, skips, skipped, allran, resource_denieds)
 
     sys.exit(surprises > 0)
 
@@ -821,7 +835,7 @@ def count(n, word):
     else:
         return "%d %ss" % (n, word)
 
-def printlist(x, width=70, indent=4):
+def printlist(x, width=70, indent=4, output_to=sys.stdout):
     """Print the elements of iterable x to stdout.
 
     Optional arg width (default 70) is the maximum line length.
@@ -832,25 +846,35 @@ def printlist(x, width=70, indent=4):
     from textwrap import fill
     blanks = ' ' * indent
     # Print the sorted list: 'x' may be a '--random' list or a set()
-    print fill(' '.join(str(elt) for elt in sorted(x)), width,
+    print >> output_to, fill(' '.join(str(elt) for elt in sorted(x)), width,
                initial_indent=blanks, subsequent_indent=blanks)
 
-def countsurprises(expected, actual, action, antiaction, allran, resource_denieds):
+def countsurprises(expected, actual, action, antiaction, allran, resource_denieds, output_to=sys.stdout):
     """returns the number of items in actual that aren't in expected."""
-    printlist(actual)
+    printlist(actual,output_to=output_to)
     if not expected.isvalid():
-        print "Ask someone to teach regrtest.py about which tests are"
-        print "expected to %s on %s." % (action, sys.platform)
+        print >> output_to, "Ask someone to teach regrtest.py about which tests are"
+        print >> output_to, "expected to %s on %s." % (action, sys.platform)
         return 1#Surprising not to know what to expect....
     good_surprise = expected.getexpected() - set(actual)
     if allran and good_surprise:
-        print count(len(good_surprise), 'test'), antiaction, 'unexpectedly:'
-        printlist(good_surprise)
+        print >> output_to, count(len(good_surprise), 'test'), antiaction, 'unexpectedly:'
+        printlist(good_surprise,output_to=output_to)
     bad_surprise = set(actual) - expected.getexpected() - set(resource_denieds)
     if bad_surprise:
-        print count(len(bad_surprise), action), "unexpected:"
-        printlist(bad_surprise)
+        print >> output_to, count(len(bad_surprise), action), "unexpected:"
+        printlist(bad_surprise,output_to=output_to)
     return len(bad_surprise)
+
+
+def skip_conditional_support(test_module,module_name):
+    try:
+        test_support.import_module(module_name)
+    except unittest.SkipTest:
+        return '\n' + test_module
+    return ""
+
+
 
 # Map sys.platform to a string containing the basenames of tests
 # expected to be skipped on that platform.
@@ -1194,7 +1218,7 @@ _expectations = {
         """,
     'java':
         """
-        # Not supportable on Java, or at least requires additional emulation in Jython
+        # These always skip (e.g. fail to import a certain module).
         test__locale
         test__rawffi
         test_aepack
@@ -1209,8 +1233,10 @@ _expectations = {
         test_capi
         test_cd
         test_cl
-        test_ctypes
+        test_closuregen        # cannot import name verify
+        test_ctypes            # cannot import name verify
         test_dl
+        test_dummy_threading   # cannot import _newFunctionThread
         test_fcntl
         test_fork1
         test_gdb
@@ -1222,7 +1248,6 @@ _expectations = {
         test_imgfile
         test_ioctl
         test_kqueue
-        test_largefile
         test_linuxaudiodev
         test_macfs
         test_macostools
@@ -1234,7 +1259,6 @@ _expectations = {
         test_openpty
         test_ossaudiodev
         test_parser
-        test_plistlib
         test_pty
         test_resource
         test_rgbimg
@@ -1243,57 +1267,34 @@ _expectations = {
         test_strop
         test_structmembers
         test_sunaudiodev
-        test_sundry
         test_symtable
         test_tcl
         test_tk
         test_tools
         test_ttk_guionly
         test_ttk_textonly
-        test_unicode_file
-        test_wait3
-        test_wait4
+        test_unicode_file      # cannot import name TESTFN_UNICODE
+        test_wait3             # os.fork not defined
+        test_wait4             # os.fork not defined
         test_wave
         test_winreg
         test_winsound
-        test_zipfile64
+        test_zipfile64         # requires bogus resource "extralargefile"
 
         # Could rewrite these tests
-        test_epoll
-        test_poll
-        test_profile
+        test_descr             # cannot import name verify
+        test_epoll             # test works only on Linux 2.6
+        test_poll              # cannot import name TestSkipped
+        test_struct            # cannot import name verify
 
-        # The following tests cause issues for tests that are subsequently run
-        test_distutils
-        test_email_codecs
-        test_io
         test_locale
 
         # Should fix these tests so they are not hardcoded for CPython pyc files
         test_compileall
-        test_pydoc
+        test_longexp           # Requires Python bytecode compilation support
 
-        # Requires Python bytecode compilation support
-        test_longexp
-
-        # Nonreliable tests
-        test_asynchat
-        test_asyncore
-        test_select_new
-
-        # Command line testing is hard for Jython to do, but revisit
-        test_cmd_line_script
-
-        # Tests that should work with socket-reboot, but currently hang
-        test_ftplib
-        test_httplib
-        test_poplib
-        test_smtplib
-        test_socket_ssl
-        test_telnetlib
-
-        test_sys_setprofile  # revisit for GC
-        test_sys_settrace    # revisit for line jumping
+        test_multibytecodec    # No module named _multibytecodec
+        test_ucn               # No module named _testcapi
         """
 }
 _expectations['freebsd5'] = _expectations['freebsd4']
@@ -1302,48 +1303,119 @@ _expectations['freebsd7'] = _expectations['freebsd4']
 _expectations['freebsd8'] = _expectations['freebsd4']
 
 _failures = {
-    'java':
+    'java':     # Expected to fail on every OS
         """
         test_codecencodings_cn
         test_codecencodings_hk
         test_codecencodings_iso2022
         test_codecencodings_jp
         test_codecencodings_kr
-        test_codecencodings_tw
         test_codecmaps_cn
-        test_codecmaps_hk
         test_codecmaps_jp
         test_codecmaps_kr
         test_codecmaps_tw
         test_compiler
         test_dis
-        test_dummy_threading
         test_eof
         test_frozen  # not meaningful for Jython, although it is similar to Clamp singlejar
         test_iterlen
-        test_multibytecodec
-        test_multibytecodec_support
         test_peepholer
         test_pyclbr
         test_pyexpat
-        test_stringprep
+        test_stringprep # UnicodeDecodeError
         test_threadsignals
         test_transformer
-        test_ucn
+        test_xml_etree_jy
         test_zipimport
+
+        # fails on Windows standalone, probably shouldn't
+        test_netrc             # KeyError: 'foo.domain.com'
+        test_zipfile
+
+        # fails on Windows standalone too, but more embarassing as java specific
+        test_subprocess_jy
+        test_sys_jy            # OSError handling wide-character filename
+
+        test_asyncore 
+        test_compileall
+        test_distutils
+        test_email_codecs
+        test_largefile         # [Errno 9] Bad file descriptor
+        test_locale
+        test_profile
+        test_pydoc             # Hangs with prompt (Windows)
+        test_sundry            # ImportError: No module named audiodev
+
+        test_sys_setprofile    # revisit for GC
+        test_sys_settrace      # revisit for line jumping
+
+        # Unreliable tests 
+        test_asynchat
+        # test_gc                # Rare failures depending on timing of Java gc
+        test_logging           # Hangs, though ok run singly. Issue #2536
+        test_tarfile           # flakey everywhere. Issue #2574
+        # test_urllib2net        # unexpected output makes this a failure to regrtest.py
+
+        # Failing tests here are because of lack of STARTTLS; see http://bugs.jython.org/issue2447
+        # (which produces "'NoneType' is not iterable" in the server accept loop)
+        test_ftplib
+        test_httplib
+        test_poplib
+        test_smtplib
+
+        # Problems with the latest JSR 223 changes; see http://bugs.jython.org/issue2154
+        test_jsr223
         """,
+
+    'java.nt':     # Expected to fail on Windows
+        """
+        test_mailbox           # fails miserably and ruins other tests
+        test_os_jy             # Locale tests fail on Cygwin (but not Windows)
+        # test_popen             # Passes, but see http://bugs.python.org/issue1559298
+        test_select_new        # Hangs (Windows), though ok run singly
+        test_urllib2           # file not on local host (likely Windows only)
+        """,
+
+    'java.posix':   # Expected to fail on Linux
+        """
+        test_jython_launcher    # /usr/bin/env: python2.7 -E: No such file or directory
+
+        # These leak file handles on a grand scale (observed on Ubuntu 14.04),
+        # causing failures elsewhere, but they don't actually fail.
+        test_docxmlrpc          #  206 leaked handles issue 2420
+        test_httpservers        #  721 leaked handles issue 2420
+        ## test_imaplib            #   92 leaked handles issue 2420 (tolerable)
+        test_socketserver       # 1344 leaked handles issue 2420
+        test_telnetlib          # 1588 leaked handles issue 2420
+        ## test_timeout            #  123 leaked handles issue 2420 (tolerable)
+        test_urllib2_localnet   #  763 leaked handles issue 2420
+        test_xmlrpc             #  453 leaked handles issue 2420
+
+        """
 }
 
 _platform = sys.platform
 if _platform[:4] == 'java':
     _platform = 'java'
-    if os._name == 'nt':
-        # XXX: Omitted for now because it fails so miserably and ruins
-        # other tests
-        _failures['java'] += '\ntest_mailbox'
-        if ' ' in sys.executable:
-            # http://bugs.python.org/issue1559298
-            _failures['java'] += '\ntest_popen'
+    if os._name != 'darwin':
+        _expectations['java'] += '\ntest__osx_support'
+    if os.name != 'posix':
+        _expectations['java'] += """
+                        test_commands
+                        test_pipes"""
+
+
+
+# tests for modules which themselves test for compatability, based on
+# additional installed libraries, etc
+conditional_support = {'test_dbm':'dbm',
+                       'test_readline':'readline',
+                       'test_sax':'sax'}
+
+for test_module in conditional_support:
+    _expectations[_platform] += \
+        skip_conditional_support(test_module, conditional_support[test_module])
+
 
 class _ExpectedSkips:
     def __init__(self):
@@ -1455,18 +1527,34 @@ class _ExpectedFailures(_ExpectedSkips):
         if _platform in _failures:
             s = _failures[_platform]
             self.expected = set(self.split_commented(s))
+            if test_support.is_jython:
+                # There may be a key like java.nt with extra entries
+                s = _failures.get('java.' + os._name)
+                if s:
+                    self.expected |= set(self.split_commented(s))
             self.valid = True
 
-def savememo(memo,good,bad,skipped):
+
+def savememo(memo, good, failures, bad, skips, skipped, allran, resource_denieds):
     f = open(memo,'w')
     try:
-        for n,l in [('good',good),('bad',bad),('skipped',skipped)]:
+        for n,l in [('good',good), ('bad',bad), ('skipped',skipped)]:
             print >>f,"%s = [" % n
             for x in l:
                 print >>f,"    %r," % x
             print >>f," ]"
+        print >>f, count(len(skipped), "test"), "skipped:"
+        countsurprises(skips, skipped, 'skip', 'ran', allran, resource_denieds, f)
+        print >>f, count(len(bad), "test"), "failed:"
+        countsurprises(failures, bad, 'fail', 'passed', allran, resource_denieds, f)
+        import platform
+        print >>f, "Platform: "
+        print >>f, "    %r" % platform.platform()
+        print >>f, "Command line: "
+        print >>f, "    %r" % sys.argv
     finally:
         f.close()
+
 
 if __name__ == '__main__':
     # Remove regrtest.py's own directory from the module search path.  This

@@ -246,11 +246,13 @@ class TestIsInstanceIsSubclass(unittest.TestCase):
         if test_support.have_unicode:
             self.assertEqual(True, issubclass(str, (unicode, (Child, NewChild, basestring))))
 
+    @unittest.skipIf(test_support.is_jython, "See http://bugs.jython.org/issue2536.")
     def test_subclass_recursion_limit(self):
         # make sure that issubclass raises RuntimeError before the C stack is
         # blown
         self.assertRaises(RuntimeError, blowstack, issubclass, str, str)
 
+    @unittest.skipIf(test_support.is_jython, "See http://bugs.jython.org/issue2536.")
     def test_isinstance_recursion_limit(self):
         # make sure that issubclass raises RuntimeError before the C stack is
         # blown

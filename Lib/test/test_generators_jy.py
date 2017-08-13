@@ -1,7 +1,8 @@
 from __future__ import generators
 import unittest
+from test import test_support
 
-# tests for deeply nested try/except/finally's
+# tests for deeply nested try/except/finally
 
 class FinallyTests(unittest.TestCase):
     def gen1(self):
@@ -168,5 +169,16 @@ class TestThrowTestCase(unittest.TestCase):
         self.assertEqual(genexp.gi_frame, None)
         self.assertRaises(StopIteration, genexp.next)
 
+
+def test_main():
+    tests = (
+        FinallyTests,
+        TryExceptTests,
+        TestThrowTestCase,
+        )
+    test_support.run_unittest(*tests)
+
+
 if __name__ == "__main__":
-    unittest.main()
+    test_main()
+

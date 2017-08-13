@@ -405,7 +405,7 @@ class PyCompileTestCase(BaseImportTestCase):
         mod = sys.modules[mod_name]
         self.assertEqual(mod.__file__, mod_name + COMPILED_SUFFIX)
 
-
+@unittest.skipIf(test_support.is_jython_nt, "FIXME: failing on Windows: issue 2418")
 class SubprocessTestCase(BaseChdirTestCase):
 
     TEST_DIRS = 2

@@ -10,7 +10,7 @@ import jarray
 
 from org.python.core import Py
 from org.python.util import PythonInterpreter
-from javatests.TestSupport import getField
+from javatests.TestSupport import invokePyTypeMethod
 from java.sql import Date, Time, Timestamp
 import datetime
 
@@ -24,7 +24,7 @@ class MemoryLeakTests(unittest.TestCase):
         # by using this helper function that reflects on PyType (and
         # demonstrates here that it's the same as the builtin function
         # `type`!)
-        class_to_type_map = getField(type, 'class_to_type').get(None)
+        class_to_type_map = invokePyTypeMethod(type, 'getClassToType')
 
         def create_proxies():
             pi = PythonInterpreter()

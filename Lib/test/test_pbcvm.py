@@ -7,18 +7,26 @@ from regrtest import runtest
 
 def make_fib_function():
     from org.python.core import PyBytecode, PyFunction
+
+    # The code below was compiled from
+    # def fib(x):
+    #    if x == 0 or x == 1:
+    #        return 1
+    #    else:
+    #        return fib(x-1)+fib(x-2)
+
     co_argcount = 1
     co_nlocals = 1
     co_stacksize = 4
     co_flags = 67
-    co_code = '|\x00\x00d\x01\x00j\x02\x00p\r\x00\x01|\x00\x00d\x02\x00j\x02\x00o\x08\x00\x01d\x02\x00Sn\x1d\x00\x01t\x00\x00|\x00\x00d\x03\x00\x18\x83\x01\x00t\x00\x00|\x00\x00d\x02\x00\x18\x83\x01\x00\x17Sd\x00\x00S'
+    co_code = '|\x00\x00d\x01\x00k\x02\x00s\x18\x00|\x00\x00d\x02\x00k\x02\x00r\x1c\x00d\x02\x00St\x00\x00|\x00\x00d\x02\x00\x18\x83\x01\x00t\x00\x00|\x00\x00d\x03\x00\x18\x83\x01\x00\x17Sd\x00\x00S'
     co_consts = (None, 0, 1, 2)
     co_names = ('fib',)
     co_varnames = ('x',)
     co_filename = '<fib test code>'
     co_name = 'fib'
     co_firstlineno = 1
-    co_lnotab = '\x00\x01\x1a\x01\x08\x02'
+    co_lnotab = '\x00\x01\x18\x01\x04\x02'
     co_freevars = ()
     co_cellvars = ()
 
@@ -73,3 +81,4 @@ def test_main():
 
 if __name__ == "__main__":
     test_main()
+

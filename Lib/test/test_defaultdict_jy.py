@@ -99,9 +99,19 @@ class ThreadSafetyTestCase(unittest.TestCase):
         for i in xrange(size):
             self.assertEqual(counters[i].get(), i, counters)
 
-class GetVariantsTestCase(unittest.TestCase):
 
-    #http://bugs.jython.org/issue2133
+class UnhashableKeyRaiseTypeErrorTestCase(unittest.TestCase):
+    # http://bugs.jython.org/issue2522
+
+    def test_setitem_raises_typeerror(self):
+        self.assertRaises(TypeError, defaultdict(int).__setitem__, {}, 1)
+
+    def test_getitem_raises_typeerror(self):
+        self.assertRaises(TypeError, defaultdict(int).__getitem__, {})
+
+
+class GetVariantsTestCase(unittest.TestCase):
+    # http://bugs.jython.org/issue2133
 
     def test_get_does_not_vivify(self):
         d = defaultdict(list)
@@ -118,6 +128,33 @@ class GetVariantsTestCase(unittest.TestCase):
         self.assertEquals(d["vivify"], [])
         self.assertEquals(d.items(), [("vivify", [])]) 
 
+
+class GetItemPropagateWhateverMissingRaisedTestCase(unittest.TestCase):
+    # http://bugs.jython.org/issue2523
+
+    def test_getitem_propagate_default_factory_raises(self):
+
+        class FooError(Exception):
+            pass
+
+        def defaultfactory():
+            raise FooError()
+
+        d = defaultdict(defaultfactory)
+        self.assertRaises(FooError, d.__getitem__, 'bar')
+
+    def test_getitem_propagate_overridden_missing_raises(self):
+
+        class FooError(Exception):
+            pass
+
+        class DefaultDict(defaultdict):
+
+            def __missing__(self, key):
+                raise FooError()
+
+        d = DefaultDict(int)
+        self.assertRaises(FooError, d.__getitem__, 'bar')
 
 
 class OverrideMissingTestCase(unittest.TestCase):
@@ -137,7 +174,8 @@ class OverrideMissingTestCase(unittest.TestCase):
             return k + k
 
     def setUp(self):
-        self.kdd = OverrideMissingTestCase.KeyDefaultDict(OverrideMissingTestCase.KeyDefaultDict.double)
+        self.kdd = OverrideMissingTestCase.KeyDefaultDict(
+                OverrideMissingTestCase.KeyDefaultDict.double)
 
     def test_dont_call_derived_missing(self):
         self.kdd[3] = 5
@@ -151,7 +189,10 @@ class OverrideMissingTestCase(unittest.TestCase):
 
 
 def test_main():
-    test_support.run_unittest(PickleTestCase, ThreadSafetyTestCase, GetVariantsTestCase, OverrideMissingTestCase)
+    test_support.run_unittest(PickleTestCase, ThreadSafetyTestCase,
+            UnhashableKeyRaiseTypeErrorTestCase,
+            GetVariantsTestCase, OverrideMissingTestCase,
+            GetItemPropagateWhateverMissingRaisedTestCase)
 
 
 if __name__ == '__main__':

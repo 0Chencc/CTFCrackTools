@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from test import test_support
+from test.test_support import is_jython, is_jython_nt
 
 class SysTest(unittest.TestCase):
 
@@ -22,7 +23,7 @@ class SysTest(unittest.TestCase):
             self.assertEquals(str(e), "leaving now")
 
     def test_tuple_args(self):
-        "Exceptions raised unpacking tuple args have right line number"
+        # Exceptions raised unpacking tuple args have right line number
         def tuple_args( (x,y) ): pass
         try:
             tuple_args( 10 )
@@ -66,6 +67,20 @@ class SysTest(unittest.TestCase):
         del sys.getdefaultencoding
         reload(sys)
         self.assert_(type(sys.getdefaultencoding) == type(gde))
+
+    def test_get_tuple_from_version_info(self):
+        self.assertEqual(type(tuple(sys.version_info)), tuple)
+
+    def test_float_info_tuple(self):
+        self.assertEqual(tuple(sys.float_info), sys.float_info)
+
+    def test_long_info_tuple(self):
+        self.assertEqual(tuple(sys.long_info), sys.long_info)
+
+    def test_version_info_gt_lt(self):
+        self.assertTrue(sys.version_info > (0, 0))
+        self.assertTrue(sys.version_info < (99, 99))
+
 
 
 def exec_code_separately(function, sharing=False):
@@ -193,6 +208,7 @@ class SysEncodingTest(unittest.TestCase):
     # Adapted from CPython 2.7 test_sys to exercise setting Jython registry
     # values related to encoding and error policy.
 
+    @unittest.skipIf(is_jython_nt, "FIXME: fails probably due to issue 2312")
     def test_ioencoding(self):  # adapted from CPython v2.7 test_sys
         import subprocess, os
         env = dict(os.environ)
@@ -243,9 +259,8 @@ class SysEncodingTest(unittest.TestCase):
 
 class SysArgvTest(unittest.TestCase):
 
-    @unittest.skipIf(os._name == "nt", "FIXME should work on Windows")
     def test_unicode_argv(self):
-        """Unicode roundtrips successfully through sys.argv arguments"""
+        # Unicode roundtrips successfully through sys.argv arguments
         zhongwen = u'\u4e2d\u6587'
         with test_support.temp_cwd(name=u"tempcwd-%s" % zhongwen):
             p = subprocess.Popen(

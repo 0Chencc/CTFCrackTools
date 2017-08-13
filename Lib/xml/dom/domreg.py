@@ -57,7 +57,7 @@ def getDOMImplementation(name = None, features = ()):
         return mod.getDOMImplementation()
     elif name:
         return registered[name]()
-    elif os.environ.has_key("PYTHON_DOM"):
+    elif "PYTHON_DOM" in os.environ:
         return getDOMImplementation(name = os.environ["PYTHON_DOM"])
 
     # User did not specify a name, try implementations in arbitrary
@@ -87,7 +87,7 @@ def _parse_feature_string(s):
     while i < length:
         feature = parts[i]
         if feature[0] in "0123456789":
-            raise ValueError, "bad feature name: " + `feature`
+            raise ValueError, "bad feature name: %r" % (feature,)
         i = i + 1
         version = None
         if i < length:

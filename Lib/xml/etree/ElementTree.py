@@ -683,8 +683,8 @@ class ElementTree(object):
         return list(self.iter(tag))
 
     ##
-    # Finds the first toplevel element with given tag.
-    # Same as getroot().find(path).
+    # Same as getroot().find(path), starting at the root of the
+    # tree.
     #
     # @param path What element to look for.
     # @keyparam namespaces Optional namespace prefix map.
@@ -704,10 +704,9 @@ class ElementTree(object):
         return self._root.find(path, namespaces)
 
     ##
-    # Finds the element text for the first toplevel element with given
-    # tag.  Same as getroot().findtext(path).
+    # Same as getroot().findtext(path), starting at the root of the tree.
     #
-    # @param path What toplevel element to look for.
+    # @param path What element to look for.
     # @param default What to return if the element was not found.
     # @keyparam namespaces Optional namespace prefix map.
     # @return The text content of the first matching element, or the
@@ -729,8 +728,7 @@ class ElementTree(object):
         return self._root.findtext(path, default, namespaces)
 
     ##
-    # Finds all toplevel elements with the given tag.
-    # Same as getroot().findall(path).
+    # Same as getroot().findall(path), starting at the root of the tree.
     #
     # @param path What element to look for.
     # @keyparam namespaces Optional namespace prefix map.
@@ -802,26 +800,28 @@ class ElementTree(object):
             file = file_or_filename
         else:
             file = open(file_or_filename, "wb")
-        write = file.write
-        if not encoding:
-            if method == "c14n":
-                encoding = "utf-8"
+        try:
+            write = file.write
+            if not encoding:
+                if method == "c14n":
+                    encoding = "utf-8"
+                else:
+                    encoding = "us-ascii"
+            elif xml_declaration or (xml_declaration is None and
+                                     encoding not in ("utf-8", "us-ascii")):
+                if method == "xml":
+                    write("<?xml version='1.0' encoding='%s'?>\n" % encoding)
+            if method == "text":
+                _serialize_text(write, self._root, encoding)
             else:
-                encoding = "us-ascii"
-        elif xml_declaration or (xml_declaration is None and
-                                 encoding not in ("utf-8", "us-ascii")):
-            if method == "xml":
-                write("<?xml version='1.0' encoding='%s'?>\n" % encoding)
-        if method == "text":
-            _serialize_text(write, self._root, encoding)
-        else:
-            qnames, namespaces = _namespaces(
-                self._root, encoding, default_namespace
-                )
-            serialize = _serialize[method]
-            serialize(write, self._root, encoding, qnames, namespaces)
-        if file_or_filename is not file:
-            file.close()
+                qnames, namespaces = _namespaces(
+                    self._root, encoding, default_namespace
+                    )
+                serialize = _serialize[method]
+                serialize(write, self._root, encoding, qnames, namespaces)
+        finally:
+            if file_or_filename is not file:
+                file.close()
 
     def write_c14n(self, file):
         # lxml.etree compatibility.  use output method instead
@@ -990,15 +990,15 @@ def _serialize_html(write, elem, encoding, qnames, namespaces):
                     # FIXME: handle boolean attributes
                     write(" %s=\"%s\"" % (qnames[k], v))
             write(">")
-            tag = tag.lower()
+            ltag = tag.lower()
             if text:
-                if tag == "script" or tag == "style":
+                if ltag == "script" or ltag == "style":
                     write(_encode(text, encoding))
                 else:
                     write(_escape_cdata(text, encoding))
             for e in elem:
                 _serialize_html(write, e, encoding, qnames, None)
-            if tag not in HTML_EMPTY:
+            if ltag not in HTML_EMPTY:
                 write("</" + tag + ">")
     if elem.tail:
         write(_escape_cdata(elem.tail, encoding))
@@ -1200,9 +1200,14 @@ def iterparse(source, events=None, parser=None):
     if not hasattr(source, "read"):
         source = open(source, "rb")
         close_source = True
-    if not parser:
-        parser = XMLParser(target=TreeBuilder())
-    return _IterParseIterator(source, events, parser, close_source)
+    try:
+        if not parser:
+            parser = XMLParser(target=TreeBuilder())
+        return _IterParseIterator(source, events, parser, close_source)
+    except:
+        if close_source:
+            source.close()
+        raise
 
 class _IterParseIterator(object):
 
@@ -1254,34 +1259,40 @@ class _IterParseIterator(object):
                 raise ValueError("unknown event %r" % event)
 
     def next(self):
-        while 1:
-            try:
-                item = self._events[self._index]
-                self._index += 1
-                return item
-            except IndexError:
-                pass
-            if self._error:
-                e = self._error
-                self._error = None
-                raise e
-            if self._parser is None:
-                self.root = self._root
-                if self._close_file:
-                    self._file.close()
-                raise StopIteration
-            # load event buffer
-            del self._events[:]
-            self._index = 0
-            data = self._file.read(16384)
-            if data:
+        try:
+            while 1:
                 try:
-                    self._parser.feed(data)
-                except SyntaxError as exc:
-                    self._error = exc
-            else:
-                self._root = self._parser.close()
-                self._parser = None
+                    item = self._events[self._index]
+                    self._index += 1
+                    return item
+                except IndexError:
+                    pass
+                if self._error:
+                    e = self._error
+                    self._error = None
+                    raise e
+                if self._parser is None:
+                    self.root = self._root
+                    break
+                # load event buffer
+                del self._events[:]
+                self._index = 0
+                data = self._file.read(16384)
+                if data:
+                    try:
+                        self._parser.feed(data)
+                    except SyntaxError as exc:
+                        self._error = exc
+                else:
+                    self._root = self._parser.close()
+                    self._parser = None
+        except:
+            if self._close_file:
+                self._file.close()
+            raise
+        if self._close_file:
+            self._file.close()
+        raise StopIteration
 
     def __iter__(self):
         return self

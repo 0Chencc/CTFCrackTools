@@ -1,28 +1,40 @@
-# The jarray module is being phased out, with all functionality
-# now available in the array module.
-from __future__ import with_statement
+# The jarray module is mostly phased out, but it is still has one
+# constructor function - zeros - that is not directly available in the
+# array module.
+#
+# The equivalent of
+# jarray.zeros(n, typecode)
+# is
+# array.array(typecode, itertools.repeat(0, n))
+#
+# however itertools.repeat does not define __len__ and therefore we
+# have to first build out the zero sequence separately, then copy
+# over. This overhead could be significant for large arrays.
+
+import jarray
+import itertools
 import os
 import unittest
-from test import test_support
 from array import array
+from test import test_support
+from java.lang import String as JString
+from java.util import Arrays
+
 
 class ArrayJyTestCase(unittest.TestCase):
 
-    def test_jarray(self): # until it is fully formally removed
-        # While jarray is still being phased out, just flex the initializers.
-        # The rest of the test for array will catch all the big problems.
-        import jarray
+    def test_jarray(self):
         from java.lang import String
-        jarray.array(range(5), 'i')
-        jarray.array([String("a"), String("b"), String("c")], String)
-        jarray.zeros(5, 'i')
-        jarray.zeros(5, String)
+        
+        self.assertEqual(sum(jarray.array(range(5), 'i')), 10)
+        self.assertEqual(','.join(jarray.array([String("a"), String("b"), String("c")], String)), u'a,b,c')
+        self.assertEqual(sum(jarray.zeros(5, 'i')), 0)
+        self.assertEqual([x for x in jarray.zeros(5, String)], [None, None, None, None, None])
 
     def test_java_object_arrays(self):
         from array import zeros
         from java.lang import String
         from java.lang.reflect import Array
-        from java.util import Arrays
         jStringArr = array(String, [String("a"), String("b"), String("c")])
         self.assert_(
             Arrays.equals(jStringArr.typecode, 'java.lang.String'),
@@ -91,9 +103,63 @@ class ArrayOpsTestCase(unittest.TestCase):
         ar += Foo()
         self.assertEqual('__radd__', ar)
 
+    def test_nonhashability(self):
+        "array.array objects are not hashable"
+        # http://bugs.jython.org/issue2451
+        a = array('b', itertools.repeat(0, 100))
+        with self.assertRaisesRegexp(TypeError, r"unhashable type: 'array.array'"):
+            hash(a)
+
+
+class ArrayConversionTestCase(unittest.TestCase):
+    
+    # Covers bugs raised in
+    # http://bugs.jython.org/issue1780,
+    # http://bugs.jython.org/issue2423
+
+    def assertAsList(self, a, b):
+        self.assertEqual(Arrays.asList(a), b)
+
+    def test_boxing_conversion(self):
+        "array objects support boxing, as they did in Jython 2.1"
+        from java.lang import Integer
+
+        self.assertAsList(jarray.array([1, 2, 3, 4, 5], Integer), [1, 2, 3, 4, 5])
+        self.assertAsList(array(Integer, [1, 2, 3, 4, 5]), [1, 2, 3, 4, 5])
+        self.assertAsList(jarray.array([1, 2, 3, 4, 5], "i"), [1, 2, 3, 4, 5])
+        self.assertAsList(array("i", [1, 2, 3, 4, 5]), [1, 2, 3, 4, 5])
+
+    def test_auxillary_boxing(self):
+        "PyArray is internally used to support boxing of iterators/iterables"
+        self.assertAsList(xrange(5), [0, 1, 2, 3, 4])
+        self.assertAsList(iter(xrange(5)), [0, 1, 2, 3, 4])
+        self.assertAsList(list(xrange(5)), [0, 1, 2, 3, 4])
+        self.assertAsList((i * 2 for i in xrange(5)), [0, 2, 4, 6, 8])
+        self.assertAsList(iter((i * 2 for i in xrange(5))), [0, 2, 4, 6, 8])
+        self.assertAsList(iter((i * 2 for i in xrange(5))), [0, 2, 4, 6, 8])
+        self.assertAsList(itertools.chain('ABC', 'DEF'), ['A', 'B', 'C', 'D', 'E', 'F'])
+
+    def test_object_varargs(self):
+        "array.array objects can be used in the varargs position, with primitive boxing"
+        a = array('i', range(5, 10))
+        self.assertEqual(
+            'arg 0=5, arg 1=6, arg 2=7, arg 3=8, arg 4=9',
+            JString.format('arg 0=%d, arg 1=%d, arg 2=%d, arg 3=%d, arg 4=%d', [5, 6, 7, 8, 9]))
+
+    def test_assignable_varargs(self):
+        "array.array objects can be used in the varargs position"
+        # modified from test case in http://bugs.jython.org/issue2423;
+        from java.lang import Class
+        from java.net import URL, URLClassLoader
+        params = jarray.array([URL], Class)
+        # URLClassLoader.addURL is protected, so workaround via reflection
+        method = URLClassLoader.getDeclaredMethod('addURL', params)
+        # and verify we got the right method after all
+        self.assertEqual(method.name, "addURL")
+
 
 def test_main():
-    tests = [ToFromfileTestCase, ArrayOpsTestCase]
+    tests = [ToFromfileTestCase, ArrayOpsTestCase, ArrayConversionTestCase]
     if test_support.is_jython:
         tests.extend([ArrayJyTestCase])
     test_support.run_unittest(*tests)

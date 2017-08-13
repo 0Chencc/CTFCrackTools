@@ -6,12 +6,17 @@ import os
 import select
 import socket
 import sys
-import test_socket
+from test import test_socket
 import unittest
 from test import test_support
 
 HOST = test_socket.HOST
 PORT = test_socket.PORT + 100
+
+if test_support.is_jython:
+    import java.util.logging
+    from test.test_socket import _set_java_logging
+
 
 class SelectWrapper:
 
@@ -178,6 +183,13 @@ class TestJythonSelect(unittest.TestCase):
 
 
 def test_main():
+
+    if test_support.is_jython:
+        # Netty logs stack dumps when we destroy sockets after their parent
+        # group, see http://bugs.jython.org/issue2517 . Is this a real bug?
+        # For now, treat as inconvenient artifact of test.
+        _set_java_logging("io.netty.channel.ChannelInitializer",
+                          java.util.logging.Level.SEVERE)
 
     tests = [TestSelectInvalidParameters,
              TestSelectClientSocket,

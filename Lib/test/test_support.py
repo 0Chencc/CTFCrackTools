@@ -31,12 +31,12 @@ try:
 except ImportError:
     thread = None
 
-
 __all__ = ["Error", "TestFailed", "ResourceDenied", "import_module",
            "verbose", "use_resources", "max_memuse", "record_original_stdout",
            "get_original_stdout", "unload", "unlink", "rmtree", "forget",
            "is_resource_enabled", "requires", "find_unused_port", "bind_port",
-           "fcmp", "have_unicode", "is_jython", "TESTFN", "HOST", "FUZZ",
+           "fcmp", "have_unicode", "is_jython", "is_jython_nt",
+           "TESTFN", "HOST", "FUZZ",
            "SAVEDCWD", "temp_cwd", "findfile", "sortdict", "check_syntax_error",
            "open_urlresource", "check_warnings", "check_py3k_warnings",
            "CleanImport", "EnvironmentVarGuard", "captured_output",
@@ -46,7 +46,28 @@ __all__ = ["Error", "TestFailed", "ResourceDenied", "import_module",
            "threading_cleanup", "reap_children", "cpython_only",
            "check_impl_detail", "get_attribute", "py3k_bytes",
            "import_fresh_module", "threading_cleanup", "reap_children",
-           "strip_python_stderr"]
+           "strip_python_stderr", "IPV6_ENABLED"]
+
+
+# We use these extensively in adapting the regression tests for Jython
+is_jython = sys.platform.startswith('java')
+is_jython_nt = is_jython and (os._name == 'nt')
+is_jython_posix = is_jython and (os._name == 'posix')
+
+if is_jython:
+    def get_java_version(version=None):
+        # returns (1, 8, 0, 121) for version = "1.8.0_121", meaning
+        # Java 8 update 121, etc.. Conforms to:
+        # http://www.oracle.com/technetwork/java/javase/versioning-naming-139433.html
+        # and not yet http://openjdk.java.net/jeps/223 .
+        if version is None:
+            version = platform.java_ver()[0]
+        parse = re.match("(\d+)\.(\d+)\.(\d+)_(\d+)", version)
+        if parse:
+            return tuple((int(x) for x in parse.groups()))
+        else:
+            return ()
+
 
 class Error(Exception):
     """Base class for regression test exceptions."""
@@ -58,7 +79,7 @@ class ResourceDenied(unittest.SkipTest):
     """Test skipped because it requested a disallowed resource.
 
     This is raised when a test calls requires() for a resource that
-    has not be enabled.  It is used to distinguish between expected
+    has not been enabled.  It is used to distinguish between expected
     and unexpected skips.
     """
 
@@ -189,7 +210,7 @@ def unload(name):
     except KeyError:
         pass
 
-if sys.platform.startswith("win") or (os.name == "java" and os._name == "nt"):
+if sys.platform.startswith("win") or is_jython_nt:
     def _waitfor(func, pathname, waitall=False):
         # Peform the operation
         func(pathname)
@@ -220,7 +241,6 @@ if sys.platform.startswith("win") or (os.name == "java" and os._name == "nt"):
             # Increase the timeout and try again
             time.sleep(timeout)
             timeout *= 2
-        print "Still cannot delete", pathname
         warnings.warn('tests may fail, delete still pending for ' + pathname,
                       RuntimeWarning, stacklevel=4)
 
@@ -291,7 +311,7 @@ def requires(resource, msg=None):
     possibility of False being returned occurs when regrtest.py is executing."""
     # see if the caller's module is __main__ - if so, treat as if
     # the resource was set
-    if sys._getframe().f_back.f_globals.get("__name__") == "__main__":
+    if sys._getframe(1).f_globals.get("__name__") == "__main__":
         return
     if not is_resource_enabled(resource):
         if msg is None:
@@ -299,6 +319,7 @@ def requires(resource, msg=None):
         raise ResourceDenied(msg)
 
 HOST = 'localhost'
+HOSTv6 = "::1"
 
 def find_unused_port(family=socket.AF_INET, socktype=socket.SOCK_STREAM):
     """Returns an unused port that should be suitable for binding.  This is
@@ -385,6 +406,7 @@ def bind_port(sock, host=HOST):
         port = tempsock.getsockname()[1]
         tempsock.close()
         del tempsock
+        gc_collect()
         sock.bind((host, port))
         return port
 
@@ -403,6 +425,37 @@ def bind_port(sock, host=HOST):
     sock.bind((host, 0))
     port = sock.getsockname()[1]
     return port
+
+
+def _is_ipv6_enabled():
+    """Check whether IPv6 is enabled on this host."""
+    if socket.has_ipv6:
+        sock = None
+        try:
+            sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+            sock.bind((HOSTv6, 0))
+            return True
+        except OSError:
+            pass
+        finally:
+            if sock:
+                sock.close()
+    return False
+
+IPV6_ENABLED = False  #_is_ipv6_enabled()
+
+def system_must_validate_cert(f):
+    """Skip the test on TLS certificate validation failures."""
+    @functools.wraps(f)
+    def dec(*args, **kwargs):
+        try:
+            f(*args, **kwargs)
+        except IOError as e:
+            if "CERTIFICATE_VERIFY_FAILED" in str(e):
+                raise unittest.SkipTest("system does not contain "
+                                        "necessary certificates")
+            raise
+    return dec
 
 FUZZ = 1e-6
 
@@ -428,14 +481,23 @@ try:
 except NameError:
     have_unicode = False
 
-is_jython = sys.platform.startswith('java')
+requires_unicode = unittest.skipUnless(have_unicode, 'no unicode support')
+
+def u(s):
+    return unicode(s, 'unicode-escape')
+
 if is_jython:
     def make_jar_classloader(jar):
         import os
         from java.net import URL, URLClassLoader
+        from java.io import File
 
-        url = URL('jar:file:%s!/' % jar)
-        if os._name == 'nt':
+        if isinstance(jar, bytes): # Java will expect a unicode file name
+            jar = jar.decode(sys.getfilesystemencoding())
+        jar_url = File(jar).toURI().toURL().toString()
+        url = URL(u'jar:%s!/' % jar_url)
+
+        if is_jython_nt:
             # URLJarFiles keep a cached open file handle to the jar even
             # after this ClassLoader is GC'ed, disallowing Windows tests
             # from removing the jar file from disk when finished with it
@@ -449,9 +511,11 @@ if is_jython:
         return URLClassLoader([url])
 
 # Filename used for testing
-if os.name == 'java':
+if is_jython:
     # Jython disallows @ in module names
     TESTFN = '$test'
+    TESTFN_UNICODE = u"$test-\u87d2\u86c7" # = test python (Chinese)
+    TESTFN_ENCODING = sys.getfilesystemencoding()
 elif os.name == 'riscos':
     TESTFN = 'testfile'
 else:
@@ -469,30 +533,30 @@ else:
             # 2 latin characters.
             TESTFN_UNICODE = unicode("@test-\xe0\xf2", "latin-1")
         TESTFN_ENCODING = sys.getfilesystemencoding()
-        # TESTFN_UNICODE_UNENCODEABLE is a filename that should *not* be
+        # TESTFN_UNENCODABLE is a filename that should *not* be
         # able to be encoded by *either* the default or filesystem encoding.
         # This test really only makes sense on Windows NT platforms
         # which have special Unicode support in posixmodule.
         if (not hasattr(sys, "getwindowsversion") or
                 sys.getwindowsversion()[3] < 2): #  0=win32s or 1=9x/ME
-            TESTFN_UNICODE_UNENCODEABLE = None
+            TESTFN_UNENCODABLE = None
         else:
             # Japanese characters (I think - from bug 846133)
-            TESTFN_UNICODE_UNENCODEABLE = eval('u"@test-\u5171\u6709\u3055\u308c\u308b"')
+            TESTFN_UNENCODABLE = eval('u"@test-\u5171\u6709\u3055\u308c\u308b"')
             try:
                 # XXX - Note - should be using TESTFN_ENCODING here - but for
                 # Windows, "mbcs" currently always operates as if in
                 # errors=ignore' mode - hence we get '?' characters rather than
                 # the exception.  'Latin1' operates as we expect - ie, fails.
                 # See [ 850997 ] mbcs encoding ignores errors
-                TESTFN_UNICODE_UNENCODEABLE.encode("Latin1")
+                TESTFN_UNENCODABLE.encode("Latin1")
             except UnicodeEncodeError:
                 pass
             else:
                 print \
                 'WARNING: The filename %r CAN be encoded by the filesystem.  ' \
                 'Unicode filename tests may not be effective' \
-                % TESTFN_UNICODE_UNENCODEABLE
+                % TESTFN_UNENCODABLE
 
 # Make sure we can write to TESTFN, try in /tmp if we can't
 fp = None
@@ -556,7 +620,6 @@ def temp_cwd(name='tempcwd', quiet=False):
             rmtree(name)
 
 
-
 def findfile(file, here=__file__, subdir=None):
     """Try to find a file on sys.path and the working directory.  If it is not
     found the argument passed to the function is returned (this does not
@@ -571,30 +634,6 @@ def findfile(file, here=__file__, subdir=None):
         fn = os.path.join(dn, file)
         if os.path.exists(fn): return fn
     return file
-
-def verify(condition, reason='test failed'):
-    """Verify that condition is true. If not, raise TestFailed.
-
-       The optional argument reason can be given to provide
-       a better error text.
-    """
-
-    if not condition:
-        raise TestFailed(reason)
-
-def vereq(a, b):
-    """Raise TestFailed if a == b is false.
-
-    This is better than verify(a == b) because, in case of failure, the
-    error message incorporates repr(a) and repr(b) so you can see the
-    inputs.
-
-    Note that "not (a == b)" isn't necessarily the same as "a != b"; the
-    former is tested.
-    """
-
-    if not (a == b):
-        raise TestFailed("%r == %r" % (a, b))
 
 def sortdict(dict):
     "Like repr(dict), but in sorted order."
@@ -617,12 +656,8 @@ def make_bad_fd():
         unlink(TESTFN)
 
 def check_syntax_error(testcase, statement):
-    try:
-        compile(statement, '<test string>', 'exec')
-    except SyntaxError:
-        pass
-    else:
-        testcase.fail('Missing SyntaxError: "%s"' % statement)
+    testcase.assertRaises(SyntaxError, compile, statement,
+                          '<test string>', 'exec')
 
 def open_urlresource(url, check=None):
     import urlparse, urllib2
@@ -784,7 +819,7 @@ class CleanImport(object):
     Use like this:
 
         with CleanImport("foo"):
-            __import__("foo") # new reference
+            importlib.import_module("foo") # new reference
     """
 
     def __init__(self, *module_names):
@@ -852,6 +887,31 @@ class EnvironmentVarGuard(UserDict.DictMixin):
             else:
                 self._environ[k] = v
         os.environ = self._environ
+
+
+class DirsOnSysPath(object):
+    """Context manager to temporarily add directories to sys.path.
+
+    This makes a copy of sys.path, appends any directories given
+    as positional arguments, then reverts sys.path to the copied
+    settings when the context ends.
+
+    Note that *all* sys.path modifications in the body of the
+    context manager, including replacement of the object,
+    will be reverted at the end of the block.
+    """
+
+    def __init__(self, *paths):
+        self.original_value = sys.path[:]
+        self.original_object = sys.path
+        sys.path.extend(paths)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *ignore_exc):
+        sys.path = self.original_object
+        sys.path[:] = self.original_value
 
 
 class TransientResource(object):
@@ -946,17 +1006,10 @@ def transient_internet(resource_name, timeout=30.0, errnos=()):
         socket.setdefaulttimeout(old_timeout)
 
 
-
 @contextlib.contextmanager
 def captured_output(stream_name):
-    """Run the 'with' statement body using a StringIO object in place of a
-    specific attribute on the sys module.
-    Example use (with 'stream_name=stdout')::
-
-       with captured_stdout() as s:
-           print "hello"
-       assert s.getvalue() == "hello"
-    """
+    """Return a context manager used by captured_stdout and captured_stdin
+    that temporarily replaces the sys stream *stream_name* with a StringIO."""
     import StringIO
     orig_stdout = getattr(sys, stream_name)
     setattr(sys, stream_name, StringIO.StringIO())
@@ -966,6 +1019,12 @@ def captured_output(stream_name):
         setattr(sys, stream_name, orig_stdout)
 
 def captured_stdout():
+    """Capture the output of sys.stdout:
+
+       with captured_stdout() as s:
+           print "hello"
+       self.assertEqual(s.getvalue(), "hello")
+    """
     return captured_output("stdout")
 
 def captured_stderr():
@@ -991,7 +1050,7 @@ def gc_collect():
     gc.collect()
 
 
-_header = '2P'
+_header = '1P'
 if hasattr(sys, "gettotalrefcount"):
     _header = '2P' + _header
 _vheader = _header + 'P'
@@ -1108,7 +1167,7 @@ def bigmemtest(minsize, memuse, overhead=5*_1M):
                 # to make sure they work. We still want to avoid using
                 # too much memory, though, but we do that noisily.
                 maxsize = 5147
-                self.failIf(maxsize * memuse + overhead > 20 * _1M)
+                self.assertFalse(maxsize * memuse + overhead > 20 * _1M)
             else:
                 maxsize = int((max_memuse - overhead) / memuse)
                 if maxsize < minsize:
@@ -1168,7 +1227,6 @@ class BasicTestRunner:
         test(result)
         return result
 
-
 def _id(obj):
     return obj
 
@@ -1216,7 +1274,6 @@ def check_impl_detail(**guards):
     """
     guards, default = _parse_guards(guards)
     return guards.get(platform.python_implementation().lower(), default)
-
 
 
 

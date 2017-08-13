@@ -12,6 +12,12 @@ class TestUnicodeInput(unittest.TestCase):
         self.assertEqual(u'foo', cStringIO.StringIO(u'foo').read())
         self.assertEqual('foo', cStringIO.StringIO(u'foo').read())
 
+    def test_unicode_encode_error(self):
+        # See issue #2527
+        uc = u'\u4e2d\u6587'
+        self.assertRaises(UnicodeEncodeError, lambda: cStringIO.StringIO(uc))
+
+
 class TestWrite(unittest.TestCase):
     def test_write_seek_write(self):
         f = cStringIO.StringIO()

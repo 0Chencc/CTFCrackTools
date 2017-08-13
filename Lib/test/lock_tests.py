@@ -409,8 +409,14 @@ class ConditionTests(BaseTestCase):
             results.append(t2 - t1)
         Bunch(f, N).wait_for_finished()
         self.assertEqual(len(results), 5)
+        # Fudge factor for running on the JVM - actual waits on
+        # some OS platforms might be like this example,
+        # 0.199999809265, slightly less than 0.2 seconds. To avoid
+        # unnecessary flakiness in testing, make epsilon
+        # relatively large:
+        epsilon = 0.01
         for dt in results:
-            self.assertTrue(dt >= 0.2, dt)
+            self.assertTrue(dt >= 0.2 - epsilon, dt)
 
 
 class BaseSemaphoreTests(BaseTestCase):

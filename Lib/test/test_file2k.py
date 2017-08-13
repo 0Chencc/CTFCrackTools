@@ -11,7 +11,7 @@ except ImportError:
     threading = None
 
 from test import test_support
-from test.test_support import TESTFN, run_unittest
+from test.test_support import TESTFN, run_unittest, is_jython, is_jython_nt
 from UserList import UserList
 
 class AutoFileTests(unittest.TestCase):
@@ -711,6 +711,7 @@ class StdoutTests(unittest.TestCase):
         finally:
             sys.stdout = save_stdout
 
+    @unittest.skipIf(is_jython_nt, "FIXME: utf-16 decode error, see issue 2312")
     def test_unicode(self):
         import subprocess
 

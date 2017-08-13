@@ -2,6 +2,10 @@
 
 Made for Jython.
 """
+import math
+import operator
+import os
+import re
 import unittest
 from test import test_support
 
@@ -48,8 +52,40 @@ class ComplexTest(unittest.TestCase):
         for z in infinities :
             self.assertEqual(abs(z), INF)
 
+
+def data_file(*name):
+    return os.path.join(os.path.dirname(__file__), *name)
+
+
+class ComplexArithmeticTest(unittest.TestCase):
+    def almostEqual(self, a, b):
+        if a == b:  # also accounts for infinities
+            return True
+        return abs(a - b) < 0.0000000001
+
+    def assertComplexEqual(self, x, y):
+        self.assertTrue(
+            (self.almostEqual(x.real, y.real) or (math.isnan(x.real) and math.isnan(y.real))) and \
+            (self.almostEqual(x.imag, y.imag) or (math.isnan(x.imag) and math.isnan(y.imag))),
+            "expected %r != actual %r" % (x, y))
+
+    def test_complex_arithmetic(self):
+        """Verify *, /, +, - on representative complex numbers results in the same values as in CPython"""
+        # Verifies fix for http://bugs.jython.org/issue2460
+        re_comment = re.compile("^(\s*)\#")
+        with open(data_file("complex_arithmetic.txt")) as f:
+            for line in f:
+                if re_comment.match(line):
+                    continue
+                op, a, b, result = line.split()
+                if result == "ZeroDivisionError":
+                    self.assertRaises(ZeroDivisionError, getattr(operator, op), complex(a), complex(b))
+                else:
+                    self.assertComplexEqual(complex(result), getattr(operator, op)(complex(a), complex(b)))
+
+
 def test_main():
-    test_support.run_unittest(ComplexTest)
+    test_support.run_unittest(ComplexTest, ComplexArithmeticTest)
 
 if __name__ == "__main__":
     test_main()

@@ -33,20 +33,44 @@ except ImportError:
 try:
     from javax.xml.parsers import SAXParserFactory, ParserConfigurationException
     factory = SAXParserFactory.newInstance()
+    # Set this feature false, otherwise will attempt to load DTDs like
+    # DOCTYPE doc PUBLIC 'http://xml.python.org/public which are
+    # purposefully very much nonexistent in tests such as
+    # test_minidom.
+    #
+    # NOTE that this factory is by default nonvalidating anyway, as
+    # needed for Python usage.
+    factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", False)
     jaxp = 1
 except ImportError:
     jaxp = 0
 
-from java.lang import String
+from java.lang import String, Exception as JException
+
+class SAXUnicodeDecodeError(UnicodeDecodeError):
+    def __init__(self, message):
+        self.message = message
+    def __repr__(self):
+        return "SAXUnicodeDecodeError: caused by %s" % (self.message,)
+    __str__ = __repr__
 
 
 def _wrap_sax_exception(e):
+    # Work around issues in how we report exceptions to using
+    # code. Note this is an implementation detail, so some assumptions
+    # are required. But if this identification fails, a reasonable exception
+    # will still be thrown.
+    #
+    # Because of some differences in how Oracle packages Xerces, also catch
+    # on the parse method itself.
+    if "MalformedByteSequenceException" in str(e.getException()):
+        return SAXUnicodeDecodeError(str(e))
     return _exceptions.SAXParseException(e.message,
                                          e.exception,
                                          SimpleLocator(e.columnNumber,
-                                                              e.lineNumber,
-                                                              e.publicId,
-                                                              e.systemId))
+                                                       e.lineNumber,
+                                                       e.publicId,
+                                                       e.systemId))
 
 class JyErrorHandlerWrapper(javasax.ErrorHandler):
     def __init__(self, err_handler):
@@ -143,7 +167,14 @@ class JavaSAXParser(xmlreader.XMLReader, javasax.ContentHandler, LexicalHandler)
 
     def parse(self, source):
         "Parse an XML document from a URL or an InputSource."
-        self._parser.parse(JyInputSourceWrapper(source))
+        try:
+            self._parser.parse(JyInputSourceWrapper(source))
+        except JException as e:
+            # Handle the difference in how Oracle packages Xerces...
+            if "MalformedByteSequenceException" in str(e):
+                raise SAXUnicodeDecodeError(str(e))
+            else:
+                raise
 
     def getFeature(self, name):
         return self._parser.getFeature(name)
@@ -236,6 +267,10 @@ class JavaSAXParser(xmlreader.XMLReader, javasax.ContentHandler, LexicalHandler)
 
     def endEntity(self, name):
         pass # TODO
+
+    def skippedEntity(self, name):
+        pass
+
 
 def _fixTuple(nsTuple, frm, to):
     if isinstance(nsTuple, tuple) and len(nsTuple) == 2:

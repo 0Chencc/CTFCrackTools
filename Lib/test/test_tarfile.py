@@ -6,11 +6,13 @@ import shutil
 import StringIO
 from hashlib import md5
 import errno
+import warnings
 
 import unittest
 import tarfile
 
 from test import test_support
+from test.test_support import is_jython, is_jython_nt
 
 # Check for our compression modules.
 try:
@@ -295,6 +297,7 @@ class MiscReadTest(CommonReadTest):
         self.assertTrue(self.tar.getmembers()[-1].name == "misc/eof",
                 "could not find all members")
 
+    @unittest.skipIf(is_jython_nt, "FIXME: fails trying to unlink() open file")
     def test_extract_hardlink(self):
         # Test hardlink extraction (e.g. bug #857297).
         with tarfile.open(tarname, errorlevel=1, encoding="iso8859-1") as tar:
@@ -321,12 +324,13 @@ class MiscReadTest(CommonReadTest):
         tar.extractall(TEMPDIR, directories)
         for tarinfo in directories:
             path = os.path.join(TEMPDIR, tarinfo.name)
-            if sys.platform != "win32":
+            if sys.platform != "win32" and not is_jython_nt:
                 # Win32 has no support for fine grained permissions.
                 self.assertEqual(tarinfo.mode & 0777, os.stat(path).st_mode & 0777)
             self.assertEqual(tarinfo.mtime, os.path.getmtime(path))
         tar.close()
 
+    @unittest.skipIf(is_jython_nt, "FIXME: fails trying to unlink() open file")
     def test_init_close_fobj(self):
         # Issue #7341: Close the internal file object in the TarFile
         # constructor in case of an error. For the test we rely on
@@ -834,7 +838,7 @@ class WriteTest(WriteTestBase):
         self._test_pathname("foo" + os.sep + os.sep, "foo", dir=True)
 
     def test_abs_pathnames(self):
-        if sys.platform == "win32":
+        if sys.platform == "win32" or is_jython_nt:
             self._test_pathname("C:\\foo", "foo")
         else:
             self._test_pathname("/foo", "foo")
@@ -974,10 +978,11 @@ class StreamWriteTest(WriteTestBase):
         self.assertTrue(data.count("\0") == tarfile.RECORDSIZE,
                          "incorrect zero padding")
 
+    @unittest.skipIf(is_jython_nt, "requires posix-like os.umask()")
     def test_file_mode(self):
         # Test for issue #8464: Create files with correct
         # permissions.
-        if sys.platform == "win32" or not hasattr(os, "umask"):
+        if sys.platform == "win32" or is_jython_nt or not hasattr(os, "umask"):
             return
 
         if os.path.exists(tmpname):
@@ -1590,6 +1595,8 @@ class Bz2PartialReadTest(unittest.TestCase):
 
 
 def test_main():
+    if os.path.exists(TEMPDIR):
+        shutil.rmtree(TEMPDIR)
     os.makedirs(TEMPDIR)
 
     tests = [
@@ -1654,7 +1661,11 @@ def test_main():
         test_support.run_unittest(*tests)
     finally:
         if os.path.exists(TEMPDIR):
-            shutil.rmtree(TEMPDIR)
+            try:
+                shutil.rmtree(TEMPDIR)
+            except OSError:
+                warnings.warn("Failed to remove "+TEMPDIR)
+
 
 if __name__ == "__main__":
     test_main()

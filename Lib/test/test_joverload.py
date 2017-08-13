@@ -138,6 +138,20 @@ class VarargsDispatchTests(unittest.TestCase):
                          "String...:[abc]")
         self.assertEqual(t.test([]),
                          "String...:[]")
+        
+        self.assertEqual(t.testOneFixedArg("abc"),
+                         "String arg1:abc String...:[]");
+        self.assertEqual(t.testOneFixedArg("abc", "xyz"),
+                         "String arg1:abc String...:[xyz]");
+        self.assertEqual(t.testOneFixedArg("abc", "xyz", "123"),
+                         "String arg1:abc String...:[xyz, 123]");
+                         
+        self.assertEqual(t.testTwoFixedArg("fix1", "fix2"),
+                         "String arg1:fix1 String arg2:fix2 String...:[]");
+        self.assertEqual(t.testTwoFixedArg("fix1", "fix2", "var1"),
+                         "String arg1:fix1 String arg2:fix2 String...:[var1]");
+        self.assertEqual(t.testTwoFixedArg("fix1", "fix2", "var1", "var2"),
+                         "String arg1:fix1 String arg2:fix2 String...:[var1, var2]");
 
 
     def test_lists(self):
@@ -155,6 +169,31 @@ class VarargsDispatchTests(unittest.TestCase):
                          "List...:[[1, 2, 3]]")
         self.assertEqual(t.test([]),
                          "List...:[]")
+        
+    def test_booleans(self):
+        t = Reflection.BooleanVarargs()
+        
+                
+        self.assertEqual(t.test(True, False),
+                         "booleans...:[true, false]")
+        self.assertEqual(t.test(True),
+                         "booleans...:[true]")
+        self.assertEqual(t.test(),
+                         "booleans...:[]")
+        
+        self.assertEqual(t.testOneFixedArg(True),
+                         "boolean arg1:true booleans...:[]");
+        self.assertEqual(t.testOneFixedArg(True, False),
+                         "boolean arg1:true booleans...:[false]");
+        self.assertEqual(t.testOneFixedArg(True, False, True),
+                         "boolean arg1:true booleans...:[false, true]");
+                         
+        self.assertEqual(t.testTwoFixedArg(True, False),
+                         "boolean arg1:true boolean arg2:false booleans...:[]");
+        self.assertEqual(t.testTwoFixedArg(True, False, True),
+                         "boolean arg1:true boolean arg2:false booleans...:[true]");
+        self.assertEqual(t.testTwoFixedArg(True, False, True, False),
+                         "boolean arg1:true boolean arg2:false booleans...:[true, false]");
 
 
 class ComplexOverloadingTests(unittest.TestCase):

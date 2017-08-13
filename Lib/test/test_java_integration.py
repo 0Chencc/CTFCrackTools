@@ -13,9 +13,11 @@ import re
 
 from collections import deque
 from test import test_support
+from distutils.spawn import find_executable
 
-from java.lang import (ClassCastException, ExceptionInInitializerError, String, Runnable, System,
-        Runtime, Math, Byte)
+from java.lang import (
+    ClassCastException, ExceptionInInitializerError, UnsupportedOperationException,
+    String, Runnable, System, Runtime, Math, Byte)
 from java.math import BigDecimal, BigInteger
 from java.net import URI
 from java.io import (ByteArrayInputStream, ByteArrayOutputStream, File, FileInputStream,
@@ -483,8 +485,11 @@ class SecurityManagerTest(unittest.TestCase):
             # script must lie within python.home for this test to work
             return
         policy = test_support.findfile("python_home.policy")
-        self.assertEquals(subprocess.call([sys.executable,  "-J-Dpython.cachedir.skip=true",
-            "-J-Djava.security.manager", "-J-Djava.security.policy=%s" % policy, script]),
+        self.assertEquals(
+            subprocess.call([sys.executable,
+                             "-J-Dpython.cachedir.skip=true",
+                             "-J-Djava.security.manager",
+                             "-J-Djava.security.policy=%s" % policy, script]),
             0)
 
     def test_import_signal_fails_with_import_error_using_security(self):
@@ -604,18 +609,18 @@ class CloneInput(ObjectInputStream):
 
 def find_jython_jars():
     # Uses the same classpath resolution as bin/jython
-    jython_jar_path = os.path.normpath(os.path.join(sys.executable, "../../jython.jar"))
-    jython_jar_dev_path = os.path.normpath(os.path.join(sys.executable, "../../jython-dev.jar"))
+    jython_bin = os.path.normpath(os.path.dirname(sys.executable))
+    jython_top = os.path.dirname(jython_bin)
+    jython_jar_path = os.path.join(jython_top, 'jython.jar')
+    jython_jar_dev_path = os.path.join(jython_top, 'jython-dev.jar')
     if os.path.exists(jython_jar_dev_path):
         jars = [jython_jar_dev_path]
-        jars.extend(glob.glob(os.path.normpath(os.path.join(jython_jar_dev_path, "../javalib/*.jar"))))
+        jars.extend(glob.glob(os.path.join(jython_top, 'javalib', '*.jar')))
     elif os.path.exists(jython_jar_path):
         jars = [jython_jar_path]
     else:
         raise Exception("Cannot find jython jar")
     return jars
-
-
 
 
 class JavaSource(SimpleJavaFileObject):
@@ -635,6 +640,8 @@ class JavaSource(SimpleJavaFileObject):
         return self._source
 
 
+@unittest.skipIf(ToolProvider.getSystemJavaCompiler() is None,
+        "No Java compiler available. Is JAVA_HOME pointing to a JDK?")
 def compile_java_source(options, class_name, source):
     """Compiles a single java source "file" contained in the string source
     
@@ -656,21 +663,42 @@ class SerializationTest(unittest.TestCase):
         self.assertEqual(date_list, roundtrip_serialization(date_list))
 
     def test_java_serialization_pycode(self):
-
         def universal_answer():
             return 42
 
         serialized_code = roundtrip_serialization(universal_answer.func_code)
         self.assertEqual(eval(serialized_code), universal_answer())
 
+    def test_java_serialization_pyfunction(self):
+        # Not directly supported due to lack of general utility
+        # (globals will usually be in the function object in
+        # func_globals), and problems with unserialization
+        # vulnerabilities. Users can always subclass from PyFunction
+        # for specific cases, as seen in PyCascading
+        import new
+        def f():
+            return 6 * 7 + max(0, 1, 2)
+        # However, using the new module, it's possible to create a
+        # function with no globals, which means the globals will come
+        # from the current context
+        g = new.function(f.func_code, {}, "g")
+        # But still forbid Java deserialization of this function
+        # object. Use pickling or other support instead.
+        with self.assertRaises(UnsupportedOperationException):
+            roundtrip_serialization(g)
+
     def test_builtin_names(self):
         import __builtin__
         names = [x for x in dir(__builtin__)]
         self.assertEqual(names, roundtrip_serialization(names))
 
+    @unittest.skipUnless(find_executable('jar'), 'Need the jar command to run')
     def test_proxy_serialization(self):
-        """Proxies can be deserializable in a fresh JVM, including being able to "findPython" to get a PySystemState"""
-        tempdir = tempfile.mkdtemp()
+        # Proxies can be deserializable in a fresh JVM, including being able
+        # to "findPython" to get a PySystemState.
+        # tempdir gets combined with unicode paths derived from class names,
+        # so make it a unicode object.
+        tempdir = tempfile.mkdtemp().decode(sys.getfilesystemencoding())
         old_proxy_debug_dir = org.python.core.Options.proxyDebugDirectory
         try:
             # Generate a proxy for Cat class;
@@ -681,7 +709,8 @@ class SerializationTest(unittest.TestCase):
 
             # Create a jar file containing the Cat proxy; could use Java to do this; do it the easy way for now
             proxies_jar_path = os.path.join(tempdir, "proxies.jar")
-            subprocess.check_call(["jar", "cf", proxies_jar_path, "-C", tempdir, "org/"])
+            subprocess.check_call(["jar", "cf", proxies_jar_path, "-C", tempdir,
+                                    "org" + os.path.sep])
 
             # Serialize our cat
             output = ByteArrayOutputStream()
@@ -700,18 +729,23 @@ class SerializationTest(unittest.TestCase):
             jars.append(proxies_jar_path)
             classpath = os.pathsep.join(jars)
             env = dict(os.environ)
-            env.update(JYTHONPATH=os.path.normpath(os.path.join(__file__, "..")))
-            cmd = [os.path.join(System.getProperty("java.home"), "bin/java"),
-                   "-classpath", classpath, "ProxyDeserialization", cat_path]
+            env.update(JYTHONPATH=os.path.dirname(__file__))
+            cmd = [os.path.join(System.getProperty("java.home"), "bin", "java"),
+                    "-classpath", classpath,
+                    "javatests.ProxyDeserialization",
+                    cat_path]
             self.assertEqual(subprocess.check_output(cmd, env=env, universal_newlines=True),
                              "meow\n")
         finally:
             org.python.core.Options.proxyDebugDirectory = old_proxy_debug_dir
             shutil.rmtree(tempdir)
 
+    @unittest.skipUnless(find_executable('jar'), 'Need the jar command to run')
     def test_custom_proxymaker(self):
-        """Verify custom proxymaker supports direct usage of Python code in Java"""
-        tempdir = tempfile.mkdtemp()
+        # Verify custom proxymaker supports direct usage of Python code in Java
+        # tempdir gets combined with unicode paths derived from class names,
+        # so make it a unicode object.
+        tempdir = tempfile.mkdtemp().decode(sys.getfilesystemencoding())
         try:
             SerializableProxies.serialized_path = tempdir
             import bark
@@ -722,7 +756,8 @@ class SerializationTest(unittest.TestCase):
 
             # Create a jar file containing the org.python.test.Dog proxy
             proxies_jar_path = os.path.join(tempdir, "proxies.jar")
-            subprocess.check_call(["jar", "cf", proxies_jar_path, "-C", tempdir, "org/"])
+            subprocess.check_call(["jar", "cf", proxies_jar_path, "-C", tempdir,
+                                    "org" + os.path.sep])
 
             # Build a Java class importing Dog
             source = """
@@ -756,10 +791,10 @@ public class BarkTheDog {
             # PySystemState (and Jython runtime) is initialized for
             # the proxy
             classpath += os.pathsep + tempdir
-            cmd = [os.path.join(System.getProperty("java.home"), "bin/java"),
+            cmd = [os.path.join(System.getProperty("java.home"), "bin", "java"),
                    "-classpath", classpath, "BarkTheDog"]
             env = dict(os.environ)
-            env.update(JYTHONPATH=os.path.normpath(os.path.join(__file__, "..")))
+            env.update(JYTHONPATH=os.path.dirname(__file__))
             self.assertRegexpMatches(
                 subprocess.check_output(cmd, env=env, universal_newlines=True,
                                         stderr=subprocess.STDOUT),
@@ -810,7 +845,7 @@ class CopyTest(unittest.TestCase):
         abc = String("abc")
         abc_copy = copy.copy(abc)
         self.assertEqual(id(abc), id(abc_copy))
-        
+
         fruits = ArrayList([String("apple"), String("banana")])
         fruits_copy = copy.copy(fruits)
         self.assertEqual(fruits, fruits_copy)
@@ -872,7 +907,7 @@ class SingleMethodInterfaceTest(unittest.TestCase):
         future.get()
         self.assertEqual(x, [42])
 
-    @unittest.skip("FIXME: not working")
+    @unittest.skip("FIXME: not working; see http://bugs.jython.org/issue2115")
     def test_callable_object(self):
         callable_obj = CallableObject()
         future = self.executor.submit(callable_obj)
@@ -921,7 +956,8 @@ def test_main():
         SysIntegrationTest,
         TreePathTest,
         UnicodeTest,
-        SingleMethodInterfaceTest)
+        SingleMethodInterfaceTest,
+        )
 
 if __name__ == "__main__":
     test_main()

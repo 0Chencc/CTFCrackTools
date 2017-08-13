@@ -71,6 +71,16 @@ class ReTest(unittest.TestCase):
                 self.assertNotRegexpMatches(c, ws_re)
                 self.assertRegexpMatches(c, not_ws_re)
 
+    def test_start_is_end(self):
+        COMMENT_RE = re.compile(r'(\A)+')
+
+        requirements = ''
+        self.assertEqual(COMMENT_RE.search(requirements).groups(), (requirements, ))
+
+    def test_pip_comment(self):
+        COMMENT_RE = re.compile(r'(^|\s)+#.*$')
+        self.assertEqual(COMMENT_RE.sub('', '#'), '')
+
 
 def test_main():
     test.test_support.run_unittest(ReTest)

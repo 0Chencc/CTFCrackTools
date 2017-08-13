@@ -848,7 +848,10 @@ class test_SpooledTemporaryFile(TC):
         # A SpooledTemporaryFile should roll over to a real file on fileno()
         f = self.do_create(max_size=30)
         self.assertFalse(f._rolled)
-        self.assertTrue(f.fileno() > 0)
+        if support.is_jython:
+            self.assertIsNotNone(f.fileno())
+        else:
+            self.assertGreater(f.fileno(), 0)
         self.assertTrue(f._rolled)
 
     def test_multiple_close_before_rollover(self):

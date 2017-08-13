@@ -69,7 +69,11 @@ class ProxyDebugDirectoryTest(unittest.TestCase):
     """ProxyDebugDirectory used to be the only way to save proxied classes"""
 
     def setUp(self):
-        self.tmpdir = tempfile.mkdtemp()
+        tmp = tempfile.mkdtemp()
+         # Ensure Unicode since derived file paths are used in Java calls
+        if isinstance(tmp, bytes):
+            tmp = tmp.decode(sys.getfilesystemencoding())
+        self.tmpdir = tmp
 
     def tearDown(self):
         test_support.rmtree(self.tmpdir)
@@ -82,7 +86,7 @@ class ProxyDebugDirectoryTest(unittest.TestCase):
         class C(Callable):
             def call(self):
                 return 47
-        
+
         self.assertEqual(C().call(), 47)
         proxy_dir = os.path.join(self.tmpdir, "org", "python", "proxies")
         # If test script is run outside of regrtest, the first path is used;
@@ -93,7 +97,7 @@ class ProxyDebugDirectoryTest(unittest.TestCase):
         self.assertRegexpMatches(
             proxy_classes[0],
             r'\$C\$\d+.class$')
-        
+
 
 def test_main():
     test_support.run_unittest(

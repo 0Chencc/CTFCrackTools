@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import unittest
+import warnings
 
 from test.test_support import run_unittest, TESTFN
 
@@ -40,7 +41,10 @@ class GlobTests(unittest.TestCase):
             os.symlink(os.path.join('a', 'bcd'), self.norm('sym3'))
 
     def tearDown(self):
-        shutil.rmtree(self.tempdir)
+        try:
+            shutil.rmtree(self.tempdir)
+        except OSError:
+            warnings.warn("Failed to remove " + self.tempdir)
 
     def glob(self, *parts):
         if len(parts) == 1:

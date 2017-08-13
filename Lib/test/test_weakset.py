@@ -83,7 +83,7 @@ class TestWeakSet(unittest.TestCase):
         self.assertEqual(len(self.s), len(self.d))
         self.assertEqual(len(self.fs), 1)
         del self.obj
-        gc.collect()
+        test_support.gc_collect()
         # len of weak collections is eventually consistent on
         # Jython. In practice this does not matter because of the
         # nature of weaksets - we cannot rely on what happens in the
@@ -97,7 +97,7 @@ class TestWeakSet(unittest.TestCase):
         self.assertNotIn(1, self.s)
         self.assertIn(self.obj, self.fs)
         del self.obj
-        gc.collect()
+        test_support.gc_collect()
         self.assertNotIn(SomeClass('F'), self.fs)
 
     def test_union(self):
@@ -112,10 +112,10 @@ class TestWeakSet(unittest.TestCase):
             c = C(self.items2)
             self.assertEqual(self.s.union(c), x)
             del c
-            gc.collect()
+            test_support.gc_collect()
         self.assertEqual(len(list(u)), len(list(self.items)) + len(list(self.items2)))
         self.items2.pop()
-        gc.collect()
+        test_support.gc_collect()
         self.assertEqual(len(list(u)), len(list(self.items)) + len(list(self.items2)))
 
     def test_or(self):
@@ -135,7 +135,7 @@ class TestWeakSet(unittest.TestCase):
             self.assertEqual(i.intersection(C(self.items)), x)
         self.assertEqual(len(i), len(self.items2))
         self.items2.pop()
-        gc.collect()
+        test_support.gc_collect()
         self.assertEqual(len(list(i)), len(list(self.items2)))
 
     def test_isdisjoint(self):
@@ -169,7 +169,7 @@ class TestWeakSet(unittest.TestCase):
         self.assertRaises(TypeError, self.s.symmetric_difference, [[]])
         self.assertEqual(len(i), len(self.items) + len(self.items2))
         self.items2.pop()
-        gc.collect()
+        test_support.gc_collect()
         self.assertEqual(len(list(i)), len(list(self.items)) + len(list(self.items2)))
 
     def test_xor(self):
@@ -258,7 +258,7 @@ class TestWeakSet(unittest.TestCase):
         if not test_support.is_jython:  # Jython/JVM can weakly reference list and other objects
             self.assertRaises(TypeError, self.s.add, [])
         self.fs.add(Foo())
-        gc.collect()  # CPython assumes Foo() went out of scope and was collected, so ensure the same
+        test_support.gc_collect()  # CPython assumes Foo() went out of scope and was collected, so ensure the same
         self.assertEqual(len(list(self.fs)), 1)
         self.fs.add(self.obj)
         self.assertEqual(len(list(self.fs)), 1)
@@ -391,7 +391,7 @@ class TestWeakSet(unittest.TestCase):
         next(it)             # Trigger internal iteration
         # Destroy an item
         del items[-1]
-        gc.collect()    # just in case
+        test_support.gc_collect()    # just in case
         # We have removed either the first consumed items, or another one
         self.assertIn(len(list(it)), [len(items), len(items) - 1])
         del it
@@ -410,10 +410,12 @@ class TestWeakSet(unittest.TestCase):
                 next(it)
                 # Schedule an item for removal and recreate it
                 u = SomeClass(str(items.pop()))
-                gc.collect()      # just in case
+                test_support.gc_collect()      # just in case
                 yield u
             finally:
                 it = None           # should commit all removals
+
+        test_support.gc_collect()
 
         with testcontext() as u:
             self.assertNotIn(u, s)
@@ -436,16 +438,22 @@ class TestWeakSet(unittest.TestCase):
         items = [RefCycle() for i in range(N)]
         s = WeakSet(items)
         del items
-        gc.collect()
+        # do some gc
+        test_support.gc_collect()
         it = iter(s)
         try:
             next(it)
         except StopIteration:
             pass
-        gc.collect()
+
+        # do some gc
+        test_support.gc_collect()
+
         n1 = len(s)
         del it
-        gc.collect()
+        # do some gc
+        test_support.gc_collect()
+
         n2 = len(s)
         # one item may be kept alive inside the iterator
         self.assertIn(n1, (0, 1))

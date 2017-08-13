@@ -10,7 +10,8 @@ class TestUsingInitializer(unittest.TestCase):
 
     def test_syspath_initializer(self):
         fn = test_support.findfile('check_for_initializer_in_syspath.py')
-        env = dict(CLASSPATH='tests/data/initializer',
+        jar = test_support.findfile('syspath_initializer.jar')
+        env = dict(CLASSPATH=jar,
                    PATH=os.environ.get('PATH', ''))
 
         if WINDOWS:

@@ -229,11 +229,53 @@ class SpecialSlotsBaseTestCase(unittest.TestCase):
         self.assertIn("__weakref__", dir(self.make_class(HashMap, "__weakref__")()))
 
 
+class MultiInheritanceSlotsTestCase(unittest.TestCase):
+
+    def test_diamond_multi_inheritance_second_branch(self):
+        # see issue bugs.jython.org/issue2101
+        # also related: bugs.jython.org/issue1996
+        result = []
+
+        class A(object):
+            def method(self):
+                pass
+
+        class B(A):
+            __slots__ = ('b')
+            def method(self):
+                result.append('B.method begin')
+                super(B, self).method()
+                self.b = 'b'
+                result.append('B.method end')
+
+        class C(A):
+            def method(self):
+                result.append('C.method begin')
+                super(C, self).method()
+                self.c = 'c'
+                result.append('C.method end')
+
+        class D1(B, C):
+            def method(self): super(D1, self).method()
+
+        class D2(C, B):
+            def method(self): super(D2, self).method()
+
+        D1().method()
+        self.assertEqual(result,
+                ['B.method begin', 'C.method begin', 'C.method end', 'B.method end'])
+        result = []
+        D2().method()
+        self.assertEqual(result,
+                ['C.method begin', 'B.method begin', 'B.method end', 'C.method end'])
+
+
 def test_main():
     test_support.run_unittest(SlottedTestCase,
                               SlottedWithDictTestCase,
                               SlottedWithWeakrefTestCase,
-                              SpecialSlotsBaseTestCase)
+                              SpecialSlotsBaseTestCase,
+                              MultiInheritanceSlotsTestCase)
 
 
 if __name__ == '__main__':

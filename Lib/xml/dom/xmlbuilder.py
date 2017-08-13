@@ -3,8 +3,6 @@
 import copy
 import xml.dom
 
-from xml.dom.minicompat import *
-
 from xml.dom.NodeFilter import NodeFilter
 
 
@@ -81,7 +79,7 @@ class DOMBuilder:
                 settings = self._settings[(_name_xform(name), state)]
             except KeyError:
                 raise xml.dom.NotSupportedErr(
-                    "unsupported feature: " + `name`)
+                    "unsupported feature: %r" % (name,))
             else:
                 for name, value in settings:
                     setattr(self._options, name, value)
@@ -93,7 +91,7 @@ class DOMBuilder:
 
     def canSetFeature(self, name, state):
         key = (_name_xform(name), state and 1 or 0)
-        return self._settings.has_key(key)
+        return key in self._settings
 
     # This dictionary maps from (feature,value) to a list of
     # (option,value) pairs that should be set on the Options object.
@@ -211,7 +209,7 @@ def _name_xform(name):
     return name.lower().replace('-', '_')
 
 
-class DOMEntityResolver(NewStyle):
+class DOMEntityResolver(object):
     __slots__ = '_opener',
 
     def resolveEntity(self, publicId, systemId):
@@ -249,13 +247,13 @@ class DOMEntityResolver(NewStyle):
 
     def _guess_media_encoding(self, source):
         info = source.byteStream.info()
-        if info.has_key("Content-Type"):
+        if "Content-Type" in info:
             for param in info.getplist():
                 if param.startswith("charset="):
                     return param.split("=", 1)[1].lower()
 
 
-class DOMInputSource(NewStyle):
+class DOMInputSource(object):
     __slots__ = ('byteStream', 'characterStream', 'stringData',
                  'encoding', 'publicId', 'systemId', 'baseURI')
 

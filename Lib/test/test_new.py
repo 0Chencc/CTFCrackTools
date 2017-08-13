@@ -24,18 +24,10 @@ class NewTest(unittest.TestCase):
         c = new.instance(C, {'yolks': 3})
 
         o = new.instance(C)
-
-        # __dict__ is a non dict mapping in Jython
-        if test_support.is_jython:
-            self.assertEqual(len(o.__dict__), 0, "new __dict__ should be empty")
-        else:
-            self.assertEqual(o.__dict__, {}, "new __dict__ should be empty")
+        self.assertEqual(o.__dict__, {}, "new __dict__ should be empty")
         del o
         o = new.instance(C, None)
-        if test_support.is_jython:
-            self.assertEqual(len(o.__dict__), 0, "new __dict__ should be empty")
-        else:
-            self.assertEqual(o.__dict__, {}, "new __dict__ should be empty")
+        self.assertEqual(o.__dict__, {}, "new __dict__ should be empty")
         del o
 
         def break_yolks(self):
@@ -109,7 +101,14 @@ class NewTest(unittest.TestCase):
         test_closure(g, (1, 1), ValueError) # closure is wrong size
         test_closure(f, g.func_closure, ValueError) # no closure needed
 
-    if hasattr(new, 'code') and not test_support.is_jython:
+    # [Obsolete] Note: Jython will never have new.code()
+    #
+    # Who said that?!!! guess what, we do! :)
+    # 
+    # Unfortunately we still need a way to compile to Python bytecode,
+    # so support is still incomplete, as seen in the fact that we need
+    # to get values from CPython 2.7.
+    if hasattr(new, 'code'):
         def test_code(self):
             # bogus test of new.code()
             def f(a): pass
@@ -117,16 +116,16 @@ class NewTest(unittest.TestCase):
             c = f.func_code
             argcount = c.co_argcount
             nlocals = c.co_nlocals
-            stacksize = c.co_stacksize
+            stacksize = 1  # TODO c.co_stacksize
             flags = c.co_flags
-            codestring = c.co_code
-            constants = c.co_consts
-            names = c.co_names
+            codestring = 'd\x00\x00S'  # TODO c.co_code
+            constants = (None,)  # TODO c.co_consts
+            names = ()  # TODO c.co_names
             varnames = c.co_varnames
             filename = c.co_filename
             name = c.co_name
             firstlineno = c.co_firstlineno
-            lnotab = c.co_lnotab
+            lnotab = '' # TODO c.co_lnotab, but also see http://bugs.jython.org/issue1638
             freevars = c.co_freevars
             cellvars = c.co_cellvars
 

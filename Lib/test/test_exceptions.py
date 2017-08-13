@@ -524,7 +524,6 @@ class TestSameStrAndUnicodeMsg(unittest.TestCase):
         self.check_same_msg(Exception(), '')
 
 
-    @unittest.skipIf(is_jython, "FIXME: not working in Jython")
     def test_0_args_with_overridden___str__(self):
         """Check same msg for exceptions with 0 args and overridden __str__"""
         # str() and unicode() on an exception with overridden __str__ that
@@ -550,7 +549,6 @@ class TestSameStrAndUnicodeMsg(unittest.TestCase):
         self.assertRaises(UnicodeEncodeError, str, e)
         self.assertEqual(unicode(e), u'f\xf6\xf6')
 
-    @unittest.skipIf(is_jython, "FIXME: not working in Jython")
     def test_1_arg_with_overridden___str__(self):
         """Check same msg for exceptions with overridden __str__ and 1 arg"""
         # when __str__ is overridden and __unicode__ is not implemented
@@ -575,7 +573,6 @@ class TestSameStrAndUnicodeMsg(unittest.TestCase):
         for args in argslist:
             self.check_same_msg(Exception(*args), repr(args))
 
-    @unittest.skipIf(is_jython, "FIXME: not working in Jython")
     def test_many_args_with_overridden___str__(self):
         """Check same msg for exceptions with overridden __str__ and many args"""
         # if __str__ returns an ascii string / ascii unicode string

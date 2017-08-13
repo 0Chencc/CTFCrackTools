@@ -7,7 +7,7 @@ import test_list
 
 if test_support.is_jython:
     from java.util import ArrayList
-    from java.lang import String
+    from java.lang import Integer, String
 
 class ListTestCase(unittest.TestCase):
 
@@ -52,7 +52,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_tuple_equality(self):
         self.assertEqual([(1,), [1]].count([1]), 1) # http://bugs.jython.org/issue1317
- 
+
     def test_big_list(self):
         """Verify that fairly large collection literals of primitives can be constructed."""
         # use \n to separate to avoid parser problems
@@ -227,20 +227,82 @@ class JavaListTestCase(test_list.ListTest):
         self.assertNotEqual(id(a), id(b))
         self.assertEqual(a, b)
 
-
     def test_extend_java_ArrayList(self):
         jl = ArrayList([])
         jl.extend([1,2])
         self.assertEqual(jl, ArrayList([1,2]))
         jl.extend(ArrayList([3,4]))
         self.assertEqual(jl, [1,2,3,4])
+    
+    def test_remove(self):
+        # Verifies that overloaded java.util.List#remove(int) method can still be used, but with Python index semantics
+        # http://bugs.jython.org/issue2456
+        jl = ArrayList(xrange(10, -1, -1))      # 10 .. 0, inclusive
+        jl.remove(0)  # removes jl[-1] (=0) 
+        self.assertEqual(jl, range(10, 0, -1))  # 10 .. 1
+        self.assertRaises(ValueError, jl.remove, Integer(0))  # j.l.Integer does not support __index__ - maybe it should!
+        jl.remove(0)  # removes jl[0] (=10)
+        self.assertEqual(jl, range(9, 0, -1))   #  9 .. 1
+        jl.remove(-1) # removes jl[-1] (=1) - support same index calculations as Python (= del jl[-1])
+        self.assertEqual(jl, range(9, 1, -1))   #  9 .. 2
+        jl.remove(3)
+        jl.remove(5)
+        self.assertEqual(jl, [9, 8, 7, 6, 4, 2])
+
+        a_to_z = list(chr(i) for i in xrange(ord('a'), ord('z') + 1))
+        b_to_z_by_2 = list(chr(i) for i in xrange(ord('b'), ord('z') + 1, 2))
+        jl = ArrayList(a_to_z)
+        for i in xrange(13):
+            jl.remove(i)
+        self.assertEqual(jl, b_to_z_by_2)
+
+
+class ListSubclassTestCase(unittest.TestCase):
+
+    def test_subclass_iter_copy(self):
+
+        class MyList(list):
+
+            def __iter__(self):
+                i = 0
+                results = super(MyList, self).__iter__()
+                for result in results:
+                    yield result
+                    i += 1
+
+                # add extra result for validation
+                yield i
+
+        lst = MyList(['a', 'b', 'c'])
+        self.assertEqual(list(lst), ['a', 'b', 'c', 3])
+
+    def test_subclass_iter_does_not_call_other_special_methods(self):
+        # Verify fix for http://bugs.jython.org/issue2442
+
+        class C(list):
+            def __init__(self, *args):
+                self.called = False
+                return super(C, type(self)).__init__(self, *args)
+
+            def __len__(self):
+                self.called = True
+                return super(C, type(self)).__len__(self)
+
+            def __getitem__(self, index):
+                self.called = True
+                return super(C, type(self)).__getitem__(self, index)
+
+        c = C(range(10))
+        self.assertEqual(list(iter(c)), range(10))
+        self.assertFalse(c.called)
 
 
 def test_main():
-    test_support.run_unittest(ListTestCase,
+    test_support.run_unittest(ListSubclassTestCase,
+                              ListTestCase,
                               ThreadSafetyTestCase,
                               ExtendedSliceTestCase,
                               JavaListTestCase)
-
+    
 if __name__ == "__main__":
     test_main()

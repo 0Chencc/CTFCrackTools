@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2012-2013 The Python Software Foundation.
+# Copyright (C) 2012-2016 The Python Software Foundation.
 # See LICENSE.txt and CONTRIBUTORS.txt.
 #
 """PEP 376 implementation."""
@@ -20,7 +20,7 @@ import zipimport
 from . import DistlibException, resources
 from .compat import StringIO
 from .version import get_scheme, UnsupportedVersionError
-from .metadata import Metadata, METADATA_FILENAME
+from .metadata import Metadata, METADATA_FILENAME, WHEEL_METADATA_FILENAME
 from .util import (parse_requirement, cached_property, parse_name_and_version,
                    read_exports, write_exports, CSVReader, CSVWriter)
 
@@ -132,13 +132,17 @@ class DistributionPath(object):
                 if not r or r.path in seen:
                     continue
                 if self._include_dist and entry.endswith(DISTINFO_EXT):
-                    metadata_path = posixpath.join(entry, METADATA_FILENAME)
-                    pydist = finder.find(metadata_path)
-                    if not pydist:
+                    possible_filenames = [METADATA_FILENAME, WHEEL_METADATA_FILENAME]
+                    for metadata_filename in possible_filenames:
+                        metadata_path = posixpath.join(entry, metadata_filename)
+                        pydist = finder.find(metadata_path)
+                        if pydist:
+                            break
+                    else:
                         continue
 
-                    metadata = Metadata(fileobj=pydist.as_stream(),
-                                        scheme='legacy')
+                    with contextlib.closing(pydist.as_stream()) as stream:
+                        metadata = Metadata(fileobj=stream, scheme='legacy')
                     logger.debug('Found %s', r.path)
                     seen.add(r.path)
                     yield new_dist_class(r.path, metadata=metadata,
@@ -334,6 +338,8 @@ class Distribution(object):
         self.digest = None
         self.extras = None      # additional features requested
         self.context = None     # environment marker overrides
+        self.download_urls = set()
+        self.digests = {}
 
     @property
     def source_url(self):
@@ -364,9 +370,11 @@ class Distribution(object):
         return plist
 
     def _get_requirements(self, req_attr):
-        reqts = getattr(self.metadata, req_attr)
-        return set(self.metadata.get_requirements(reqts, extras=self.extras,
-                                                  env=self.context))
+        md = self.metadata
+        logger.debug('Getting requirements from metadata %r', md.todict())
+        reqts = getattr(md, req_attr)
+        return set(md.get_requirements(reqts, extras=self.extras,
+                                       env=self.context))
 
     @property
     def run_requires(self):
@@ -528,6 +536,9 @@ class InstalledDistribution(BaseInstalledDistribution):
             metadata = env._cache.path[path].metadata
         elif metadata is None:
             r = finder.find(METADATA_FILENAME)
+            # Temporary - for Wheel 0.23 support
+            if r is None:
+                r = finder.find(WHEEL_METADATA_FILENAME)
             # Temporary - for legacy support
             if r is None:
                 r = finder.find('METADATA')
@@ -925,9 +936,9 @@ class EggInfoDistribution(BaseInstalledDistribution):
                     requires = None
         elif path.endswith('.egg-info'):
             if os.path.isdir(path):
-                path = os.path.join(path, 'PKG-INFO')
                 req_path = os.path.join(path, 'requires.txt')
                 requires = parse_requires_path(req_path)
+                path = os.path.join(path, 'PKG-INFO')
             metadata = Metadata(path=path, scheme='legacy')
         else:
             raise DistlibException('path must end with .egg-info or .egg, '
@@ -1297,5 +1308,5 @@ def make_dist(name, version, **kwargs):
     md = Metadata(**kwargs)
     md.name = name
     md.version = version
-    md.summary = summary or 'Plaeholder for summary'
+    md.summary = summary or 'Placeholder for summary'
     return Distribution(md)

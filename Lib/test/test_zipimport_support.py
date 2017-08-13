@@ -240,6 +240,14 @@ class ZipSupportTests(ImportHooksBaseTestCase):
                 print data
             self.assertIn(expected, data)
 
+    def assertNormalisedIn(self, target, data):
+        # bdb/pdb applies normcase to its filename before displaying.
+        # Also, it emerges as FS-encoded bytes, so do the same to the target.
+        target = os.path.normcase(target)
+        if not isinstance(target, bytes):
+            target = target.encode(sys.getfilesystemencoding())
+        self.assertIn(target, data)
+
     def test_pdb_issue4201(self):
         test_src = textwrap.dedent("""\
                     def f():
@@ -248,22 +256,22 @@ class ZipSupportTests(ImportHooksBaseTestCase):
                     import pdb
                     pdb.runcall(f)
                     """)
+
         with temp_dir() as d:
             script_name = make_script(d, 'script', test_src)
             p = spawn_python(script_name)
             p.stdin.write('l\n')
             data = kill_python(p)
-            # bdb/pdb applies normcase to its filename before displaying
-            # See CPython Issue 14255 (back-ported for Jython)
-            self.assertIn(os.path.normcase(script_name.encode('utf-8')), data)
+            # Back-port from CPython 3 (see CPython Issue 14255).
+            self.assertNormalisedIn(script_name, data)
+
             zip_name, run_name = make_zip_script(d, "test_zip",
                                                 script_name, '__main__.py')
             p = spawn_python(zip_name)
             p.stdin.write('l\n')
             data = kill_python(p)
-            # bdb/pdb applies normcase to its filename before displaying
-            # See CPython Issue 14255 (back-ported for Jython)
-            self.assertIn(os.path.normcase(run_name.encode('utf-8')), data)
+            # Back-port from CPython 3 (see CPython Issue 14255).
+            self.assertNormalisedIn(run_name, data)
 
 
 def test_main():

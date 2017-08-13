@@ -12,6 +12,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 import org.python.util.PythonInterpreter;
 import org.python.core.*;
+import org.python.modules.itertools.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -74,6 +75,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+import java.awt.TextArea;
 
 public class Core extends JFrame {
 	private JPanel contentPane;
@@ -106,7 +108,7 @@ public class Core extends JFrame {
 	 * Create the frame.
 	 */
 	public Core() {
-		setTitle("MSTTEAM-CTFCrackTools-v3.0.1");
+		setTitle("MSTTEAM-CTFCrackTools-v3.1-Our team is two years old！");
 	    try{
 	        //设置本属性将改变窗口边框样式定义
 	        BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;
@@ -160,7 +162,7 @@ public class Core extends JFrame {
 		scroll0.setViewportView(Item0);
 		
 		Item0.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
-		Item0.setText("Author:0chen\r\nTeam:MstTeam\r\nWebsite:http://www.Hi-OurLife.com/\r\nGithub:https://github.com/0Chencc/CTFCrackTools\r\nVersion:3.0");
+		Item0.setText("Author:0chen\r\nTeam:MstTeam\r\nWebsite:http://www.Hi-OurLife.com/\r\nGithub:https://github.com/0Chencc/CTFCrackTools\r\nVersion:3.1\r\n\r\nOur team is two years old！！！\r\nHappy two years！！！");
 		Crypto.addTab("0", null, scroll0, null);
 
 		JScrollPane scroll1 = new JScrollPane();
@@ -668,6 +670,33 @@ public class Core extends JFrame {
 		gbc_hex36.gridy = 12;
 		HexConvert.add(hex36, gbc_hex36);
 		hex36.setColumns(10);
+		
+		JPanel HexEdit = new JPanel();
+		tabbedPane.addTab("HexEdit", null, HexEdit, null);
+		GridBagLayout gbl_HexEdit = new GridBagLayout();
+		gbl_HexEdit.columnWidths = new int[]{415, 0, 0};
+		gbl_HexEdit.rowHeights = new int[]{0, 0};
+		gbl_HexEdit.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_HexEdit.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		HexEdit.setLayout(gbl_HexEdit);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 0;
+		gbc_scrollPane_1.gridy = 0;
+		HexEdit.add(scrollPane_1, gbc_scrollPane_1);
+		
+		TextArea textArea_1 = new TextArea();
+		scrollPane_1.setViewportView(textArea_1);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_2 = new GridBagConstraints();
+		gbc_scrollPane_2.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_2.gridx = 1;
+		gbc_scrollPane_2.gridy = 0;
+		HexEdit.add(scrollPane_2, gbc_scrollPane_2);
 		JPanel PluginsMenu = new JPanel();
 		tabbedPane.addTab("PluginsMenu", null, PluginsMenu, null);
 		GridBagLayout gbl_PluginsMenu = new GridBagLayout();
@@ -865,8 +894,8 @@ public class Core extends JFrame {
 	        String input = textArea.getText();
 	        PythonInterpreter interpreter = new PythonInterpreter();
 	        PySystemState sys = Py.getSystemState();
-	        //sys.path.add("C:\\Users\\0chen\\Desktop\\Lib");
-	        //sys.path.add(System.getProperty("user.dir")+"\\Lib");
+	        sys.path.add(System.getProperty("user.dir")+"\\Lib");
+	        sys.path.add(System.getProperty("user.dir")+"\\Lib\\site-packages");
 	        try {
 	        	interpreter.execfile(json.getPath(arg0.getActionCommand()));
 			} catch (Exception e) {

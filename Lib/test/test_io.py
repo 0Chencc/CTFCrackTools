@@ -650,13 +650,6 @@ class PyIOTest(IOTest):
         "len(array.array) returns number of elements rather than bytelength"
     )(IOTest.test_array_writes)
 
-    # When Jython tries to use UnsupportedOperation as _pyio defines it, it runs
-    # into a problem with multiple inheritance and the slots array: issue 1996.
-    # Override the affected test version just so we can skip it visibly.
-    @unittest.skipIf(support.is_jython, "FIXME: Jython issue 1996")
-    def test_invalid_operations(self):
-        pass
-
     # Jython does not use integer file descriptors but an object instead.
     # Unfortunately, _pyio.open checks that it is an int.
     # Override the affected test versions just so we can skip them visibly.
@@ -1479,13 +1472,6 @@ class CBufferedRWPairTest(BufferedRWPairTest):
 
 class PyBufferedRWPairTest(BufferedRWPairTest):
     tp = pyio.BufferedRWPair
-
-    # When Jython tries to use UnsupportedOperation as _pyio defines it, it runs
-    # into a problem with multiple inheritance and the slots array: issue 1996.
-    # Override the affected test version just so we can skip it visibly.
-    @unittest.skipIf(support.is_jython, "FIXME: Jython issue 1996")
-    def test_detach(self):
-        pass
 
 
 class BufferedRandomTest(BufferedReaderTest, BufferedWriterTest):
@@ -2452,6 +2438,7 @@ class TextIOWrapperTest(unittest.TestCase):
             self.assertEqual(f.errors, "replace")
 
     @unittest.skipUnless(threading, 'Threading required for this test.')
+    @unittest.skipIf(support.is_jython, "Not thread-safe: Jython issue 2588.")
     def test_threads_write(self):
         # Issue6750: concurrent writes could duplicate data
         event = threading.Event()
@@ -2905,13 +2892,6 @@ class CMiscIOTest(MiscIOTest):
 
 class PyMiscIOTest(MiscIOTest):
     io = pyio
-
-    # When Jython tries to use UnsupportedOperation as _pyio defines it, it runs
-    # into a problem with multiple inheritance and the slots array: issue 1996.
-    # Override the affected test version just so we can skip it visibly.
-    @unittest.skipIf(support.is_jython, "FIXME: Jython issue 1996")
-    def test_io_after_close(self):
-        pass
 
     # Jython does not use integer file descriptors but an object instead.
     # Unfortunately, _pyio.open checks that it is an int.

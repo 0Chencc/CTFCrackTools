@@ -1,6 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 import unittest, test.test_support
 import sys, cStringIO
+import struct
+
 
 class SysModuleTest(unittest.TestCase):
 
@@ -256,7 +258,7 @@ class SysModuleTest(unittest.TestCase):
         env = dict(os.environ)
 
         # Test character: cent sign, encoded as 0x4A (ASCII J) in CP424,
-        # not representable in ASCII.
+        # not representable in ASCII, Unicode U+00a2.
 
         env["PYTHONIOENCODING"] = "cp424"
         p = subprocess.Popen([sys.executable, "-c", 'print unichr(0xa2)'],
@@ -271,12 +273,84 @@ class SysModuleTest(unittest.TestCase):
         self.assertEqual(out, '?')
 
 
+class SizeofTest(unittest.TestCase):
+    """Jython modified version of getsizeof"""
+
+    def setUp(self):
+        self.P = struct.calcsize('P')
+        self.longdigit = sys.long_info.sizeof_digit
+        self.file = open(test.test_support.TESTFN, 'wb')
+
+    def tearDown(self):
+        self.file.close()
+        test.test_support.unlink(test.test_support.TESTFN)
+
+    check_sizeof = test.test_support.check_sizeof
+
+    def test_default(self):
+        size = test.test_support.calcobjsize
+        self.assertEqual(sys.getsizeof(True, -1), size('l'))
+
+    def test_objecttypes(self):
+        # check all types defined in Objects/
+        size = test.test_support.calcobjsize
+        vsize = test.test_support.calcvobjsize
+        check = self.check_sizeof
+        # bool
+        check(True, size('l'))
+        # buffer
+        with test.test_support.check_py3k_warnings():
+            check(buffer(''), size('1P2Pil'))
+        # builtin_function_or_method
+        check(len, size('3P'))
+        # bytearray_iterator
+        check(iter(bytearray()), size('2PP'))
+        # cell
+        def get_cell():
+            x = 42
+            def inner():
+                return x
+            return inner
+        check(get_cell().func_closure[0], size('2P'))
+        # classobj (old-style class)
+        class class_oldstyle():
+            def method():
+                pass
+        check(class_oldstyle, size('6P'))
+        # instance (old-style class)
+        check(class_oldstyle(), size('3P'))
+        # instancemethod (old-style class)
+        check(class_oldstyle().method, size('3P'))
+        # complex
+        check(complex(0,1), size('2P2d'))
+        # code
+        check(get_cell().func_code, size('4i3Pi3P'))
+        # BaseException
+        check(BaseException(), size('3P'))
+
+    def test_pythontypes(self):
+        # check all types defined in Python/
+        size = test.test_support.calcobjsize
+        vsize = test.test_support.calcvobjsize
+        check = self.check_sizeof
+        # imp.NullImporter
+        import imp
+        check(imp.NullImporter(self.file.name), size('3P'))
+        try:
+            raise TypeError
+        except TypeError:
+            tb = sys.exc_info()[2]
+            # traceback
+            if tb != None:
+                check(tb, size('2P2i'))
+
+
 def test_main():
     if test.test_support.is_jython:
         del SysModuleTest.test_lost_displayhook
         del SysModuleTest.test_refcount
         del SysModuleTest.test_setcheckinterval
-    test.test_support.run_unittest(SysModuleTest)
+    test.test_support.run_unittest(SysModuleTest, SizeofTest)
 
 if __name__ == "__main__":
     test_main()

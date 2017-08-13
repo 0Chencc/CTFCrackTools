@@ -70,11 +70,12 @@ class ExceptionsTestCase(unittest.TestCase):
         # But the exception hook, via Py#displayException, does not fail when attempting to __str__ the exception args
         with test_support.captured_stderr() as s:
             sys.excepthook(RuntimeError, u"Drink \u2615", None)
-        self.assertEqual(s.getvalue(), "RuntimeError\n")  
+        # At minimum, it tells us what kind of exception it was
+        self.assertEqual(s.getvalue()[:12], "RuntimeError")
         # It is fine with ascii values, of course
         with test_support.captured_stderr() as s:
             sys.excepthook(RuntimeError, u"Drink java", None)
-        self.assertEqual(s.getvalue(), "RuntimeError: Drink java\n")  
+        self.assertEqual(s.getvalue(), "RuntimeError: Drink java\n")
 
 
 def test_main():

@@ -602,7 +602,7 @@ class UTF16ExTest(unittest.TestCase):
     def test_bad_args(self):
         self.assertRaises(TypeError, codecs.utf_16_ex_decode)
 
-@unittest.skipIf(test_support.is_jython, "Jython has no _codecs.readbuffer_encode method")
+@unittest.skipIf(test_support.is_jython, "FIXME Jython has no _codecs.readbuffer_encode method")
 class ReadBufferTest(unittest.TestCase):
 
     def test_array(self):
@@ -619,7 +619,7 @@ class ReadBufferTest(unittest.TestCase):
         self.assertRaises(TypeError, codecs.readbuffer_encode)
         self.assertRaises(TypeError, codecs.readbuffer_encode, 42)
 
-@unittest.skipIf(test_support.is_jython, "Jython has no _codecs.charbuffer_encode method")
+@unittest.skipIf(test_support.is_jython, "FIXME Jython has no _codecs.charbuffer_encode method")
 class CharBufferTest(unittest.TestCase):
 
     def test_string(self):
@@ -1084,7 +1084,6 @@ class NameprepTest(unittest.TestCase):
                 except Exception,e:
                     raise test_support.TestFailed("Test 3.%d: %s" % (pos+1, str(e)))
 
-# @unittest.skipIf(test_support.is_jython, "FIXME: Jython issue 1153 missing support for IDNA")
 class IDNACodecTest(unittest.TestCase):
     def test_builtin_decode(self):
         self.assertEqual(unicode("python.org", "idna"), u"python.org")

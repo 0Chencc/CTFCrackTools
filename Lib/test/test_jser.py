@@ -15,7 +15,9 @@ class Foo:
 class JavaSerializationTests(unittest.TestCase):
 
     def setUp(self):
-        self.sername = os.path.join(sys.prefix, "test.ser")
+        name = os.path.join(sys.prefix, "test.ser")
+        # As we are using java.io directly, ensure file name is a unicode
+        self.sername = name.decode(sys.getfilesystemencoding())
 
     def tearDown(self):
         os.remove(self.sername)

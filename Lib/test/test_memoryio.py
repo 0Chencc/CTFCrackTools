@@ -398,13 +398,6 @@ class PyBytesIOTest(MemoryTestMixin, MemorySeekTestMixin, unittest.TestCase):
 
     UnsupportedOperation = pyio.UnsupportedOperation
 
-    # When Jython tries to use UnsupportedOperation as _pyio defines it, it runs
-    # into a problem with multiple inheritance and the slots array: issue 1996.
-    # Override the affected test version just so we can skip it visibly.
-    @unittest.skipIf(support.is_jython, "FIXME: Jython issue 1996")
-    def test_detach(self):
-        pass
-
     @staticmethod
     def buftype(s):
         return s.encode("ascii")
@@ -595,13 +588,6 @@ class PyStringIOTest(MemoryTestMixin, MemorySeekTestMixin,
     UnsupportedOperation = pyio.UnsupportedOperation
     EOF = ""
 
-    # When Jython tries to use UnsupportedOperation as _pyio defines it, it runs
-    # into a problem with multiple inheritance and the slots array: issue 1996.
-    # Override the affected test version just so we can skip it visibly.
-    @unittest.skipIf(support.is_jython, "FIXME: Jython issue 1996")
-    def test_detach(self):
-        pass
-
 
 class PyStringIOPickleTest(TextIOTestMixin, unittest.TestCase):
     """Test if pickle restores properly the internal state of StringIO.
@@ -624,10 +610,6 @@ class CBytesIOTest(PyBytesIOTest):
     test_bytes_array = unittest.skip(
         "array.array() does not have the new buffer API"
     )(PyBytesIOTest.test_bytes_array)
-
-    # Re-instate test_detach skipped by Jython in PyBytesIOTest
-    if support.is_jython: # FIXME: Jython issue 1996
-        test_detach = MemoryTestMixin.test_detach
 
     def test_getstate(self):
         memio = self.ioclass()
@@ -672,10 +654,6 @@ class CStringIOTest(PyStringIOTest):
 
     # XXX: For the Python version of io.StringIO, this is highly
     # dependent on the encoding used for the underlying buffer.
-
-    # Re-instate test_detach skipped by Jython in PyBytesIOTest
-    if support.is_jython: # FIXME: Jython issue 1996
-        test_detach = MemoryTestMixin.test_detach
 
     # This test checks that tell() results are consistent with the length of
     # text written, but this is not documented in the API: only that seek()

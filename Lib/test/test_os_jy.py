@@ -100,7 +100,7 @@ class OSFileTestCase(unittest.TestCase):
                 pos = fd.tell()
                 self.assertEqual(pos, x + 1,
                         '[forward] after read: pos should be %d but is %d' % (x + 1, pos))
-                
+
                 self.assertEqual(c, x)
 
             # read backward from the end
@@ -116,7 +116,7 @@ class OSFileTestCase(unittest.TestCase):
                 pos = fd.tell()
                 self.assertEqual(pos, x + 1,
                         '[backward] after read: pos should be %d but is %d' % (x + 1, pos))
-                
+
                 self.assertEqual(c, x)
 
                 if x > 0:
@@ -198,15 +198,42 @@ class UnicodeTestCase(unittest.TestCase):
 
     def test_env(self):
         with test_support.temp_cwd(name=u"tempcwd-中文"):
+            # os.environ is constructed with FS-encoded values (as in CPython),
+            # but it will accept unicode additions.
             newenv = os.environ.copy()
-            newenv["TEST_HOME"] = u"首页"
-            p = subprocess.Popen([sys.executable, "-c",
-                                  'import sys,os;' \
-                                  'sys.stdout.write(os.getenv("TEST_HOME").encode("utf-8"))'],
-                                 stdout=subprocess.PIPE,
-                                 env=newenv)
-            self.assertEqual(p.stdout.read().decode("utf-8"), u"首页")
-    
+            newenv["TEST_HOME"] = expected = u"首页"
+            # Environment passed as UTF-16 String[] by Java, arrives FS-encoded.
+            for encoding in ('utf-8', 'gbk'):
+                # Emit the value of TEST_HOME explicitly encoded.
+                p = subprocess.Popen(
+                        [sys.executable, "-c",
+                                'import sys, os;' \
+                                'sys.stdout.write(os.getenv("TEST_HOME")' \
+                                '.decode(sys.getfilesystemencoding())' \
+                                '.encode("%s"))' \
+                                % encoding],
+                        stdout=subprocess.PIPE,
+                        env=newenv)
+                # Decode with chosen encoding 
+                self.assertEqual(p.stdout.read().decode(encoding), u"首页")
+
+    def test_env_naively(self):
+        with test_support.temp_cwd(name=u"tempcwd-中文"):
+            # os.environ is constructed with FS-encoded values (as in CPython),
+            # but it will accept unicode additions.
+            newenv = os.environ.copy()
+            newenv["TEST_HOME"] = expected = u"首页"
+            # Environment passed as UTF-16 String[] by Java, arrives FS-encoded.
+            # However, emit TEST_HOME without thinking about the encoding.
+            p = subprocess.Popen(
+                    [sys.executable, "-c",
+                            'import sys, os;' \
+                            'sys.stdout.write(os.getenv("TEST_HOME"))'],
+                    stdout=subprocess.PIPE,
+                    env=newenv)
+            # Decode with default encoding utf-8 (because ... ?)
+            self.assertEqual(p.stdout.read().decode('utf-8'), expected)
+
     def test_getcwd(self):
         with test_support.temp_cwd(name=u"tempcwd-中文") as temp_cwd:
             p = subprocess.Popen([sys.executable, "-c",
@@ -216,38 +243,46 @@ class UnicodeTestCase(unittest.TestCase):
             self.assertEqual(p.stdout.read().decode("utf-8"), temp_cwd)
 
     def test_listdir(self):
-        # It is hard to avoid Unicode paths on systems like OS X. Use
-        # relative paths from a temp CWD to work around this
+        # It is hard to avoid Unicode paths on systems like OS X. Use relative
+        # paths from a temp CWD to work around this. But when you don't,
+        # it behaves like this ...
         with test_support.temp_cwd() as new_cwd:
-            unicode_path = os.path.join(".", "unicode")
-            self.assertIs(type(unicode_path), str)
-            chinese_path = os.path.join(unicode_path, u"中文")
+
+            basedir = os.path.join(".", "unicode")
+            self.assertIs(type(basedir), bytes)
+            chinese_path = os.path.join(basedir, u"中文")
             self.assertIs(type(chinese_path), unicode)
             home_path = os.path.join(chinese_path, u"首页")
             os.makedirs(home_path)
-            
+
+            FS = sys.getfilesystemencoding()
+
             with open(os.path.join(home_path, "test.txt"), "w") as test_file:
                 test_file.write("42\n")
 
-            # Verify works with str paths, returning Unicode as necessary
-            entries = os.listdir(unicode_path)
-            self.assertIn(u"中文", entries)
+            # listdir(bytes) includes encoded form of 中文
+            entries = os.listdir(basedir)
+            self.assertIn(u"中文".encode(FS), entries)
+            for entry in entries:
+                self.assertIs(type(entry), bytes)
 
-            # Verify works with Unicode paths
+            # listdir(unicode) includes unicode form of 首页
             entries = os.listdir(chinese_path)
             self.assertIn(u"首页", entries)
-           
+            for entry in entries:
+                self.assertIs(type(entry), unicode)
+
             # glob.glob builds on os.listdir; note that we don't use
-            # Unicode paths in the arg to glob
+            # Unicode paths in the arg to glob so the result is bytes
             self.assertEqual(
                 glob.glob(os.path.join("unicode", "*")),
-                [os.path.join(u"unicode", u"中文")])
+                [os.path.join(u"unicode", u"中文").encode(FS)])
             self.assertEqual(
                 glob.glob(os.path.join("unicode", "*", "*")),
-                [os.path.join(u"unicode", u"中文", u"首页")])
+                [os.path.join(u"unicode", u"中文", u"首页").encode(FS)])
             self.assertEqual(
                 glob.glob(os.path.join("unicode", "*", "*", "*")),
-                [os.path.join(u"unicode", u"中文", u"首页", "test.txt")])
+                [os.path.join(u"unicode", u"中文", u"首页", "test.txt").encode(FS)])
 
             # Now use a Unicode path as well as in the glob arg
             self.assertEqual(
@@ -259,15 +294,19 @@ class UnicodeTestCase(unittest.TestCase):
             self.assertEqual(
                 glob.glob(os.path.join(u"unicode", "*", "*", "*")),
                 [os.path.join(u"unicode", u"中文", u"首页", "test.txt")])
- 
+
             # Verify Java integration. But we will need to construct
             # an absolute path since chdir doesn't work with Java
             # (except for subprocesses, like below in test_env)
-            for entry in entries:
+            for entry in entries: # list(unicode)
+                # new_cwd is bytes while chinese_path is unicode.
+                # But new_cwd is not guaranteed to be just ascii, so decode it.
+                new_cwd = new_cwd.decode(FS)
                 entry_path = os.path.join(new_cwd, chinese_path, entry)
                 f = File(entry_path)
-                self.assertTrue(f.exists(), "File %r (%r) should be testable for existence" % (
-                    f, entry_path))
+                self.assertTrue(f.exists(),
+                    "File %r (%r) should be testable for existence" %
+                    (f, entry_path))
 
 class LocaleTestCase(unittest.TestCase):
 
@@ -277,7 +316,7 @@ class LocaleTestCase(unittest.TestCase):
             return code.strip().replace("-", "").lower()
 
         try:
-            installed_codes = dict(((normalize(code), code) for 
+            installed_codes = dict(((normalize(code), code) for
                                     code in subprocess.check_output(["locale", "-a"]).split()))
         except (subprocess.CalledProcessError, OSError):
             raise unittest.SkipTest("locale command not available, cannot test")
@@ -317,7 +356,7 @@ class LocaleTestCase(unittest.TestCase):
             # Should not convert str for 'i'/'I', but should convert
             # unicode if in Turkish locale; this behavior intentionally is
             # different than CPython; see also http://bugs.python.org/issue17252
-            # 
+            #
             # Note that JVMs seem to have some latitude here however, so support
             # either for now.
             ["['i', u'\\u0131', 'I', u'\\u0130']\n",
@@ -345,12 +384,12 @@ class LocaleTestCase(unittest.TestCase):
         self.get_installed_locales("ja_JP.UTF-8")
         self.assertEqual(
             subprocess.check_output(
-                [sys.executable, 
+                [sys.executable,
                  "-J-Duser.country=JP", "-J-Duser.language=ja",
                  "-c",
                  "import time; print repr(time.strftime('%c', (2015, 3, 29, 14, 55, 13, 6, 88, 0)))"]),
             "'\\xe6\\x97\\xa5 3 29 14:55:13 2015'\n")
-        
+
 
 class SystemTestCase(unittest.TestCase):
 
@@ -359,7 +398,7 @@ class SystemTestCase(unittest.TestCase):
         # would fail with an import error due to creating a circular
         # import chain. This root cause is because the os module
         # imports the subprocess module for the system function; but
-        # the subprocess module imports from os. Verrifies that this
+        # the subprocess module imports from os. Verifies that this is
         # managed by making the import late; also verify the
         # monkeypatching optimization is successful by calling
         # os.system twice.
@@ -370,6 +409,23 @@ class SystemTestCase(unittest.TestCase):
                      "import traceback; import os; os.system('echo 42'); os.system('echo 47')"])\
                 .replace("\r", ""),  # in case of running on Windows
                 "42\n47\n")
+
+    def test_system_uses_os_environ(self):
+        """Writing to os.environ is made available as env vars in os.system subprocesses"""
+        # This test likely requires additional customization for
+        # environments like AS/400, but I do not have current access.
+        # Verifies fix for http://bugs.jython.org/issue2416
+        if os._name == "nt":
+            echo_command = 'echo %TEST_ENVVAR%'
+        else:
+            echo_command = 'echo $TEST_ENVVAR'
+        with test_support.temp_cwd() as temp_cwd:
+            self.assertEqual(
+                subprocess.check_output(
+                    [sys.executable, "-c",
+                     "import os; os.environ['TEST_ENVVAR'] = 'works on 2.7.1+'; os.system('%s')" % echo_command])\
+                .replace("\r", ""),  # in case of running on Windows
+                "works on 2.7.1+\n")
 
 
 @unittest.skipUnless(hasattr(os, 'link'), "os.link not available")
@@ -423,7 +479,7 @@ class SymbolicLinkTestCase(unittest.TestCase):
             self.assertEqual(os.readlink(source), target)
             self.assertEqual(os.readlink(unicode(source)), unicode(target))
             self.assertIsInstance(os.readlink(unicode(source)), unicode)
-            
+
     def test_readlink_non_symlink(self):
         """os.readlink of a non symbolic link should raise an error"""
         # test for http://bugs.jython.org/issue2292
@@ -447,7 +503,7 @@ class SymbolicLinkTestCase(unittest.TestCase):
 
 def test_main():
     test_support.run_unittest(
-        OSFileTestCase, 
+        OSFileTestCase,
         OSDirTestCase,
         OSStatTestCase,
         OSWriteTestCase,

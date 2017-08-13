@@ -380,7 +380,7 @@ argv0 = sys.argv[0]
             mod_name = 'not_main'
             script_name = self._make_test_script(script_dir, mod_name)
             zip_name, fname = make_zip_script(script_dir, 'test_zip', script_name)
-            msg = "can't find '__main__' module in '%s'" % zip_name
+            msg = "can't find '__main__' module in %r" % zip_name
             self._check_import_error(zip_name, msg)
 
     def test_main_recursion_error(self):

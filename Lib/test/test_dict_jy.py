@@ -137,6 +137,8 @@ class JavaIntegrationTest(unittest.TestCase):
         x['a'] = 1
         x[(1, 2)] = 'xyz'
         self.assertEqual({tup for tup in x.iteritems()}, {('a', 1), ((1, 2), 'xyz')})
+        self.assertEqual({tup for tup in x.itervalues()}, {1, 'xyz'})
+        self.assertEqual({tup for tup in x.iterkeys()}, {'a', (1, 2)})
         self.assertEqual(str(x), repr(x))
         self.assertEqual(type(str(x)), type(repr(x)))
 
