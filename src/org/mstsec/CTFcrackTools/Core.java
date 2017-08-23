@@ -83,6 +83,8 @@ public class Core extends JFrame {
 	private static JTextArea textArea = new JTextArea();
 	private Json json =new Json();
 	private static String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
+	private static String Version = "-v3.1.1";
+	private static String Note = " Our team is two years old！";
 	private JTextField hex2;
 	private JTextField hex8;
 	private JTextField hex10;
@@ -93,6 +95,16 @@ public class Core extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	static{
+		  try{
+			BeautyEyeLNFHelper.frameBorderStyle=BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;
+		    org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+		    BeautyEyeLNFHelper.translucencyAtFrameInactive = true;
+		    UIManager.put("RootPane.setupButtonVisible", false);
+		}catch(Exception e){
+			
+		}
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -109,18 +121,7 @@ public class Core extends JFrame {
 	 * Create the frame.
 	 */
 	public Core() {
-		setTitle("MSTTEAM-CTFCrackTools-v3.1-Our team is two years old！");
-	    try{
-	        //设置本属性将改变窗口边框样式定义
-	        BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;
-	        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
-	        BeautyEyeLNFHelper.translucencyAtFrameInactive = true;
-	        //buttom--Send.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.red));
-	    }
-	    catch(Exception e)
-	    {
-	        //TODO exception
-	    }
+		setTitle("MSTTEAM-CTFCrackTools"+Version+Note);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 906, 755);
 		contentPane = new JPanel();
@@ -163,7 +164,11 @@ public class Core extends JFrame {
 		scroll0.setViewportView(Item0);
 		
 		Item0.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 13));
-		Item0.setText("Author:0chen\r\nTeam:MstTeam\r\nWebsite:http://www.Hi-OurLife.com/\r\nGithub:https://github.com/0Chencc/CTFCrackTools\r\nVersion:3.1\r\n\r\nOur team is two years old！！！\r\nHappy two years！！！");
+		Item0.setText("Author:0chen\r\nTeam:MstTeam\r\n" +
+				"Website:http://www.Hi-OurLife.com/\r\n" +
+				"Github:https://github.com/0Chencc/CTFCrackTools\r\n" +
+				"\r\n\r\nOur team is two years old！！！" +
+				"\r\nHappy two years！！！");
 		Crypto.addTab("0", null, scroll0, null);
 
 		JScrollPane scroll1 = new JScrollPane();
@@ -875,7 +880,6 @@ public class Core extends JFrame {
 	        PythonInterpreter.initialize(preprops, props, new String[0]);
 	        PythonInterpreter interpreter = new PythonInterpreter();
 	        PySystemState sys = Py.getSystemState();
-	        //sys.path.add(System.getProperty("user.dir")+"/Lib");
 	        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
 	        try {
 	        	interpreter.execfile(json.getPath(arg0.getActionCommand()));
