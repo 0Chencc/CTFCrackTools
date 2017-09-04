@@ -4,13 +4,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.python.core.Py;
 import org.python.core.PyFunction;
 import org.python.core.PyObject;
 import org.python.core.PyString;
+import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
 import sun.misc.BASE64Decoder;
@@ -326,50 +329,113 @@ public interface Func {
 		return res.toString();
 	}
 	public static String Base32j(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\basecode.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b32e",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String Base32c(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\basecode.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b32d",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String Base16j(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\basecode.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b16e",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String Base16c(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\basecode.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/basecode.py");
 	    PyFunction func = (PyFunction)interpreter.get("b16d",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String r162ascii(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\16andascii.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/16andascii.py");
 	    PyFunction func = (PyFunction)interpreter.get("r162ascii",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String ascii216(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\16andascii.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/16andascii.py");
 	    PyFunction func = (PyFunction)interpreter.get("ascii216",PyFunction.class);
 	    PyObject rsadstr = func.__call__(new PyString(input));  
 	    return (rsadstr.toString());
 	}
 	public static String Bacon(String input){
-	    PythonInterpreter interpreter = new PythonInterpreter();
-		interpreter.execfile(System.getProperty("user.dir")+"\\Lib\\peigen.py");
+        Properties props = new Properties();
+        props.put("python.home",System.getProperty("user.dir")+"/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.security.respectJavaAccessibility", "false");
+        props.put("python.import.site","false");
+        Properties preprops = System.getProperties();
+        PythonInterpreter.initialize(preprops, props, new String[0]);
+        PythonInterpreter interpreter = new PythonInterpreter();
+        PySystemState sys = Py.getSystemState();
+        sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages");
+		interpreter.execfile(System.getProperty("user.dir")+"/Lib/peigen.py");
 	    PyFunction func = (PyFunction)interpreter.get("run",PyFunction.class);
 	    PyObject jg = func.__call__(new PyString(input));  
 	    return jg.toString();
