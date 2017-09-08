@@ -83,7 +83,7 @@ public class Core extends JFrame {
 	private static JTextArea textArea = new JTextArea();
 	private Json json =new Json();
 	private static String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");//程序配置文件
-	private static String Version = "-v3.1.2";
+	private static String Version = "-v3.1.3";
 	private static String Note = " Our team is two years old！";
 	private JTextField hex2;
 	private JTextField hex8;
@@ -556,6 +556,7 @@ public class Core extends JFrame {
 			public void caretUpdate(CaretEvent e) {
 				if(!inputnum.getText().equals("")){
 					String input = inputnum.getText();
+					input=input.replace(" ", "");
 					int radixnum = 10;
 					switch(comboBox.getSelectedItem().toString()){
 					case "Binary":
