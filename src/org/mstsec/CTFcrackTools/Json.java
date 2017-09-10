@@ -1,19 +1,13 @@
 package org.mstsec.CTFCrackTools;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.*;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 public class Json{
 	String JsonPath = new String(System.getProperty("user.dir")+"\\Setting.json");
 	//Json解析
@@ -89,19 +83,21 @@ public class Json{
 	    JsonArray Plugins = object.getAsJsonArray("Plugins");
 	    for (JsonElement jsonElement : Plugins) {
 	        JsonObject Plugin = jsonElement.getAsJsonObject();
-	        if(Plugin.get("title").getAsString().equalsIgnoreCase(title)&&!Plugin.get("dialog").isJsonNull()){
-	        	detailStr = "Title:"+Plugin.get("title").getAsString()+"\n\n"
+	        if(Plugin.get("title").getAsString().equalsIgnoreCase(title)){
+	        	if(!Plugin.get("dialog").isJsonNull()){
+		        	detailStr = "Title:"+Plugin.get("title").getAsString()+"\n\n"
 	        				+ "Author："+Plugin.get("author").getAsString()+"\n\n"
 	        				+"Type："+Plugin.get("type").getAsString()+"\n\n"
 	        				+ "Detail："+Plugin.get("detail").getAsString()+"\n\n"
 	        				+ "Dialog："+Plugin.get("dialog").getAsString()+"\n\n"
 	        				+ "Path："+Plugin.get("path").getAsString();
-	        }else if(Plugin.get("title").getAsString().equalsIgnoreCase(title)&&Plugin.get("dialog").isJsonNull()){
-	        	detailStr = "Title："+Plugin.get("title").getAsString()+"\n\n"
-        				+ "Author："+Plugin.get("author").getAsString()+"\n\n"
-        				+"Type："+Plugin.get("type").getAsString()+"\n\n"
-        				+ "Detail："+Plugin.get("detail").getAsString()+"\n\n"
-        				+ "Path："+Plugin.get("path").getAsString();
+	        	}else{
+		        	detailStr = "Title："+Plugin.get("title").getAsString()+"\n\n"
+	        				+ "Author："+Plugin.get("author").getAsString()+"\n\n"
+	        				+"Type："+Plugin.get("type").getAsString()+"\n\n"
+	        				+ "Detail："+Plugin.get("detail").getAsString()+"\n\n"
+	        				+ "Path："+Plugin.get("path").getAsString();
+	        	}
 	        }
 	    }
 	    return detailStr;
@@ -145,9 +141,6 @@ public class Json{
     			JsonParser parser = new JsonParser(); 
     			object =  (JsonObject)parser.parse(new InputStreamReader(new FileInputStream(JsonPath),"UTF-8"));
     			Plugins = object.getAsJsonArray("Plugins");
-    			for (JsonElement jsonElement : Plugins) {
-    				JsonObject Plugin = jsonElement.getAsJsonObject();
-    			}
     		}else{
     			object = new JsonObject();
     			Plugins = new JsonArray();
@@ -188,9 +181,6 @@ public class Json{
     			JsonParser parser = new JsonParser(); 
     			object =  (JsonObject)parser.parse(new InputStreamReader(new FileInputStream(JsonPath),"UTF-8"));
     			Plugins = object.getAsJsonArray("Plugins");
-    			for (JsonElement jsonElement : Plugins) {
-    				JsonObject Plugin = jsonElement.getAsJsonObject();
-    			}
     		}
     		jsonreadcoding.close();
     	}
