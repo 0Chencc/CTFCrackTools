@@ -1,6 +1,6 @@
 # CTFcrackTools-V3
 >[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
->[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/0Chencc/CTFCrackTools/)
+>[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
 >[![language](https://img.shields.io/badge/language-java-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
 >
 > CTFcrackTools重置版
