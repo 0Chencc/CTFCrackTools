@@ -166,6 +166,7 @@ public class Json{
 	    OutputStreamWriter outprint = new OutputStreamWriter(outfile,"UTF-8");
 	    outprint.write(tool.formatJson(jsonStr));
 	    outprint.flush();
+	    outprint.close();
 	    return title;
 	}
 	public void rmPllugin(String title)throws Exception{
@@ -199,6 +200,7 @@ public class Json{
 	    OutputStreamWriter outprint = new OutputStreamWriter(outfile,"UTF-8");
 	    outprint.write(tool.formatJson(jsonStr));
 	    outprint.flush();
+	    outprint.close();
 	}
 	public String getPath(String title) throws Exception{
 	    String path=null;
