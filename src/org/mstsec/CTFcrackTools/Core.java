@@ -10,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.python.util.PythonInterpreter;
 import org.python.core.*;
-import org.python.modules.itertools.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
