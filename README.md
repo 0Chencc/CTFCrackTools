@@ -10,6 +10,10 @@
 > 米斯特安全团队首页：[http://www.hi-ourlife.com/](http://www.hi-ourlife.com/)
 >
 > 部分插件来源：希望团队-nMask
+## 第二版
+应老用户要求，将继续更新V2版本。以下是项目地址：
+
+[https://github.com/0Chencc/CTFCrackTools-V2](https://github.com/0Chencc/CTFCrackTools-V2)
 
 ## 框架介绍
 
