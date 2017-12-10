@@ -12,7 +12,5 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
-out/production/classes/JsonFormatTool.class
-out/production/classes/JsonFormatTool$Companion.class
 out/production/classes/
 .idea/workspace.xml
