@@ -1,63 +1,18 @@
-# Mobile Tools for Java (J2ME)
 .mtj.tmp/
+.gradle
+/build/
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Ignore Gradle GUI config
+gradle-app.setting
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
 
-# =========================
-# Operating System Files
-# =========================
+# Cache of project
+.gradletasknamecache
 
-# OSX
-# =========================
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-# =========================
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-Setting.json
-target/classes/org/mstsec/CTFCrackTools/*.class
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+out/production/classes/JsonFormatTool.class
+out/production/classes/JsonFormatTool$Companion.class
+out/production/classes/

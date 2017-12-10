@@ -1,9 +1,11 @@
-# CTFcrackTools-V3
+# CTFcrackTools-V3.1
 >[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
 >[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
 >[![language](https://img.shields.io/badge/language-java-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
 >
 > CTFcrackTools重置版
+> 
+> 使用kotlin与java混合开发
 >
 > 作者：米斯特安全-林晨、摇摆、奶权
 >
@@ -16,6 +18,8 @@
 [https://github.com/0Chencc/CTFCrackTools-V2](https://github.com/0Chencc/CTFCrackTools-V2)
 
 ## 框架介绍
+
+使用kotlin与java混合开发
 
 这大概是国内首个应用于CTF的工具框架。
 
