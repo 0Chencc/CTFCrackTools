@@ -1,20 +1,12 @@
-import com.google.gson.*
 import java.io.*
 import com.google.gson.JsonObject
 
-import com.google.gson.JsonElement
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import java.io.FileInputStream
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
 import java.io.OutputStreamWriter
 import java.io.FileOutputStream
 import java.io.File
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
-import org.python.bouncycastle.asn1.x500.style.RFC4519Style.title
 import java.io.IOException
 import java.io.FileNotFoundException
 class Json{
@@ -24,7 +16,7 @@ class Json{
         val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
         val Parser = JsonParser()
         val Object = Parser.parse(BufferedReader(JsonReadCoding)) as JsonObject
-        var type:String?? = null
+        var type:String? = null
         val Plugins = Object.getAsJsonArray("Plugins")
         Plugins
                 .asSequence()
@@ -38,7 +30,7 @@ class Json{
         val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
         val Parser = JsonParser()
         val Object = Parser.parse(BufferedReader(JsonReadCoding)) as JsonObject
-        var Dialog:String?? = null
+        var Dialog:String? = null
         val Plugins = Object.getAsJsonArray("Plugins")
         Plugins
                 .asSequence()
@@ -115,7 +107,7 @@ class Json{
             while (true){
                 lineText=pyPluginread.readLine()
                 if(lineText!=null){
-                    if(lineText!!.toLowerCase().contains("title:")) {
+                    if(lineText.toLowerCase().contains("title:")) {
                         title=lineText.substring(lineText.toLowerCase().indexOf("title:")+6, lineText.length)
                     } else if(lineText.toLowerCase().contains("type:")) {
                         type=lineText.substring(lineText.toLowerCase().indexOf("type:")+5, lineText.length)

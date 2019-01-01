@@ -12,7 +12,7 @@ class JsonFormatTool {
 
         val length=json.length
         var number=0
-        var key: Char=0.toChar()
+        var key: Char
 
         //遍历输入字符串。
         for (i in 0 until length) {

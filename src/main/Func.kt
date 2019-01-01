@@ -1,7 +1,5 @@
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Base64.*
-import org.python.*
-import org.python.bouncycastle.jcajce.provider.symmetric.HC128
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
