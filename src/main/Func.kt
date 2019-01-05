@@ -222,7 +222,7 @@ class Func{
         return StringBuilder()
                 .let{
                     result ->
-                    val hex=input.split("\\\\u")
+                    val hex=input.split("\\u")
                     (1 until hex.size)
                             .map { Integer.parseInt(hex[it], 16) }
                             .forEach { result.append(it.toChar()) }
@@ -327,9 +327,4 @@ class Func{
         }
         result.toString()
     }
-}
-
-fun main(args: Array<String>) {
-    val f=Func()
-    println(f.MorseDecode(".----"))
 }
