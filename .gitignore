@@ -14,3 +14,5 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 out/production/classes/
 .idea/workspace.xml
+Setting.json
+Setting.json
