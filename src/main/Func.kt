@@ -1,3 +1,4 @@
+import com.sun.org.apache.bcel.internal.generic.SWITCH
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Base64.*
 import java.net.URLDecoder
@@ -310,24 +311,25 @@ class Func{
         input:String->
         val word = input.toCharArray()
         val result = StringBuilder()
-        for(i in 0 .. word.size){
+        for(i in 0 .. word.size-1){
             when{
                 word[i] == '\n' -> word[i]=' '
-                word[i] == '.' -> result.append(word[i])
-                word[i] == '_' -> result.append(word[i])
-                word[i] == ' ' -> result.append(word[i])
+                word[i] == '.' -> {
+                    result.append(word[i])
+                }
+                word[i] == '-' -> {
+                    result.append(word[i])
+                }
+                word[i] == ' ' -> {
+                    result.append(word[i])
+                }
             }
         }
-        word.toString()
+        result.toString()
     }
 }
-/*
 
 fun main(args: Array<String>) {
-    */
-/*--此处用于debug-- *//*
-
     val f=Func()
-    println(f.StringtoHex("hack"))
-    println(f.HextoString(f.StringtoHex("hack")))
-}*/
+    println(f.MorseDecode(".----"))
+}

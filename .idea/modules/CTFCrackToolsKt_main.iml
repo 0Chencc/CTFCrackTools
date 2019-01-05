@@ -29,7 +29,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../src/main" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../src/main/resources" type="java-resource" />
     </content>
     <content url="file://$MODULE_DIR$/../../src/mian" />
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />

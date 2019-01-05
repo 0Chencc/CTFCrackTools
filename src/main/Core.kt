@@ -765,8 +765,8 @@ class Core : JFrame() {
         private var textArea=JTextArea()
         private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"\\Setting.json"))
         //private val JsonPath=String(System.getProperty("user.dir")+"\\Setting.json")
-        private val Version="-v3.1.5"
-        private val Note=""
+        private val Version="-v3.1.6"
+        private val Note="2019新年快乐"
 
         /**
          * Launch the application.
