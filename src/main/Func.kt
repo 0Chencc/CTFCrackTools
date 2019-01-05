@@ -328,3 +328,9 @@ class Func{
         result.toString()
     }
 }
+
+fun main(args: Array<String>) {
+    val f=Func()
+    println(f.BaconCodeEncode("a"))
+    println(f.BaconCodeDecode("AAAAA"))
+}

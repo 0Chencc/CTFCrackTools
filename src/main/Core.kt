@@ -108,12 +108,10 @@ class Core : JFrame() {
         scroll0.setViewportView(Item0)
 
         Item0.font=Font("新宋体", Font.PLAIN, 13)
-        Item0.text="Author:0chen\r\nTeam:MstTeam/PwnHoo\r\n"+
+        Item0.text="Author:0chen\r\nTeam:MstTeam\r\n"+
                 "Website:http://www.Hi-OurLife.com/\r\n"+
                 "Github:https://github.com/0Chencc/CTFCrackTools\r\n"+
                 "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n"+
-                "PwnHoo:http://www.PwnHoo.com/\r\n"+
-                "PwnHoo社区以及框架反馈交流群:675044302"
         Crypto.addTab("0", null, scroll0, null)
 
         val scroll1=JScrollPane()
@@ -302,7 +300,7 @@ class Core : JFrame() {
         Encode.add(MorseEncode)
 
         val BaconEncode=JMenuItem("BaconEncode")
-        BaconDecode.addActionListener { textArea.text=f.BaconCodeEncode(textArea.text) }
+        BaconEncode.addActionListener { textArea.text=f.BaconCodeEncode(textArea.text) }
         Encode.add(BaconEncode)
 
         val UrlEncode=JMenuItem("UrlEncode")
