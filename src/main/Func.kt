@@ -1,4 +1,4 @@
-import com.sun.org.apache.bcel.internal.generic.SWITCH
+
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Base64.*
 import java.net.URLDecoder
@@ -328,9 +328,8 @@ class Func{
         result.toString()
     }
 }
-
+/* Debug
 fun main(args: Array<String>) {
     val f=Func()
-    println(f.BaconCodeEncode("a"))
-    println(f.BaconCodeDecode("AAAAA"))
 }
+*/

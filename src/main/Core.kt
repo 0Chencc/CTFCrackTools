@@ -1,6 +1,3 @@
-import java.awt.EventQueue
-import java.awt.Font
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
@@ -9,25 +6,18 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper
 import org.python.util.PythonInterpreter
 import org.python.core.*
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.sun.xml.internal.fastinfoset.util.StringArray
-import javafx.scene.control.ComboBox
+import java.awt.*
 
-import java.awt.GridLayout
 import javax.swing.JTabbedPane
 import java.awt.event.ContainerAdapter
 import java.awt.event.ContainerEvent
 import javax.swing.JButton
 import javax.swing.JFileChooser
 
-import java.awt.GridBagLayout
-import java.awt.GridBagConstraints
 import javax.swing.JTextArea
 import javax.swing.JPopupMenu
-import java.awt.Component
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.BufferedReader
@@ -36,23 +26,14 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Properties
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
 import javax.swing.JMenuItem
 import javax.swing.JOptionPane
 import javax.swing.SwingConstants
 import javax.swing.JMenu
-import java.awt.Insets
 import javax.swing.JList
 import javax.swing.JLabel
 import javax.swing.*
-import javax.swing.event.ChangeListener
 import javax.swing.filechooser.FileNameExtensionFilter
-import javax.swing.event.ChangeEvent
-import javax.swing.event.CaretListener
-import javax.swing.event.CaretEvent
-import java.awt.Color
-import java.lang.Math.E
 import javax.swing.border.LineBorder
 
 class Core : JFrame() {
@@ -77,33 +58,37 @@ class Core : JFrame() {
         contentPane=JPanel()
         contentPane.border=EmptyBorder(5, 5, 5, 5)
         setContentPane(contentPane)
-        contentPane.layout=GridLayout(1, 0, 0, 0)
-
+        contentPane.layout=BorderLayout()
         val panel=JPanel()
         panel.addContainerListener(object : ContainerAdapter() {
             override fun componentRemoved(arg0: ContainerEvent?) {}
         })
-        contentPane.add(panel)
+        val model=DefaultListModel<String>()
+        val addPlugins=JMenuItem("AddPlugins")
+        val Tmodel=DefaultListModel<String>()
+        val TaddPlugins=JMenuItem("AddPlugins")
+        val topmenu = JMenuBar()
+        contentPane.add(topmenu,BorderLayout.NORTH)
+        contentPane.add(panel,BorderLayout.CENTER)
         val gbl_panel=GridBagLayout()
         gbl_panel.columnWidths=intArrayOf(0, 0)
         gbl_panel.rowHeights=intArrayOf(0, 0)
         gbl_panel.columnWeights=doubleArrayOf(1.0, java.lang.Double.MIN_VALUE)
         gbl_panel.rowWeights=doubleArrayOf(1.0, java.lang.Double.MIN_VALUE)
         panel.layout=gbl_panel
-
         val tabbedPane=JTabbedPane(JTabbedPane.TOP)
         val gbc_tabbedPane=GridBagConstraints()
         gbc_tabbedPane.fill=GridBagConstraints.BOTH
+        gbc_tabbedPane.gridheight=0
         gbc_tabbedPane.gridx=0
         gbc_tabbedPane.gridy=0
-        panel.add(tabbedPane, gbc_tabbedPane)
+        panel.add(tabbedPane,gbc_tabbedPane)
 
         val Crypto=JTabbedPane(JTabbedPane.TOP)
         Crypto.addChangeListener { textArea=(Crypto.selectedComponent as JScrollPane).viewport.view as JTextArea }
         tabbedPane.addTab("Crypto", null, Crypto, null)
 
         val scroll0=JScrollPane()
-
         val Item0=JTextArea()
         scroll0.setViewportView(Item0)
 
@@ -111,7 +96,7 @@ class Core : JFrame() {
         Item0.text="Author:0chen\r\nTeam:MstTeam\r\n"+
                 "Website:http://www.Hi-OurLife.com/\r\n"+
                 "Github:https://github.com/0Chencc/CTFCrackTools\r\n"+
-                "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n"+
+                "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n"
         Crypto.addTab("0", null, scroll0, null)
 
         val scroll1=JScrollPane()
@@ -176,6 +161,7 @@ class Core : JFrame() {
         Item9.font=Font("新宋体", Font.PLAIN, 13)
         scroll9.setViewportView(Item9)
         val menu=JPopupMenu()
+
         addPopup(Item0, menu)
         addPopup(Item1, menu)
         addPopup(Item2, menu)
@@ -186,60 +172,48 @@ class Core : JFrame() {
         addPopup(Item7, menu)
         addPopup(Item8, menu)
         addPopup(Item9, menu)
+        //PopupMenu
         val Decrypt=JMenu("Decrypt")
         menu.add(Decrypt)
-
         val CaesarCode=JMenuItem("CaesarCode")
         CaesarCode.addActionListener { textArea.text=f.Caesar(textArea.text) }
         Decrypt.add(CaesarCode)
-
         val Rot13=JMenuItem("Rot13")
         Rot13.addActionListener { textArea.text=f.Rot13(textArea.text) }
         Decrypt.add(Rot13)
-
         val Fencecode=JMenuItem("FenceCode")
         Fencecode.addActionListener { textArea.text=f.Fence(textArea.text) }
         Decrypt.add(Fencecode)
-
         val Pigcode=JMenuItem("PigCode")
         Pigcode.addActionListener { textArea.text=f.PigCode(textArea.text) }
         Decrypt.add(Pigcode)
-
         val Reverse=JMenuItem("Reverse")
         Reverse.addActionListener { textArea.text=f.reverse(textArea.text) }
         Decrypt.add(Reverse)
-
         val Ascii2Hex=JMenuItem("Ascii->Hex")
         Ascii2Hex.addActionListener { textArea.text=f.StringtoHex(textArea.text) }
         Decrypt.add(Ascii2Hex)
-
         val Hex2Ascii=JMenuItem("Hex->Ascii")
         Hex2Ascii.addActionListener { textArea.text=f.HextoString(textArea.text) }
         Decrypt.add(Hex2Ascii)
-
         val Ascii2Unicode=JMenuItem("Ascii->Unicode")
         Ascii2Unicode.addActionListener { textArea.text=f.AsciiToUnicode(textArea.text) }
         Decrypt.add(Ascii2Unicode)
-
         val Unicode2Ascii=JMenuItem("Unicode->Ascii")
         Unicode2Ascii.addActionListener { textArea.text=f.UnicodeToAscii(textArea.text) }
         Decrypt.add(Unicode2Ascii)
 
         val Decode=JMenu("Decode")
         menu.add(Decode)
-
         val Base64DecodeGBK=JMenuItem("Base64DecodeGBK")
         Base64DecodeGBK.addActionListener { textArea.text=f.Base64de(textArea.text) }
         Decode.add(Base64DecodeGBK)
-
         val Base64DecodeUTF8=JMenuItem("Base64DecodeUTF8")
         Base64DecodeUTF8.addActionListener { textArea.text=f.Base64de(textArea.text) }
         Decode.add(Base64DecodeUTF8)
-
         val Base32Decode=JMenuItem("Base32Decode")
         Base32Decode.addActionListener { textArea.text=f.Base32de(textArea.text) }
         Decode.add(Base32Decode)
-
         /*
         JMenuItem Base16Decode = new JMenuItem("Base16Decode");
         Base16Decode.addActionListener(new ActionListener() {
@@ -248,28 +222,23 @@ class Core : JFrame() {
                 textArea.setText(f.Base16de(textArea.getText()));
             }
         });
-        Decode.add(Base16Decode);
-*/
-
+        Decode.add(Base16Decode);*/
         val MorseDecode=JMenuItem("MorseDeCode")
         MorseDecode.addActionListener { textArea.text=f.MorseDecode(textArea.text) }
         Decode.add(MorseDecode)
-
         val BaconDecode=JMenuItem("BaconDecode")
         BaconDecode.addActionListener { textArea.text=f.BaconCodeDecode(textArea.text) }
         Decode.add(BaconDecode)
-
         val UrlDecode=JMenuItem("UrlDecode")
         UrlDecode.addActionListener { textArea.text=f.URLDecoder(textArea.text) }
         Decode.add(UrlDecode)
-
         val UniDecode=JMenuItem("UnicodeDecode")
         UniDecode.addActionListener { textArea.text=f.UnicodeDecode(textArea.text) }
         Decode.add(UniDecode)
 
+        //Encode
         val Encode=JMenu("Encode")
         menu.add(Encode)
-
         /*        JMenuItem Base64Encodegbk = new JMenuItem("Base64EncodeGBK");
         Base64Encodegbk.addActionListener(new ActionListener() {
             @Override
@@ -278,15 +247,12 @@ class Core : JFrame() {
             }
         });
         Encode.add(Base64Encodegbk);*/
-
         val Base32Encode=JMenuItem("Base32Encode")
         Base32Encode.addActionListener { textArea.text=f.Base32en(textArea.text) }
-
         val Base64EncodeUTF8=JMenuItem("Base64EncodeUTF8")
         Base64EncodeUTF8.addActionListener { textArea.text=f.Base64en(textArea.text) }
         Encode.add(Base64EncodeUTF8)
         Encode.add(Base32Encode)
-
         /*        JMenuItem Base16Encode = new JMenuItem("Base16Encode");
         Base16Encode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -314,8 +280,87 @@ class Core : JFrame() {
         val Plugins=JMenu("Plugins")
         menu.add(Plugins)
 
-        val model=DefaultListModel<String>()
-        val addPlugins=JMenuItem("AddPlugins")
+
+        //TopMenu
+        val topDec=JMenu("Decrypt")
+        topmenu.add(topDec)
+        val TCaesar = JMenuItem("CaesarCode")
+        TCaesar.addActionListener { textArea.text=f.Caesar(textArea.text) }
+        topDec.add(TCaesar)
+        val TRot13=JMenuItem("Rot13")
+        TRot13.addActionListener { textArea.text=f.Rot13(textArea.text) }
+        topDec.add(TRot13)
+        val TFencecode=JMenuItem("FenceCode")
+        TFencecode.addActionListener { textArea.text=f.Fence(textArea.text) }
+        topDec.add(TFencecode)
+        val TPigcode=JMenuItem("PigCode")
+        TPigcode.addActionListener { textArea.text=f.PigCode(textArea.text) }
+        topDec.add(TPigcode)
+        val TReverse=JMenuItem("Reverse")
+        TReverse.addActionListener { textArea.text=f.reverse(textArea.text) }
+        topDec.add(TReverse)
+        val TAscii2Hex=JMenuItem("Ascii->Hex")
+        TAscii2Hex.addActionListener { textArea.text=f.StringtoHex(textArea.text) }
+        topDec.add(TAscii2Hex)
+        val THex2Ascii=JMenuItem("Hex->Ascii")
+        THex2Ascii.addActionListener { textArea.text=f.HextoString(textArea.text) }
+        topDec.add(THex2Ascii)
+        val TAscii2Unicode=JMenuItem("Ascii->Unicode")
+        TAscii2Unicode.addActionListener { textArea.text=f.AsciiToUnicode(textArea.text) }
+        topDec.add(TAscii2Unicode)
+        val TUnicode2Ascii=JMenuItem("Unicode->Ascii")
+        TUnicode2Ascii.addActionListener { textArea.text=f.UnicodeToAscii(textArea.text) }
+        topDec.add(TUnicode2Ascii)
+
+        val TDecode=JMenu("Decode")
+        topmenu.add(TDecode)
+        val TBase64DecodeGBK=JMenuItem("Base64DecodeGBK")
+        TBase64DecodeGBK.addActionListener { textArea.text=f.Base64de(textArea.text) }
+        TDecode.add(TBase64DecodeGBK)
+        val TBase64DecodeUTF8=JMenuItem("Base64DecodeUTF8")
+        TBase64DecodeUTF8.addActionListener { textArea.text=f.Base64de(textArea.text) }
+        TDecode.add(TBase64DecodeUTF8)
+        val TBase32Decode=JMenuItem("Base32Decode")
+        TBase32Decode.addActionListener { textArea.text=f.Base32de(textArea.text) }
+        TDecode.add(TBase32Decode)
+        val TMorseDecode=JMenuItem("MorseDeCode")
+        TMorseDecode.addActionListener { textArea.text=f.MorseDecode(textArea.text) }
+        TDecode.add(TMorseDecode)
+        val TBaconDecode=JMenuItem("BaconDecode")
+        TBaconDecode.addActionListener { textArea.text=f.BaconCodeDecode(textArea.text) }
+        TDecode.add(TBaconDecode)
+        val TUrlDecode=JMenuItem("UrlDecode")
+        TUrlDecode.addActionListener { textArea.text=f.URLDecoder(textArea.text) }
+        TDecode.add(TUrlDecode)
+        val TUniDecode=JMenuItem("UnicodeDecode")
+        TUniDecode.addActionListener { textArea.text=f.UnicodeDecode(textArea.text) }
+        TDecode.add(TUniDecode)
+
+        val TEncode=JMenu("Encode")
+        topmenu.add(TEncode)
+        val TBase32Encode=JMenuItem("Base32Encode")
+        TBase32Encode.addActionListener { textArea.text=f.Base32en(textArea.text) }
+        val TBase64EncodeUTF8=JMenuItem("Base64EncodeUTF8")
+        TBase64EncodeUTF8.addActionListener { textArea.text=f.Base64en(textArea.text) }
+        TEncode.add(TBase64EncodeUTF8)
+        TEncode.add(TBase32Encode)
+        val TMorseEncode=JMenuItem("MorseEnCode")
+        TMorseEncode.addActionListener { textArea.text=f.MorseEncode(textArea.text) }
+        TEncode.add(TMorseEncode)
+        val TBaconEncode=JMenuItem("BaconEncode")
+        TBaconEncode.addActionListener { textArea.text=f.BaconCodeEncode(textArea.text) }
+        TEncode.add(TBaconEncode)
+        val TUrlEncode=JMenuItem("UrlEncode")
+        TUrlEncode.addActionListener { textArea.text=f.UrlEncoder(textArea.text) }
+        TEncode.add(TUrlEncode)
+        val TUnicodeEncode=JMenuItem("UnicodeEncode")
+        TUnicodeEncode.addActionListener { textArea.text=f.UnicodeEncode(textArea.text) }
+        TEncode.add(TUnicodeEncode)
+
+        val TPlugins=JMenu("Plugins")
+        topmenu.add(TPlugins)
+
+        /* addPluginEvent */
         addPlugins.addActionListener {
             val py_suf=arrayOf("py")
             val py_filter: FileNameExtensionFilter
@@ -329,9 +374,13 @@ class Core : JFrame() {
                 try {
                     val title=json.createJSON(py_file.toString())
                     when (json.getType(title)) {
-                        "crypto" -> Plugins.add(buildPluginMenuItem(title))
+                        "crypto" -> {
+                            Plugins.add(buildPluginMenuItem(title))
+                            TPlugins.add(buildPluginMenuItem(title))
+                        }
                     }
                     model.addElement(title)
+                    Tmodel.addElement(title)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
                 } catch (e1: Exception) {
@@ -344,6 +393,42 @@ class Core : JFrame() {
         Plugins.add(addPlugins)
         try {
             buildCryptoPlugin(Plugins)
+        } catch (e1: Exception) {
+            // TODO 自动生成的 catch 块
+            e1.printStackTrace()
+        }
+        TaddPlugins.addActionListener {
+            val py_suf=arrayOf("py")
+            val py_filter: FileNameExtensionFilter
+            val py_openfile=JFileChooser()
+            py_openfile.fileSelectionMode=JFileChooser.FILES_ONLY
+            py_filter=FileNameExtensionFilter("Python(.py)", *py_suf)
+            py_openfile.fileFilter=py_filter
+            val py_openframe=py_openfile.showDialog(JLabel(), "选择/Choose")
+            if(py_openframe==JFileChooser.APPROVE_OPTION) {
+                val py_file=py_openfile.selectedFile//得到选择的文件名
+                try {
+                    val title=json.createJSON(py_file.toString())
+                    when (json.getType(title)) {
+                        "crypto" -> {
+                            Plugins.add(buildPluginMenuItem(title))
+                            Plugins.add(buildPluginMenuItem(title))
+                        }
+                    }
+                    Tmodel.addElement(title)
+                    model.addElement(title)
+                } catch (e1: IOException) {
+                    e1.printStackTrace()
+                } catch (e1: Exception) {
+                    // TODO 自动生成的 catch 块
+                    e1.printStackTrace()
+                }
+
+            }
+        }
+        TPlugins.add(TaddPlugins)
+        try {
+            buildCryptoPlugin(TPlugins)
         } catch (e1: Exception) {
             // TODO 自动生成的 catch 块
             e1.printStackTrace()
@@ -556,6 +641,7 @@ class Core : JFrame() {
 
         try {
             buildPluginMenu(model)
+            buildPluginMenu(Tmodel)
         } catch (e1: Exception) {
             // TODO 自动生成的 catch 块
             e1.printStackTrace()
@@ -606,11 +692,13 @@ class Core : JFrame() {
                     "crypto" -> for (i in 0..Plugins.itemCount) {
                         if(Plugins.getItem(i).label.equals(rmPlugin, ignoreCase=true)) {
                             Plugins.remove(i)
+                            TPlugins.remove(i)
                             break
                         }
                     }
                 }
                 model.removeElement(rmPlugin)
+                Tmodel.removeElement(rmPlugin)
                 json.rmPlugin(rmPlugin)
                 PluginDetail.text=""
             } catch (e: Exception) {
@@ -618,7 +706,7 @@ class Core : JFrame() {
                 e.printStackTrace()
             }
         }
-        //添加插件
+        //添加插件addPlugin
         val AddPlugin=JButton("Append")
         AddPlugin.addActionListener {
             val py_suf=arrayOf("py")
@@ -633,9 +721,13 @@ class Core : JFrame() {
                 try {
                     val title=json.createJSON(py_file.toString())
                     when (json.getType(title)) {
-                        "crypto" -> Plugins.add(buildPluginMenuItem(title))
+                        "crypto" -> {
+                            TPlugins.add(buildPluginMenuItem(title))
+                            Plugins.add(buildPluginMenuItem(title))
+                        }
                     }
                     model.addElement(title)
+                    Tmodel.addElement(title)
                 } catch (e1: IOException) {
                     e1.printStackTrace()
                 } catch (e1: Exception) {
