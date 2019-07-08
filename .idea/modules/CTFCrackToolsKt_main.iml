@@ -35,7 +35,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../src/main" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$/../../src/mian" />
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>

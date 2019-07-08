@@ -9,17 +9,14 @@ import org.python.core.*
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.awt.*
+import java.awt.event.*
 
 import javax.swing.JTabbedPane
-import java.awt.event.ContainerAdapter
-import java.awt.event.ContainerEvent
 import javax.swing.JButton
 import javax.swing.JFileChooser
 
 import javax.swing.JTextArea
 import javax.swing.JPopupMenu
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -35,6 +32,7 @@ import javax.swing.JLabel
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.border.LineBorder
+import javax.swing.text.DefaultEditorKit
 
 class Core : JFrame() {
     internal var f=Func()
@@ -854,10 +852,8 @@ class Core : JFrame() {
     companion object {
         private var textArea=JTextArea()
         private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"\\Setting.json"))
-        //private val JsonPath=String(System.getProperty("user.dir")+"\\Setting.json")
-        private val Version="-v3.1.6"
-        private val Note="2019新年快乐"
-
+        private val Version="-v3.1.8"
+        private val Note="高考后"
         /**
          * Launch the application.
          */
@@ -870,7 +866,6 @@ class Core : JFrame() {
             } catch (e: Exception) {
 
             }
-
         }
 
         @JvmStatic
