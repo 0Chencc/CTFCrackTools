@@ -8,6 +8,7 @@ import org.python.core.*
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import org.fusesource.jansi.internal.Kernel32
 import java.awt.*
 import java.awt.event.*
 
@@ -50,6 +51,13 @@ class Core : JFrame() {
      * Create the frame.
      */
     init {
+        val im:InputMap = UIManager.get("TextArea.focusInputMap") as InputMap
+        val os = System.getProperty("os.name")
+        if (os.startsWith("Mac OS")){
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
+            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
+        }
         title="CTFCrackTools$Version$Note"
         defaultCloseOperation=JFrame.EXIT_ON_CLOSE
         setBounds(100, 100, 906, 755)
@@ -161,15 +169,85 @@ class Core : JFrame() {
         val menu=JPopupMenu()
 
         addPopup(Item0, menu)
+        Item0.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item1, menu)
+        Item1.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item2, menu)
+        Item2.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item3, menu)
+        Item3.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item4, menu)
+        Item4.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item5, menu)
+        Item5.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item6, menu)
+        Item6.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item7, menu)
+        Item7.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item8, menu)
+        Item8.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         addPopup(Item9, menu)
+        Item9.addMouseListener(object:MouseAdapter(){
+            override fun mouseClicked(e: MouseEvent?) {
+                if(e!!.clickCount==2){
+                    textArea.paste()
+                }
+            }
+        })
         //PopupMenu
         val Decrypt=JMenu("Decrypt")
         menu.add(Decrypt)
@@ -203,9 +281,6 @@ class Core : JFrame() {
 
         val Decode=JMenu("Decode")
         menu.add(Decode)
-        val Base64DecodeGBK=JMenuItem("Base64DecodeGBK")
-        Base64DecodeGBK.addActionListener { textArea.text=f.Base64de(textArea.text) }
-        Decode.add(Base64DecodeGBK)
         val Base64DecodeUTF8=JMenuItem("Base64DecodeUTF8")
         Base64DecodeUTF8.addActionListener { textArea.text=f.Base64de(textArea.text) }
         Decode.add(Base64DecodeUTF8)
@@ -357,7 +432,6 @@ class Core : JFrame() {
 
         val TPlugins=JMenu("Plugins")
         topmenu.add(TPlugins)
-
         /* addPluginEvent */
         addPlugins.addActionListener {
             val py_suf=arrayOf("py")
@@ -851,9 +925,9 @@ class Core : JFrame() {
 
     companion object {
         private var textArea=JTextArea()
-        private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"\\Setting.json"))
+        private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
         private val Version="-v3.1.8"
-        private val Note="高考后"
+        private val Note=""
         /**
          * Launch the application.
          */

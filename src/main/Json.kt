@@ -10,7 +10,7 @@ import java.io.File
 import java.io.IOException
 import java.io.FileNotFoundException
 class Json{
-    val PLUGINSJSONPATH =System.getProperty("user.dir")+"\\Setting.json"
+    val PLUGINSJSONPATH =System.getProperty("user.dir")+"/Setting.json"
     fun getType(title:String): String? {
         val JsonFile = FileInputStream(PLUGINSJSONPATH)
         val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
