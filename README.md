@@ -54,15 +54,13 @@ def main(a):
 
 现在来具体讲下这些插件的用法，具体应该将下框架的调用方法。
 
-> 编码类型当然是utf-8啦
->
-> Type:Crypto是一个硬性要求，因为我目前只写了Crypto的类，我打算在后期加上压缩包，图片的分类出来，慢慢完善。
->
-> main的方法中，至少有一个变量，至多有四个变量。
->
-> 除了第一个变量以外的，都应该在Dialog后标明。
->
-> Example：我们团队的奶权写了一个维基利亚密码的插件
+**type：**为什么需要写插件类型呢，我其实有个野心。是打算尽可能的把能遇到的题目类型的解密方式都写进去，比如pwn这些。
+
+**dialog：**这个呢，其实我考虑到了有些解密方式需要多个密钥。故此设计了这个，如果声明了多个密钥，则程序会弹出多个输入框。
+
+**main：**本工具插件调用十分简单，但是限制就是，必须传入数据。
+
+**因为工具调用其实就是通过def mian(a)传入数据然后获取return的数据。**
 
 ```Python
 #!/usr/bin/env python
@@ -95,13 +93,11 @@ def main(ciphertext,key):
     return vigenereDecrypto(ciphertext.replace(" ","").upper(),key.replace(" ","").upper())
 ```
 
-这样写的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。而ciphertext则是直接传入。
+ciphertext是输入框的内容，直接导入的，无需管。
 
-如图：![mark](/img/1.png)
+代码的架构是这样的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。
 
-![mark](/img/2.png)
-
-![mark](/img/3.png)
+如图：![mark](/img/plugin.gif)
 
 ```Python
 def vigenereDecrypto(ciphertext,key)

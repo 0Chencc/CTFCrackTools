@@ -886,7 +886,7 @@ class Core : JFrame() {
     companion object {
         private var textArea=JTextArea()
         private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
-        private val Version="-v3.1.8"
+        private val Version="-v3.2.1"
         private val Note=""
         /**
          * Launch the application.
