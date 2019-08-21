@@ -8,7 +8,7 @@ import org.python.core.*
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import org.fusesource.jansi.internal.Kernel32
+
 import java.awt.*
 import java.awt.event.*
 
@@ -31,6 +31,7 @@ import javax.swing.JMenu
 import javax.swing.JList
 import javax.swing.JLabel
 import javax.swing.*
+
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.border.LineBorder
 import javax.swing.text.DefaultEditorKit
@@ -46,17 +47,22 @@ class Core : JFrame() {
     private val hex32: JTextField
     private val hex36: JTextField
     private val inputnum: JTextField
-
     /**
      * Create the frame.
      */
     init {
-        val im:InputMap = UIManager.get("TextArea.focusInputMap") as InputMap
+        val imJArea:InputMap = UIManager.get("TextArea.focusInputMap") as InputMap
+        val imJField:InputMap = UIManager.get("TextField.focusInputMap") as InputMap
         val os = System.getProperty("os.name")
         if (os.startsWith("Mac OS")){
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
+            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
+            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
+            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
+            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction)
+            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
+            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
+            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
+            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction)
         }
         title="CTFCrackTools$Version$Note"
         defaultCloseOperation=JFrame.EXIT_ON_CLOSE
@@ -96,19 +102,20 @@ class Core : JFrame() {
 
         val scroll0=JScrollPane()
         val Item0=JTextArea()
+        Item0.lineWrap=true
         scroll0.setViewportView(Item0)
-
         Item0.font=Font("新宋体", Font.PLAIN, 13)
         Item0.text="Author:0chen\r\nTeam:MstTeam\r\n"+
                 "Website:http://www.Hi-OurLife.com/\r\n"+
                 "Github:https://github.com/0Chencc/CTFCrackTools\r\n"+
-                "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n"
+                "GitPage:https://0chencc.github.io/CTFCrackTools/"
         Crypto.addTab("0", null, scroll0, null)
 
         val scroll1=JScrollPane()
         Crypto.addTab("1", null, scroll1, null)
 
         val Item1=JTextArea()
+        Item1.lineWrap=true
         Item1.font=Font("新宋体", Font.PLAIN, 13)
         scroll1.setViewportView(Item1)
 
@@ -116,6 +123,7 @@ class Core : JFrame() {
         Crypto.addTab("2", null, scroll2, null)
 
         val Item2=JTextArea()
+        Item2.lineWrap=true
         Item2.font=Font("新宋体", Font.PLAIN, 13)
         scroll2.setViewportView(Item2)
 
@@ -123,12 +131,14 @@ class Core : JFrame() {
         Crypto.addTab("3", null, scroll3, null)
 
         val Item3=JTextArea()
+        Item3.lineWrap=true
         Item3.font=Font("新宋体", Font.PLAIN, 13)
         scroll3.setViewportView(Item3)
 
         val scroll4=JScrollPane()
         Crypto.addTab("4", null, scroll4, null)
         val Item4=JTextArea()
+        Item4.lineWrap=true
         Item4.font=Font("新宋体", Font.PLAIN, 13)
         scroll4.setViewportView(Item4)
 
@@ -136,6 +146,7 @@ class Core : JFrame() {
         Crypto.addTab("5", null, scroll5, null)
 
         val Item5=JTextArea()
+        Item5.lineWrap=true
         Item5.font=Font("新宋体", Font.PLAIN, 13)
         scroll5.setViewportView(Item5)
 
@@ -143,6 +154,7 @@ class Core : JFrame() {
         Crypto.addTab("6", null, scroll6, null)
 
         val Item6=JTextArea()
+        Item6.lineWrap=true
         Item6.font=Font("新宋体", Font.PLAIN, 13)
         scroll6.setViewportView(Item6)
 
@@ -150,6 +162,7 @@ class Core : JFrame() {
         Crypto.addTab("7", null, scroll7, null)
 
         val Item7=JTextArea()
+        Item7.lineWrap=true
         Item7.font=Font("新宋体", Font.PLAIN, 13)
         scroll7.setViewportView(Item7)
 
@@ -157,6 +170,7 @@ class Core : JFrame() {
         Crypto.addTab("8", null, scroll8, null)
 
         val Item8=JTextArea()
+        Item8.lineWrap=true
         Item8.font=Font("新宋体", Font.PLAIN, 13)
         scroll8.setViewportView(Item8)
 
@@ -164,90 +178,29 @@ class Core : JFrame() {
         Crypto.addTab("9", null, scroll9, null)
 
         val Item9=JTextArea()
+        Item9.lineWrap=true
         Item9.font=Font("新宋体", Font.PLAIN, 13)
         scroll9.setViewportView(Item9)
-        val menu=JPopupMenu()
-
-        addPopup(Item0, menu)
+        /* Double Click to copy-双击复制
         Item0.addMouseListener(object:MouseAdapter(){
             override fun mouseClicked(e: MouseEvent?) {
                 if(e!!.clickCount==2){
                     textArea.paste()
                 }
             }
-        })
+        })*/
+        val menu=JPopupMenu()
+
+        addPopup(Item0, menu)
         addPopup(Item1, menu)
-        Item1.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item2, menu)
-        Item2.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item3, menu)
-        Item3.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item4, menu)
-        Item4.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item5, menu)
-        Item5.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item6, menu)
-        Item6.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item7, menu)
-        Item7.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item8, menu)
-        Item8.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         addPopup(Item9, menu)
-        Item9.addMouseListener(object:MouseAdapter(){
-            override fun mouseClicked(e: MouseEvent?) {
-                if(e!!.clickCount==2){
-                    textArea.paste()
-                }
-            }
-        })
         //PopupMenu
         val Decrypt=JMenu("Decrypt")
         menu.add(Decrypt)
@@ -584,6 +537,13 @@ class Core : JFrame() {
                 hex16.text=java.math.BigInteger(input, radixnum).toString(16)
                 hex32.text=java.math.BigInteger(input, radixnum).toString(32)
                 hex36.text=java.math.BigInteger(input, radixnum).toString(36)
+            }else{
+                hex2.text=""
+                hex8.text=""
+                hex10.text=""
+                hex16.text=""
+                hex32.text=""
+                hex36.text=""
             }
         }
         val gbc_hex2=GridBagConstraints()
