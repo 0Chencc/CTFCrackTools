@@ -1,4 +1,4 @@
-# CTFcrackTools-V3.1
+# CTFcrackTools-V3.2
 >[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
 >[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
 >[![language](https://img.shields.io/badge/language-java-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
@@ -17,6 +17,10 @@
 
 [https://github.com/0Chencc/CTFCrackTools-V2](https://github.com/0Chencc/CTFCrackTools-V2)
 
+## 界面介绍
+
+![mark](/img/use.gif)
+
 ## 框架介绍
 
 使用kotlin与java混合开发
@@ -34,6 +38,13 @@
 项目地址：[https://github.com/0Chencc/CTFCrackTools](https://github.com/0Chencc/CTFCrackTools)
 
 下载编译好的版本：https://github.com/0Chencc/CTFCrackTools/releases/
+
+## 多套外观提供使用
+
+本框架支持多套外观使用，将Setting.json中的Theme改为1,2,3分别对应三套主题，什么都不填，或者随便填。都会使用默认主题，为第4套主题。
+
+注意，代码为1的主题，仅支持JDK8及以下JDK版本。不支持JDK9和JDK10。
+
 
 ## 插件编写
 
@@ -105,6 +116,3 @@ def vigenereDecrypto(ciphertext,key)
 
 ciphertext即是输入的内容，key是由弹窗出来由用户填写的。
 
-## 界面介绍
-
-![mark](/img/use.gif)
