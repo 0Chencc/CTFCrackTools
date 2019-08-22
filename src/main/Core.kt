@@ -1,8 +1,6 @@
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
-
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper
 import org.python.util.PythonInterpreter
 import org.python.core.*
 
@@ -23,6 +21,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.Double
+import java.math.BigInteger
 import java.util.Properties
 import javax.swing.JMenuItem
 import javax.swing.JOptionPane
@@ -36,6 +36,12 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.border.LineBorder
 import javax.swing.text.DefaultEditorKit
 
+import mdlaf.*
+import mdlaf.animation.*
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper
+import com.alee.laf.WebLookAndFeel
+import mdlaf.utils.MaterialColors
+
 class Core : JFrame() {
     internal var f=Func()
     private val contentPane: JPanel
@@ -47,25 +53,26 @@ class Core : JFrame() {
     private val hex32: JTextField
     private val hex36: JTextField
     private val inputnum: JTextField
+
     /**
      * Create the frame.
      */
     init {
-        val imJArea:InputMap = UIManager.get("TextArea.focusInputMap") as InputMap
-        val imJField:InputMap = UIManager.get("TextField.focusInputMap") as InputMap
-        val os = System.getProperty("os.name")
-        if (os.startsWith("Mac OS")){
-            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
+        val imJArea: InputMap=UIManager.get("TextArea.focusInputMap") as InputMap
+        val imJField: InputMap=UIManager.get("TextField.focusInputMap") as InputMap
+        val os=System.getProperty("os.name")
+        if(os.startsWith("Mac OS")) {
+            imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
             imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
             imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
             imJArea.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction)
-            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_C,KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
+            imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction)
             imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction)
             imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction)
             imJField.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction)
         }
         title="CTFCrackTools$Version$Note"
-        defaultCloseOperation=JFrame.EXIT_ON_CLOSE
+        defaultCloseOperation=EXIT_ON_CLOSE
         setBounds(100, 100, 906, 755)
         contentPane=JPanel()
         contentPane.border=EmptyBorder(5, 5, 5, 5)
@@ -79,14 +86,14 @@ class Core : JFrame() {
         val addPlugins=JMenuItem("AddPlugins")
         val Tmodel=DefaultListModel<String>()
         val TaddPlugins=JMenuItem("AddPlugins")
-        val topmenu = JMenuBar()
-        contentPane.add(topmenu,BorderLayout.NORTH)
-        contentPane.add(panel,BorderLayout.CENTER)
+        val topmenu=JMenuBar()
+        contentPane.add(topmenu, BorderLayout.NORTH)
+        contentPane.add(panel, BorderLayout.CENTER)
         val gbl_panel=GridBagLayout()
         gbl_panel.columnWidths=intArrayOf(0, 0)
         gbl_panel.rowHeights=intArrayOf(0, 0)
-        gbl_panel.columnWeights=doubleArrayOf(1.0, java.lang.Double.MIN_VALUE)
-        gbl_panel.rowWeights=doubleArrayOf(1.0, java.lang.Double.MIN_VALUE)
+        gbl_panel.columnWeights=doubleArrayOf(1.0, Double.MIN_VALUE)
+        gbl_panel.rowWeights=doubleArrayOf(1.0, Double.MIN_VALUE)
         panel.layout=gbl_panel
         val tabbedPane=JTabbedPane(JTabbedPane.TOP)
         val gbc_tabbedPane=GridBagConstraints()
@@ -94,7 +101,7 @@ class Core : JFrame() {
         gbc_tabbedPane.gridheight=0
         gbc_tabbedPane.gridx=0
         gbc_tabbedPane.gridy=0
-        panel.add(tabbedPane,gbc_tabbedPane)
+        panel.add(tabbedPane, gbc_tabbedPane)
 
         val Crypto=JTabbedPane(JTabbedPane.TOP)
         Crypto.addChangeListener { textArea=(Crypto.selectedComponent as JScrollPane).viewport.view as JTextArea }
@@ -108,7 +115,11 @@ class Core : JFrame() {
         Item0.text="Author:0chen\r\nTeam:MstTeam\r\n"+
                 "Website:http://www.Hi-OurLife.com/\r\n"+
                 "Github:https://github.com/0Chencc/CTFCrackTools\r\n"+
-                "GitPage:https://0chencc.github.io/CTFCrackTools/"
+                "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n\r\n" +
+                "本框架支持4种主题，请于Setting中的Theme中修改，分别为1/2/3，什么都不填或者填写其他，会用默认主题\r\n" +
+                "主题1，需要在JDK8以及以下版本使用，不兼容JDK9、JDK10\r\n" +
+                "值得注意的是，之前插件保存的JSON文件是Setting.json，但是本次更新将更换为Plugins.json\r\n" +
+                "请各位使用之前版本的朋友，将原来的Setting.json重命名为Plugins.json"
         Crypto.addTab("0", null, scroll0, null)
 
         val scroll1=JScrollPane()
@@ -310,7 +321,7 @@ class Core : JFrame() {
         //TopMenu
         val topDec=JMenu("Decrypt")
         topmenu.add(topDec)
-        val TCaesar = JMenuItem("CaesarCode")
+        val TCaesar=JMenuItem("CaesarCode")
         TCaesar.addActionListener { textArea.text=f.Caesar(textArea.text) }
         topDec.add(TCaesar)
         val TRot13=JMenuItem("Rot13")
@@ -464,8 +475,8 @@ class Core : JFrame() {
         val gbl_HexConvert=GridBagLayout()
         gbl_HexConvert.columnWidths=intArrayOf(59, 533, 0)
         gbl_HexConvert.rowHeights=intArrayOf(0, 0, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 0)
-        gbl_HexConvert.columnWeights=doubleArrayOf(1.0, 1.0, java.lang.Double.MIN_VALUE)
-        gbl_HexConvert.rowWeights=doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, java.lang.Double.MIN_VALUE)
+        gbl_HexConvert.columnWeights=doubleArrayOf(1.0, 1.0, Double.MIN_VALUE)
+        gbl_HexConvert.rowWeights=doubleArrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE)
         HexConvert.layout=gbl_HexConvert
 
         val comboBox=JComboBox<String>()
@@ -531,13 +542,13 @@ class Core : JFrame() {
                     else -> {
                     }
                 }
-                hex2.text=java.math.BigInteger(input, radixnum).toString(2)
-                hex8.text=java.math.BigInteger(input, radixnum).toString(8)
-                hex10.text=java.math.BigInteger(input, radixnum).toString(10)
-                hex16.text=java.math.BigInteger(input, radixnum).toString(16)
-                hex32.text=java.math.BigInteger(input, radixnum).toString(32)
-                hex36.text=java.math.BigInteger(input, radixnum).toString(36)
-            }else{
+                hex2.text=BigInteger(input, radixnum).toString(2)
+                hex8.text=BigInteger(input, radixnum).toString(8)
+                hex10.text=BigInteger(input, radixnum).toString(10)
+                hex16.text=BigInteger(input, radixnum).toString(16)
+                hex32.text=BigInteger(input, radixnum).toString(32)
+                hex36.text=BigInteger(input, radixnum).toString(36)
+            } else {
                 hex2.text=""
                 hex8.text=""
                 hex10.text=""
@@ -641,8 +652,8 @@ class Core : JFrame() {
         val gbl_PluginsMenu=GridBagLayout()
         gbl_PluginsMenu.columnWidths=intArrayOf(257, 7, 279, 0)
         gbl_PluginsMenu.rowHeights=intArrayOf(0, 0, 0)
-        gbl_PluginsMenu.columnWeights=doubleArrayOf(1.0, 1.0, 1.0, java.lang.Double.MIN_VALUE)
-        gbl_PluginsMenu.rowWeights=doubleArrayOf(0.0, 1.0, java.lang.Double.MIN_VALUE)
+        gbl_PluginsMenu.columnWeights=doubleArrayOf(1.0, 1.0, 1.0, Double.MIN_VALUE)
+        gbl_PluginsMenu.rowWeights=doubleArrayOf(0.0, 1.0, Double.MIN_VALUE)
         PluginsMenu.layout=gbl_PluginsMenu
 
         val PluginsList=JLabel("PluginsList")
@@ -712,8 +723,8 @@ class Core : JFrame() {
         val gbl_panel_1=GridBagLayout()
         gbl_panel_1.columnWidths=intArrayOf(69, 0)
         gbl_panel_1.rowHeights=intArrayOf(180, 23, 35, 23, 0)
-        gbl_panel_1.columnWeights=doubleArrayOf(0.0, java.lang.Double.MIN_VALUE)
-        gbl_panel_1.rowWeights=doubleArrayOf(0.0, 0.0, 0.0, 0.0, java.lang.Double.MIN_VALUE)
+        gbl_panel_1.columnWeights=doubleArrayOf(0.0, Double.MIN_VALUE)
+        gbl_panel_1.rowWeights=doubleArrayOf(0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE)
         panel_1.layout=gbl_panel_1
         //删除插件
         val RemovePlugin=JButton("Remove")
@@ -782,31 +793,35 @@ class Core : JFrame() {
 
     @Throws(Exception::class)
     private fun buildPluginMenu(pluginlist: DefaultListModel<String>) {
-        if(File(JsonPath).isFile() && File(JsonPath).exists() && json.isJSON()) {
-            val jsonfile=FileInputStream(JsonPath)
+        if(File(PluginsJsonPath).isFile() && File(PluginsJsonPath).exists() && json.isJSON(PluginsJsonPath)) {
+            val jsonfile=FileInputStream(PluginsJsonPath)
             val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
             val parser=JsonParser()
             val `object`=parser.parse(BufferedReader(jsonreadcoding)) as JsonObject
             val Plugins=`object`.getAsJsonArray("Plugins")
-            for (jsonElement in Plugins) {
-                val Plugin=jsonElement.asJsonObject
-                pluginlist.addElement(Plugin.get("title").asString)
+            if(Plugins!=null){
+                for (jsonElement in Plugins) {
+                    val Plugin=jsonElement.asJsonObject
+                    pluginlist.addElement(Plugin.get("title").asString)
+                }
             }
         }
     }
 
     @Throws(Exception::class)
     private fun buildCryptoPlugin(menu: JMenu) {
-        if(File(JsonPath).isFile() && File(JsonPath).exists() && json.isJSON()) {
-            val jsonfile=FileInputStream(JsonPath)
+        if(File(PluginsJsonPath).isFile() && File(PluginsJsonPath).exists() && json.isJSON(PluginsJsonPath)) {
+            val jsonfile=FileInputStream(PluginsJsonPath)
             val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
             val parser=JsonParser()
             val `object`=parser.parse(BufferedReader(jsonreadcoding)) as JsonObject
             val Plugins=`object`.getAsJsonArray("Plugins")
-            for (jsonElement in Plugins) {
-                val Plugin=jsonElement.asJsonObject
-                if(Plugin.get("type").asString.toLowerCase().equals("crypto", ignoreCase=true)) {
-                    menu.add(buildPluginMenuItem(Plugin.get("title").asString))
+            if(Plugins!=null){
+                for (jsonElement in Plugins) {
+                    val Plugin=jsonElement.asJsonObject
+                    if(Plugin.get("type").asString.toLowerCase().equals("crypto", ignoreCase=true)) {
+                        menu.add(buildPluginMenuItem(Plugin.get("title").asString))
+                    }
                 }
             }
         }
@@ -885,20 +900,55 @@ class Core : JFrame() {
 
     companion object {
         private var textArea=JTextArea()
-        private val JsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
-        private val Version="-v3.2.1"
+        private val PluginsJsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Plugins.json"))
+        private val SettingJsonPath = String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
+        private val Version="-v3.2.2"
         private val Note=""
+        private val json=Json()
+        private var themes: Int=0
+
         /**
          * Launch the application.
          */
         init {
-            try {
-                BeautyEyeLNFHelper.frameBorderStyle=BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow
-                org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF()
-                BeautyEyeLNFHelper.translucencyAtFrameInactive=true
-                UIManager.put("RootPane.setupButtonVisible", false)
-            } catch (e: Exception) {
+            if(File(SettingJsonPath).isFile() && File(SettingJsonPath).exists() && json.isJSON(SettingJsonPath)) {
+                val jsonfile=FileInputStream(SettingJsonPath)
+                val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
+                val parser=JsonParser()
+                val `object`=parser.parse(BufferedReader(jsonreadcoding)) as JsonObject
+                val Themes=`object`.getAsJsonArray("Themes")
+                if(Themes!=null){
+                    for (jsonElement in Themes) {
+                        val Theme=jsonElement.asJsonObject
+                        if(Theme.toString()!="{}") {
+                            when (Theme.get("Theme").asInt) {
+                                1 -> {
+                                    try {
+                                        BeautyEyeLNFHelper.frameBorderStyle=BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow//外观1
+                                        BeautyEyeLNFHelper.launchBeautyEyeLNF()
+                                        BeautyEyeLNFHelper.translucencyAtFrameInactive=true
+                                        UIManager.put("RootPane.setupButtonVisible", false)
+                                    } catch (e: Exception) {
+                                    }
+                                }
+                                2 -> {
+                                    try {
+                                        UIManager.setLookAndFeel(MaterialLookAndFeel())//外观2
+                                    } catch (e: UnsupportedLookAndFeelException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                3 -> {
+                                    WebLookAndFeel.install()//外观3
+                                }
+                                else -> {
 
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
         }
 
