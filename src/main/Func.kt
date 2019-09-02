@@ -84,7 +84,7 @@ class Func{
     fun PigCode(input:String):String{
         val result = StringBuffer()
         val keymap= mapOf('A' to 'J','B' to 'K','C' to 'L','D' to 'M',
-                'E' to 'N','F' to 'O','G' to 'P','H' to 'Q','I' to 'R','J' to 'K','K' to 'B','L' to 'C',
+                'E' to 'N','F' to 'O','G' to 'P','H' to 'Q','I' to 'R','J' to 'A','K' to 'B','L' to 'C',
                 'M' to 'D','N' to 'E','O' to 'F','P' to 'G','Q' to 'H','R' to 'I','S' to 'W','T' to 'X',
                 'U' to 'Y','V' to 'Z','W' to 'S','X' to 'T')
         val word = input.toCharArray()
@@ -93,6 +93,8 @@ class Func{
                 result.append(keymap.get(word[i])!!)
             }else if(word[i].isLowerCase()){
                 result.append(keymap.get(word[i].toUpperCase())!!.toLowerCase())
+            }else{
+                result.append(word[i])
             }
         }
         return result.toString()
