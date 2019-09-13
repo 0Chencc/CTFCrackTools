@@ -245,10 +245,10 @@ class Core : JFrame() {
 
         val Decode=JMenu("Decode")
         menu.add(Decode)
-        val Base64DecodeUTF8=JMenuItem("Base64DecodeUTF8")
-        Base64DecodeUTF8.addActionListener { textArea.text=f.Base64de(textArea.text) }
-        Decode.add(Base64DecodeUTF8)
-        val Base32Decode=JMenuItem("Base32Decode")
+        val Base64Decode=JMenuItem("Base64DeCode")
+        Base64Decode.addActionListener { textArea.text=f.Base64de(textArea.text) }
+        Decode.add(Base64Decode)
+        val Base32Decode=JMenuItem("Base32DeCode")
         Base32Decode.addActionListener { textArea.text=f.Base32de(textArea.text) }
         Decode.add(Base32Decode)
         /*
@@ -263,16 +263,18 @@ class Core : JFrame() {
         val MorseDecode=JMenuItem("MorseDeCode")
         MorseDecode.addActionListener { textArea.text=f.MorseDecode(textArea.text) }
         Decode.add(MorseDecode)
-        val BaconDecode=JMenuItem("BaconDecode")
+        val BaconDecode=JMenuItem("BaconDeCode")
         BaconDecode.addActionListener { textArea.text=f.BaconCodeDecode(textArea.text) }
         Decode.add(BaconDecode)
-        val UrlDecode=JMenuItem("UrlDecode")
+        val UrlDecode=JMenuItem("UrlDeCode")
         UrlDecode.addActionListener { textArea.text=f.URLDecoder(textArea.text) }
         Decode.add(UrlDecode)
-        val UniDecode=JMenuItem("UnicodeDecode")
+        val UniDecode=JMenuItem("UnicodeDeCode")
         UniDecode.addActionListener { textArea.text=f.UnicodeDecode(textArea.text) }
         Decode.add(UniDecode)
-
+        val VigenereDecode=JMenuItem("VigenereDeCode")
+        VigenereDecode.addActionListener{textArea.text=f.VigenereDeCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
+        Decode.add(VigenereDecode)
         //Encode
         val Encode=JMenu("Encode")
         menu.add(Encode)
@@ -286,9 +288,9 @@ class Core : JFrame() {
         Encode.add(Base64Encodegbk);*/
         val Base32Encode=JMenuItem("Base32Encode")
         Base32Encode.addActionListener { textArea.text=f.Base32en(textArea.text) }
-        val Base64EncodeUTF8=JMenuItem("Base64EncodeUTF8")
-        Base64EncodeUTF8.addActionListener { textArea.text=f.Base64en(textArea.text) }
-        Encode.add(Base64EncodeUTF8)
+        val Base64Encode=JMenuItem("Base64Encode")
+        Base64Encode.addActionListener { textArea.text=f.Base64en(textArea.text) }
+        Encode.add(Base64Encode)
         Encode.add(Base32Encode)
         /*        JMenuItem Base16Encode = new JMenuItem("Base16Encode");
         Base16Encode.addActionListener(new ActionListener() {
@@ -302,17 +304,20 @@ class Core : JFrame() {
         MorseEncode.addActionListener { textArea.text=f.MorseEncode(textArea.text) }
         Encode.add(MorseEncode)
 
-        val BaconEncode=JMenuItem("BaconEncode")
+        val BaconEncode=JMenuItem("BaconEnCode")
         BaconEncode.addActionListener { textArea.text=f.BaconCodeEncode(textArea.text) }
         Encode.add(BaconEncode)
 
-        val UrlEncode=JMenuItem("UrlEncode")
+        val UrlEncode=JMenuItem("UrlEnCode")
         UrlEncode.addActionListener { textArea.text=f.UrlEncoder(textArea.text) }
         Encode.add(UrlEncode)
 
-        val UnicodeEncode=JMenuItem("UnicodeEncode")
+        val UnicodeEncode=JMenuItem("UnicodeEnCode")
         UnicodeEncode.addActionListener { textArea.text=f.UnicodeEncode(textArea.text) }
         Encode.add(UnicodeEncode)
+        val VigenereEncode=JMenuItem("VigenereEnCode")
+        VigenereEncode.addActionListener{textArea.text=f.VigenereEnCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
+        Encode.add(VigenereEncode)
 
         val Plugins=JMenu("Plugins")
         menu.add(Plugins)
@@ -351,48 +356,51 @@ class Core : JFrame() {
 
         val TDecode=JMenu("Decode")
         topmenu.add(TDecode)
-        val TBase64DecodeGBK=JMenuItem("Base64DecodeGBK")
-        TBase64DecodeGBK.addActionListener { textArea.text=f.Base64de(textArea.text) }
-        TDecode.add(TBase64DecodeGBK)
-        val TBase64DecodeUTF8=JMenuItem("Base64DecodeUTF8")
+        val TBase64DecodeUTF8=JMenuItem("Base64DeCode")
         TBase64DecodeUTF8.addActionListener { textArea.text=f.Base64de(textArea.text) }
         TDecode.add(TBase64DecodeUTF8)
-        val TBase32Decode=JMenuItem("Base32Decode")
+        val TBase32Decode=JMenuItem("Base32DeCode")
         TBase32Decode.addActionListener { textArea.text=f.Base32de(textArea.text) }
         TDecode.add(TBase32Decode)
         val TMorseDecode=JMenuItem("MorseDeCode")
         TMorseDecode.addActionListener { textArea.text=f.MorseDecode(textArea.text) }
         TDecode.add(TMorseDecode)
-        val TBaconDecode=JMenuItem("BaconDecode")
+        val TBaconDecode=JMenuItem("BaconDeCode")
         TBaconDecode.addActionListener { textArea.text=f.BaconCodeDecode(textArea.text) }
         TDecode.add(TBaconDecode)
-        val TUrlDecode=JMenuItem("UrlDecode")
+        val TUrlDecode=JMenuItem("UrlDeCode")
         TUrlDecode.addActionListener { textArea.text=f.URLDecoder(textArea.text) }
         TDecode.add(TUrlDecode)
-        val TUniDecode=JMenuItem("UnicodeDecode")
+        val TUniDecode=JMenuItem("UnicodeDeCode")
         TUniDecode.addActionListener { textArea.text=f.UnicodeDecode(textArea.text) }
         TDecode.add(TUniDecode)
+        val TVigenereDecode=JMenuItem("VigenereDeCode")
+        TVigenereDecode.addActionListener{textArea.text=f.VigenereDeCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
+        TDecode.add(TVigenereDecode)
 
         val TEncode=JMenu("Encode")
         topmenu.add(TEncode)
-        val TBase32Encode=JMenuItem("Base32Encode")
+        val TBase64Encode=JMenuItem("Base64EnCode")
+        TBase64Encode.addActionListener { textArea.text=f.Base64en(textArea.text) }
+        TEncode.add(TBase64Encode)
+        val TBase32Encode=JMenuItem("Base32EnCode")
         TBase32Encode.addActionListener { textArea.text=f.Base32en(textArea.text) }
-        val TBase64EncodeUTF8=JMenuItem("Base64EncodeUTF8")
-        TBase64EncodeUTF8.addActionListener { textArea.text=f.Base64en(textArea.text) }
-        TEncode.add(TBase64EncodeUTF8)
         TEncode.add(TBase32Encode)
         val TMorseEncode=JMenuItem("MorseEnCode")
         TMorseEncode.addActionListener { textArea.text=f.MorseEncode(textArea.text) }
         TEncode.add(TMorseEncode)
-        val TBaconEncode=JMenuItem("BaconEncode")
+        val TBaconEncode=JMenuItem("BaconEnCode")
         TBaconEncode.addActionListener { textArea.text=f.BaconCodeEncode(textArea.text) }
         TEncode.add(TBaconEncode)
-        val TUrlEncode=JMenuItem("UrlEncode")
+        val TUrlEncode=JMenuItem("UrlEnCode")
         TUrlEncode.addActionListener { textArea.text=f.UrlEncoder(textArea.text) }
         TEncode.add(TUrlEncode)
-        val TUnicodeEncode=JMenuItem("UnicodeEncode")
+        val TUnicodeEncode=JMenuItem("UnicodeEnCode")
         TUnicodeEncode.addActionListener { textArea.text=f.UnicodeEncode(textArea.text) }
         TEncode.add(TUnicodeEncode)
+        val TVigenereEncode=JMenuItem("VigenereEnCode")
+        TVigenereEncode.addActionListener{textArea.text=f.VigenereEnCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
+        TEncode.add(TVigenereEncode)
 
         val TPlugins=JMenu("Plugins")
         topmenu.add(TPlugins)

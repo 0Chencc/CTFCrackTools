@@ -81,6 +81,76 @@ class Func{
         }
         return result.toString()
     }//凯撒密码
+    fun VigenereEnCode(input:CharArray,key:CharArray): String {
+        val asciiU:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        val asciiL:String = "abcdefghijklmnopqrstuvwxyz"
+        var i:Int = 0
+        var j:Int = 0
+        var q:Int = 0
+        var k:Int
+        var m:Int
+        return StringBuilder()
+                .let{
+                    result ->
+                    while (i<input.size) {
+                        if(input[i].isUpperCase()){
+                            j = q%key.size
+                            k = asciiU.indexOf(key[j].toUpperCase())
+                            m = asciiU.indexOf(input[i])
+                            result.append(asciiU[(m+k)%26])
+                            q++
+                        }else if(input[i].isLowerCase()){
+                            j = q%key.size
+                            k = asciiL.indexOf(key[j].toLowerCase())
+                            m = asciiL.indexOf(input[i])
+                            result.append(asciiL[(m+k)%26])
+                            q++
+                        }else{
+                            result.append(input[i])
+                        }
+                        i++
+                    }
+                    result
+                }
+                .toString()
+    }
+    fun VigenereDeCode(input:CharArray,key: CharArray):String{
+        val asciiU:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        val asciiL:String = "abcdefghijklmnopqrstuvwxyz"
+        var i:Int = 0
+        var j:Int = 0
+        var q:Int = 0
+        var k:Int
+        var m:Int
+        return StringBuilder()
+                .let{
+                    result ->
+                    while (i<input.size) {
+                        if(input[i].isUpperCase()){
+                            j = q%key.size
+                            k = asciiU.indexOf(key[j].toUpperCase())
+                            m = asciiU.indexOf(input[i])
+                            if(m<k)
+                                m+=26
+                            result.append(asciiU[m-k])
+                            q++
+                        }else if(input[i].isLowerCase()){
+                            j = q%key.size
+                            k = asciiL.indexOf(key[j].toLowerCase())
+                            m = asciiL.indexOf(input[i])
+                            if(m<k)
+                                m+=26
+                            result.append(asciiL[m-k])
+                            q++
+                        }else{
+                            result.append(input[i])
+                        }
+                        i++
+                    }
+                    result
+                }
+                .toString()
+    }
     fun PigCode(input:String):String{
         val result = StringBuffer()
         val keymap= mapOf('A' to 'J','B' to 'K','C' to 'L','D' to 'M',
@@ -330,8 +400,8 @@ class Func{
         result.toString()
     }
 }
+
 /* Debug
-fun main(args: Array<String>) {
+    fun main(args: Array<String>) {
     val f=Func()
-}
-*/
+}*/
