@@ -1,21 +1,16 @@
 # CTFcrackTools-V3.2
->[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
->[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
->[![language](https://img.shields.io/badge/language-java-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
->
-> CTFcrackTools重置版
-> 
-> 使用kotlin与java混合开发
->
-> 作者：米斯特安全-林晨、摇摆、奶权
->
-> 米斯特安全团队首页：[http://www.hi-ourlife.com/](http://www.hi-ourlife.com/)
->
-> 部分插件来源：希望团队-nMask
+[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
+[![language](https://img.shields.io/badge/Language-Java/Kotlin-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
+
+作者：林晨(0chen)
+
+米斯特安全官网：http://www.acmesec.cn/
+
 ## 第二版
 应老用户要求，将继续更新V2版本。以下是项目地址：
 
-[https://github.com/0Chencc/CTFCrackTools-V2](https://github.com/0Chencc/CTFCrackTools-V2)
+[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)
 
 ## 界面介绍
 

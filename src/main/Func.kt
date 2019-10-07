@@ -1,4 +1,3 @@
-
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Base64.*
 import java.net.URLDecoder
@@ -82,8 +81,6 @@ class Func{
         return result.toString()
     }//凯撒密码
     fun VigenereEnCode(input:CharArray,key:CharArray): String {
-        val asciiU:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        val asciiL:String = "abcdefghijklmnopqrstuvwxyz"
         var i:Int = 0
         var j:Int = 0
         var q:Int = 0
@@ -93,20 +90,22 @@ class Func{
                 .let{
                     result ->
                     while (i<input.size) {
-                        if(input[i].isUpperCase()){
-                            j = q%key.size
-                            k = asciiU.indexOf(key[j].toUpperCase())
-                            m = asciiU.indexOf(input[i])
-                            result.append(asciiU[(m+k)%26])
-                            q++
-                        }else if(input[i].isLowerCase()){
-                            j = q%key.size
-                            k = asciiL.indexOf(key[j].toLowerCase())
-                            m = asciiL.indexOf(input[i])
-                            result.append(asciiL[(m+k)%26])
-                            q++
-                        }else{
-                            result.append(input[i])
+                        when {
+                            input[i].isUpperCase() -> {
+                                j = q%key.size
+                                k = UpperCase.indexOf(key[j].toUpperCase())
+                                m = UpperCase.indexOf(input[i])
+                                result.append(UpperCase[(m+k)%26])
+                                q++
+                            }
+                            input[i].isLowerCase() -> {
+                                j = q%key.size
+                                k = LowerCase.indexOf(key[j].toLowerCase())
+                                m = LowerCase.indexOf(input[i])
+                                result.append(LowerCase[(m+k)%26])
+                                q++
+                            }
+                            else -> result.append(input[i])
                         }
                         i++
                     }
@@ -115,8 +114,6 @@ class Func{
                 .toString()
     }
     fun VigenereDeCode(input:CharArray,key: CharArray):String{
-        val asciiU:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        val asciiL:String = "abcdefghijklmnopqrstuvwxyz"
         var i:Int = 0
         var j:Int = 0
         var q:Int = 0
@@ -126,24 +123,26 @@ class Func{
                 .let{
                     result ->
                     while (i<input.size) {
-                        if(input[i].isUpperCase()){
-                            j = q%key.size
-                            k = asciiU.indexOf(key[j].toUpperCase())
-                            m = asciiU.indexOf(input[i])
-                            if(m<k)
-                                m+=26
-                            result.append(asciiU[m-k])
-                            q++
-                        }else if(input[i].isLowerCase()){
-                            j = q%key.size
-                            k = asciiL.indexOf(key[j].toLowerCase())
-                            m = asciiL.indexOf(input[i])
-                            if(m<k)
-                                m+=26
-                            result.append(asciiL[m-k])
-                            q++
-                        }else{
-                            result.append(input[i])
+                        when {
+                            input[i].isUpperCase() -> {
+                                j = q%key.size
+                                k = UpperCase.indexOf(key[j].toUpperCase())
+                                m = UpperCase.indexOf(input[i])
+                                if(m<k)
+                                    m+=26
+                                result.append(UpperCase[m-k])
+                                q++
+                            }
+                            input[i].isLowerCase() -> {
+                                j = q%key.size
+                                k = LowerCase.indexOf(key[j].toLowerCase())
+                                m = LowerCase.indexOf(input[i])
+                                if(m<k)
+                                    m+=26
+                                result.append(LowerCase[m-k])
+                                q++
+                            }
+                            else -> result.append(input[i])
                         }
                         i++
                     }
@@ -331,9 +330,28 @@ class Func{
         }
         return result.toString()
     }//字符翻转
+/*    fun HillCodeEncode(input:String,key:String):String{
+        val keymatrix:CharArray = key.split(" ") as CharArray
+        var tmp[]:<String?>Array
+        when{
+            keymatrix.size/4 == 0 ->
+                0 until keymatrix.size%4.forEach{
+
+        }
+
+        }
+        return StringBuffer()
+                .let {
+                    result->
+
+                }
+                .toString()
+    }*/
     /* 调用Python的插件 */
 
     /* 内置方法/内置常量 */
+    val UpperCase:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    val LowerCase:String = "abcdefghijklmnopqrstuvwxyz"
     val SplitString = {//多次切割字符串
         input:String ->
         val tmp = input.split(",")

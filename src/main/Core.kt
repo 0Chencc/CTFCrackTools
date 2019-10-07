@@ -3,10 +3,9 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 import org.python.util.PythonInterpreter
 import org.python.core.*
-
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-
+import org.apache.commons.lang3.*
 import java.awt.*
 import java.awt.event.*
 
@@ -41,6 +40,8 @@ import mdlaf.animation.*
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper
 import com.alee.laf.WebLookAndFeel
 import mdlaf.utils.MaterialColors
+
+import org.python.google.common.html.HtmlEscapers
 
 class Core : JFrame() {
     internal var f=Func()
@@ -275,6 +276,9 @@ class Core : JFrame() {
         val VigenereDecode=JMenuItem("VigenereDeCode")
         VigenereDecode.addActionListener{textArea.text=f.VigenereDeCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
         Decode.add(VigenereDecode)
+        val HtmlEDe=JMenuItem("Html Entity DeCode")
+        HtmlEDe.addActionListener{textArea.text=StringEscapeUtils.unescapeHtml4(textArea.text)}
+        Decode.add(HtmlEDe)
         //Encode
         val Encode=JMenu("Encode")
         menu.add(Encode)
@@ -318,6 +322,9 @@ class Core : JFrame() {
         val VigenereEncode=JMenuItem("VigenereEnCode")
         VigenereEncode.addActionListener{textArea.text=f.VigenereEnCode(textArea.text.toCharArray(),JOptionPane.showInputDialog("Please input a key").toCharArray())}
         Encode.add(VigenereEncode)
+        val HtmlEEn=JMenuItem("Html Entity EnCode")
+        HtmlEEn.addActionListener{textArea.text=StringEscapeUtils.escapeHtml4(textArea.text)}
+        Encode.add(HtmlEEn)
 
         val Plugins=JMenu("Plugins")
         menu.add(Plugins)

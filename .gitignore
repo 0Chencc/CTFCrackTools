@@ -16,3 +16,4 @@ out/production/classes/
 /.idea/
 Plugins.json
 *.iml
+/test/
