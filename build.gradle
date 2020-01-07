@@ -1,5 +1,5 @@
 group 'org.mstsec'
-version '3.2.3'
+version '3.2.4'
 
 buildscript {
     ext.kotlin_version = '1.2.31'
@@ -31,7 +31,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 sourceSets{
     main.kotlin.srcDirs += 'src/main'
-    main.java.srcDirs += 'src/mian'
+    main.java.srcDirs += 'src/main'
     test.kotlin.srcDirs += 'test'
     test.java.srcDirs += 'test'
 }
