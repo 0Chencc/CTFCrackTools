@@ -858,6 +858,7 @@ class Core : JFrame() {
             val interpreter=PythonInterpreter()
             val sys=Py.getSystemState()
             sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages")
+            //sys.path.add("C:/Python27/Lib/site-packages")
             try {
                 interpreter.execfile(json.getPath(arg0.actionCommand))
             } catch (e: Exception) {
@@ -917,8 +918,8 @@ class Core : JFrame() {
         private var textArea=JTextArea()
         private val PluginsJsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Plugins.json"))
         private val SettingJsonPath = String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
-        private val Version="-v3.2.3"
-        private val Note=""
+        private val Version="-v3.2.4"
+        private val Note="林晨skr憨憨"
         private val json=Json()
         private var themes: Int=0
 
