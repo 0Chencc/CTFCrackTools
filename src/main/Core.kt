@@ -424,7 +424,7 @@ class Core : JFrame() {
                 val py_file=py_openfile.selectedFile//得到选择的文件名
                 try {
                     val title=json.createJSON(py_file.toString())
-                    when (json.getType(title)) {
+                    when (json.search(title,"type")) {
                         "crypto" -> {
                             Plugins.add(buildPluginMenuItem(title))
                             TPlugins.add(buildPluginMenuItem(title))
@@ -460,7 +460,7 @@ class Core : JFrame() {
                 val py_file=py_openfile.selectedFile//得到选择的文件名
                 try {
                     val title=json.createJSON(py_file.toString())
-                    when (json.getType(title)) {
+                    when (json.search(title,"type")) {
                         "crypto" -> {
                             Plugins.add(buildPluginMenuItem(title))
                             Plugins.add(buildPluginMenuItem(title))
@@ -746,7 +746,7 @@ class Core : JFrame() {
         RemovePlugin.addActionListener {
             try {
                 val rmPlugin=list.selectedValue
-                when (json.getType(rmPlugin)) {
+                when (json.search(rmPlugin,"type")) {
                     "crypto" -> for (i in 0..Plugins.itemCount) {
                         if(Plugins.getItem(i).label.equals(rmPlugin, ignoreCase=true)) {
                             Plugins.remove(i)
@@ -778,7 +778,7 @@ class Core : JFrame() {
                 val py_file=py_openfile.selectedFile//得到选择的文件名
                 try {
                     val title=json.createJSON(py_file.toString())
-                    when (json.getType(title)) {
+                    when (json.search(title,"type")) {
                         "crypto" -> {
                             TPlugins.add(buildPluginMenuItem(title))
                             Plugins.add(buildPluginMenuItem(title))
@@ -860,7 +860,7 @@ class Core : JFrame() {
             sys.path.add(System.getProperty("user.dir")+"/Lib/site-packages")
             //sys.path.add("C:/Python27/Lib/site-packages")
             try {
-                interpreter.execfile(json.getPath(arg0.actionCommand))
+                interpreter.execfile(json.search(arg0.actionCommand,"path"))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -871,7 +871,7 @@ class Core : JFrame() {
             var res: PyObject?=null
             try {
                 if(json.isDialog(arg0.actionCommand)) {
-                    dialogstr=json.getDialog(arg0.actionCommand)
+                    dialogstr=json.search(arg0.actionCommand,"dialog")
                     dialog=dialogstr!!.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     when (dialog.size) {
                         3 -> {

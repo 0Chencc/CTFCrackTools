@@ -11,33 +11,19 @@ import java.io.IOException
 import java.io.FileNotFoundException
 class Json{
     val PLUGINSJSONPATH =System.getProperty("user.dir")+"/Plugins.json"
-    fun getType(title:String): String? {
+    fun search(input:String,ftype:String):String?{
         val JsonFile = FileInputStream(PLUGINSJSONPATH)
         val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
         val Parser = JsonParser()
         val Object = Parser.parse(BufferedReader(JsonReadCoding)) as JsonObject
-        var type:String? = null
         val Plugins = Object.getAsJsonArray("Plugins")
+        var result:String? = null
         Plugins
                 .asSequence()
                 .map { it.asJsonObject }
-                .filter { it.get("title").asString.equals(title, ignoreCase=true) }
-                .forEach { type=it.get("type").asString }
-        return type
-    }
-    fun getDialog(title:String):String?{
-        val JsonFile = FileInputStream(PLUGINSJSONPATH)
-        val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
-        val Parser = JsonParser()
-        val Object = Parser.parse(BufferedReader(JsonReadCoding)) as JsonObject
-        var Dialog:String? = null
-        val Plugins = Object.getAsJsonArray("Plugins")
-        Plugins
-                .asSequence()
-                .map { it.asJsonObject }
-                .filter { it.get("title").asString.equals(title, ignoreCase=true) }
-                .forEach { Dialog=it.get("dialog").asString }
-        return Dialog
+                .filter { it.get("title").asString.equals(input, ignoreCase=true) }
+                .forEach { result=it.get(ftype).asString }
+        return result
     }
     fun isDialog(title: String):Boolean{
         val JsonFile = FileInputStream(PLUGINSJSONPATH)
@@ -50,27 +36,13 @@ class Json{
                 .map { it.asJsonObject }
                 .any { it.get("title").asString.equals(title, ignoreCase=true) && !it.get("dialog").isJsonNull }
     }
-    fun getAuthor(title:String):String?{
+    fun getDetail(title:String):String?{
         val JsonFile = FileInputStream(PLUGINSJSONPATH)
         val JsonReadCoding = InputStreamReader(JsonFile,"UTF-8")
         val Parser = JsonParser()
         val Object = Parser.parse(BufferedReader(JsonReadCoding)) as JsonObject
         val Plugins = Object.getAsJsonArray("Plugins")
-        var author:String? = null
-        Plugins
-                .asSequence()
-                .map { it.asJsonObject }
-                .filter { it.get("title").asString.equals(title, ignoreCase=true) }
-                .forEach { author=it.get("author").asString }
-        return author
-    }
-    fun getDetail(title:String):String?{
-        val jsonfile=FileInputStream(PLUGINSJSONPATH)
-        val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
-        val parser=JsonParser()
-        val Object=parser.parse(BufferedReader(jsonreadcoding)) as JsonObject
         var detailStr: String?=null
-        val Plugins=Object.getAsJsonArray("Plugins")
         Plugins
                 .asSequence()
                 .map { it.asJsonObject }
@@ -199,20 +171,7 @@ class Json{
         outprint.flush()
         outprint.close()
     }
-    fun getPath(title:String):String?{
-        var path: String?=null
-        val jsonfile=FileInputStream(PLUGINSJSONPATH)
-        val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
-        val parser=JsonParser()
-        val Object=parser.parse(BufferedReader(jsonreadcoding)) as JsonObject
-        val Plugins=Object.getAsJsonArray("Plugins")
-        Plugins
-                .asSequence()
-                .map { it.asJsonObject }
-                .filter { it.get("title").asString.equals(title, ignoreCase=true) }
-                .forEach { path=it.get("path").asString }
-        return path
-    }
+
     fun isJSON(JsonPath:String):Boolean{
         val jsonfile=File(JsonPath)
         var readjson: InputStreamReader?=null

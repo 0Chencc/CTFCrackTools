@@ -18,7 +18,9 @@ apply(plugin = "kotlin")
 apply(plugin = "java")
 
 tasks.named<Jar>("jar"){
-    from(Callable { configurations["runtime"].map { if (it.isDirectory) it else zipTree(it) } })
+    from(Callable { configurations["compile"].map { if (it.isDirectory) it else zipTree(it) } })
+    //from(Callable { configurations.compile.map { if (it.isDirectory) it else zipTree(it) } })
+    //from(Callable { configurations["runtime"].map { if (it.isDirectory) it else zipTree(it) }
     exclude("META-INF/*.RSA","META-INF/*.SF","META-INF/*.DSA")
     manifest{
         attributes["Main-Class"] = "Core"
