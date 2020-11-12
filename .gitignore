@@ -17,3 +17,7 @@ out/production/classes/
 Plugins.json
 *.iml
 /test/
+*.idx
+*.pkc
+*.idx
+*.pkc

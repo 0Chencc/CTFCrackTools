@@ -11,20 +11,21 @@ buildscript {
         maven(url = "https://maven.aliyun.com/repository/central")
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
     }
 }
 apply(plugin = "kotlin")
 apply(plugin = "java")
 
 tasks.named<Jar>("jar"){
-    from(Callable { configurations["compile"].map { if (it.isDirectory) it else zipTree(it) } })
-    //from(Callable { configurations.compile.map { if (it.isDirectory) it else zipTree(it) } })
-    //from(Callable { configurations["runtime"].map { if (it.isDirectory) it else zipTree(it) }
-    exclude("META-INF/*.RSA","META-INF/*.SF","META-INF/*.DSA")
     manifest{
         attributes["Main-Class"] = "Core"
     }
+    //from (Callable  { configurations["compileClasspath"].collect { it.isDirectory() ? it : zipTree(it) } })
+    from(Callable { configurations["compile"].map { if (it.isDirectory) it else zipTree(it) } })
+    //from(Callable { configurations.compile.map { if (it.isDirectory) it else zipTree(it) } })
+    //from(Callable { configurations["runtime"].map { if (it.isDirectory) it else zipTree(it) }})
+    exclude("META-INF/*.RSA","META-INF/*.SF","META-INF/*.DSA")
 }
 repositories {
     maven(url = "http://maven.aliyun.com/nexus/content/groups/public/")
@@ -48,7 +49,7 @@ tasks.withType<JavaCompile>{
 }
 
 dependencies {
-    "implementation" ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.61")
+    "implementation" ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10")
     "implementation" ("org.python", "jython", "2.7.1b3")
     "implementation" ("com.google.code.gson", "gson", "2.8.2")
     "implementation" ("commons-codec", "commons-codec","1.10")

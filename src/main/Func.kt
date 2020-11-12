@@ -3,6 +3,7 @@ import org.apache.commons.codec.binary.Base64.*
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 /**
  * @author 林晨0chencc
@@ -220,8 +221,10 @@ class Func{
         return StringBuilder()
                 .let{
                     result ->
+                    var inputnew:String = ""
                     if(isBacon(input)){
-                        SplitNum(input,5).forEach { result.append(keymap[it]) }
+                        inputnew = input.replace(" ","")
+                        SplitNum(inputnew,5,"[ab]{5}").forEach { result.append(keymap[it]) }
                     }else{
                         result.append("并非是培根密码")
                     }
@@ -362,11 +365,30 @@ class Func{
         }
         result.toString()
     }
-    val SplitNum = {//写一个隔字符分割的方法23333...
+/*    val SplitNum = {//写一个隔字符分割的方法23333...
         input: String, Num: Int ->
         val str: Array<String?> = arrayOfNulls<String>(input.length / Num)
         (1..input.length / Num).forEach { i -> str.set(i-1, input.substring(i * Num-Num, i * Num)) }
         str
+    }*/
+    /*  SpiltNum,第一个参数是字符串，第二个字符串按几个为一组进行分割，第三个参数是正则规则
+    * */
+    fun SplitNum(input:String,Num:Int):Array<String?>{
+        val str:Array<String?> = arrayOfNulls<String>(input.length/Num)
+        (1..input.length/Num).forEach { i->str.set(i-1,input.substring(i*Num-Num,i*Num)) }
+        return str
+    }
+    fun SplitNum(input:String,Num:Int,p:String):Array<String?>{
+        val r:Pattern = Pattern.compile(p)
+        val m: Matcher = r.matcher(input)
+        var input_m = ""
+        var a = true
+        while (a){
+            if(!m.find()) a=false else input_m += m.group()
+        }
+        val str:Array<String?> = arrayOfNulls<String>(input_m.length/Num)
+        (1..input_m.length/Num).forEach { i->str.set(i-1,input_m.substring(i*Num-Num,i*Num)) }
+        return str
     }
     val isBacon = {
         input:String ->
@@ -419,7 +441,8 @@ class Func{
     }
 }
 
-/* Debug
+/* Debug*/
     fun main(args: Array<String>) {
     val f=Func()
-}*/
+    println(f.BaconCodeDecode("baaba aabbb abaaa bbaaa aaaaa abbab aaaab aaaaa abaaa baaba  aaaba abbba abbba ababb"))
+}
