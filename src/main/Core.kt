@@ -918,8 +918,8 @@ class Core : JFrame() {
         private var textArea=JTextArea()
         private val PluginsJsonPath=String(StringBuilder(System.getProperty("user.dir")+"/Plugins.json"))
         private val SettingJsonPath = String(StringBuilder(System.getProperty("user.dir")+"/Setting.json"))
-        private val Version="-v3.2.4"
-        private val Note="林晨skr憨憨"
+        private val Version="-v3.2.5"
+        private val Note=""
         private val json=Json()
         private var themes: Int=0
 
@@ -927,7 +927,7 @@ class Core : JFrame() {
          * Launch the application.
          */
         init {
-            if(File(SettingJsonPath).isFile() && File(SettingJsonPath).exists() && json.isJSON(SettingJsonPath)) {
+/*            if(File(SettingJsonPath).isFile() && File(SettingJsonPath).exists() && json.isJSON(SettingJsonPath)) {
                 val jsonfile=FileInputStream(SettingJsonPath)
                 val jsonreadcoding=InputStreamReader(jsonfile, "UTF-8")
                 val parser=JsonParser()
@@ -965,7 +965,7 @@ class Core : JFrame() {
                     }
 
                 }
-            }
+            }*/
         }
 
         @JvmStatic
