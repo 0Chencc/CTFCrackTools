@@ -34,12 +34,6 @@
 
 下载编译好的版本：https://github.com/0Chencc/CTFCrackTools/releases/
 
-## 多套外观提供使用
-
-本框架支持多套外观使用，将Setting.json中的Theme改为1,2,3分别对应三套主题，什么都不填，或者随便填。都会使用默认主题，为第4套主题。
-
-注意，代码为1的主题，仅支持JDK8及以下JDK版本。不支持JDK9和JDK10。
-
 
 ## 插件编写
 

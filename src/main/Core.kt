@@ -35,12 +35,6 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.border.LineBorder
 import javax.swing.text.DefaultEditorKit
 
-import mdlaf.*
-import mdlaf.animation.*
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper
-import com.alee.laf.WebLookAndFeel
-import mdlaf.utils.MaterialColors
-
 import org.python.google.common.html.HtmlEscapers
 
 class Core : JFrame() {
@@ -117,10 +111,8 @@ class Core : JFrame() {
                 "Website:http://www.Hi-OurLife.com/\r\n"+
                 "Github:https://github.com/0Chencc/CTFCrackTools\r\n"+
                 "GitPage:https://0chencc.github.io/CTFCrackTools/\r\n\r\n" +
-                "本框架支持4种主题，请于Setting中的Theme中修改，分别为1/2/3，什么都不填或者填写其他，会用默认主题\r\n" +
-                "主题1，需要在JDK8以及以下版本使用，不兼容JDK9、JDK10\r\n" +
-                "值得注意的是，之前插件保存的JSON文件是Setting.json，但是本次更新将更换为Plugins.json\r\n" +
-                "请各位使用之前版本的朋友，将原来的Setting.json重命名为Plugins.json"
+                "我观察到很多用户都将Java版本升级到了Java8以上，原来的外观包都不支持8以上版本，所以我移除了所有外观包\r\n" +
+                "插件配置保存在Plugins.json中，切记勿删！"
         Crypto.addTab("0", null, scroll0, null)
 
         val scroll1=JScrollPane()
