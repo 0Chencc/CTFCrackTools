@@ -897,7 +897,7 @@ class Core : JFrame() {
                     }
                 } else {
                     f=interpreter.get("main", PyFunction::class.java) as PyFunction
-                    res=f.__call__(PyString(input))
+                    res=f.__call__(input)
                     textArea.text=res!!.toString()
                 }
             } catch (e: Exception) {
