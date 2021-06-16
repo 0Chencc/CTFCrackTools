@@ -839,9 +839,10 @@ class Core : JFrame() {
         val item=JMenuItem(filename)
         item.actionCommand=filename
         item.addActionListener { arg0 ->
-            val input=textArea.text
+            val input=Py.newStringOrUnicode(textArea.text)
             val props=Properties()
-            props["python.home"]=System.getProperty("user.dir")+"/Lib"
+            //props["python.home"]=System.getProperty("user.dir")+"/Lib"
+            props["python.home"]=System.getProperty("user.dir")
             props["python.console.encoding"]="UTF-8"
             props["python.security.respectJavaAccessibility"]="false"
             props["python.import.site"]="false"
