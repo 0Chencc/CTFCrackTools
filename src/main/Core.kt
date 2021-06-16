@@ -872,26 +872,26 @@ class Core : JFrame() {
                             dialog[1]=JOptionPane.showInputDialog("Please input a "+dialog[1])
                             dialog[2]=JOptionPane.showInputDialog("Please input a "+dialog[2])
                             f=interpreter.get("main", PyFunction::class.java) as PyFunction
-                            res=f.__call__(PyString(input), PyString(dialog[0]), PyString(dialog[1]), PyString(dialog[2]))
+                            res=f.__call__(input, PyString(dialog[0]), PyString(dialog[1]), PyString(dialog[2]))
                             textArea.text=res!!.toString()
                         }
                         2 -> {
                             dialog[0]=JOptionPane.showInputDialog("Please input a "+dialog[0])
                             dialog[1]=JOptionPane.showInputDialog("Please input a "+dialog[1])
                             f=interpreter.get("main", PyFunction::class.java) as PyFunction
-                            res=f.__call__(PyString(input), PyString(dialog[0]), PyString(dialog[1]))
+                            res=f.__call__(input, PyString(dialog[0]), PyString(dialog[1]))
                             textArea.text=res!!.toString()
                         }
                         1 -> {
                             dialog[0]=JOptionPane.showInputDialog("Please input a "+dialog[0])
                             println(dialog[0])
                             f=interpreter.get("main", PyFunction::class.java) as PyFunction
-                            res=f.__call__(PyString(input), PyString(dialog[0]))
+                            res=f.__call__(input, PyString(dialog[0]))
                             textArea.text=res!!.toString()
                         }
                         else -> {
                             f=interpreter.get("main", PyFunction::class.java) as PyFunction
-                            res=f.__call__(PyString(input))
+                            res=f.__call__(input)
                             textArea.text=res!!.toString()
                         }
                     }
