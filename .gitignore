@@ -21,3 +21,5 @@ Plugins.json
 *.pkc
 *.idx
 *.pkc
+out/test/classes/META-INF/CTFCrackToolsKt.kotlin_module
+out/test/classes/Menu.class

@@ -1,11 +1,11 @@
 group 'org.mstsec'
-version '3.2.5'
+version '3.2.6'
 
 buildscript {
     ext.kotlin_version = '1.4.10'
 
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
         mavenLocal()
         mavenCentral()
     }
@@ -37,7 +37,7 @@ sourceSets{
 }
 
 repositories {
-    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    maven{ url 'https://maven.aliyun.com/nexus/content/groups/public/'}
     maven { url 'https://jitpack.io' }
     mavenLocal()
     mavenCentral()
