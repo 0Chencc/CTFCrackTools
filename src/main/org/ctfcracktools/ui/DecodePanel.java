@@ -31,46 +31,6 @@ public class DecodePanel extends JPanel {
         int length = resultArea.getText().replace("\r|\n","").length();
         resultCharacterCount.setText("ResultArea - Now Result Character Count:"+length);
     }
-
-    private void encodeComboBoxItemStateChanged(ItemEvent e) {
-        // TODO add your code here
-        if(encodeComboBox.getSelectedIndex()==0){
-            return;
-        }
-        String select = encodeComboBox.getItemAt(encodeComboBox.getSelectedIndex());
-        if ("VigenereEnCode".equals(select)){
-            char[] key = JOptionPane.showInputDialog("Please input key").toCharArray();
-            resultArea.setText(func.vigenereEnCode(key,input.toCharArray()));
-            return;
-        }
-        resultArea.setText(func.callFunc(input,select));
-        encodeComboBox.setSelectedIndex(0);
-    }
-
-    private void decodeComboBoxItemStateChanged(ItemEvent e) {
-        // TODO add your code here
-        if (decodeComboBox.getSelectedIndex()==0){
-            return;
-        }
-        String select = decodeComboBox.getItemAt(decodeComboBox.getSelectedIndex());
-        if ("VigenereDeCode".equals(select)){
-            char[] key = JOptionPane.showInputDialog("Please input key").toCharArray();
-            resultArea.setText(func.vigenereDeCode(key,input.toCharArray()));
-            return;
-        }
-        resultArea.setText(func.callFunc(input,select));
-        decodeComboBox.setSelectedIndex(0);
-    }
-
-    private void decryptComboBoxItemStateChanged(ItemEvent e) {
-        // TODO add your code here
-        if (decryptComboBox.getSelectedIndex()==0){
-            return;
-        }
-        String select = decryptComboBox.getItemAt(decryptComboBox.getSelectedIndex());
-        resultArea.setText(func.callFunc(input,select));
-        decryptComboBox.setSelectedIndex(0);
-    }
     private void pluginsComboBoxActionPerformed(ActionEvent e) {
         // TODO add your code here
         if (pluginsComboBox.getSelectedIndex()==0){
@@ -107,6 +67,52 @@ public class DecodePanel extends JPanel {
     private void reloadPluginsActionPerformed(ActionEvent e) {
         // TODO add your code here
         loadPlugin();
+    }
+
+    private void encodeComboBoxActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        if(encodeComboBox.getSelectedIndex()==0){
+            return;
+        }
+        String select = encodeComboBox.getItemAt(encodeComboBox.getSelectedIndex());
+        if ("VigenereEnCode".equals(select)){
+            String tmp = JOptionPane.showInputDialog("Please input key");
+            char[] key = tmp.toCharArray();
+            resultArea.setText(func.vigenereEnCode(input.toCharArray(),key));
+        }else {
+            resultArea.setText(func.callFunc(input,select));
+        }
+        encodeComboBox.setSelectedIndex(0);
+    }
+
+    private void decodeComboBoxActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        if (decodeComboBox.getSelectedIndex()==0){
+            return;
+        }
+        String select = decodeComboBox.getItemAt(decodeComboBox.getSelectedIndex());
+        if ("VigenereDeCode".equals(select)){
+            String tmp = JOptionPane.showInputDialog("Please input key");
+            char[] key = tmp.toCharArray();
+            resultArea.setText(func.vigenereDeCode(input.toCharArray(),key));
+        }else{
+            resultArea.setText(func.callFunc(input,select));
+        }
+        decodeComboBox.setSelectedIndex(0);
+    }
+
+    private void decryptComboBoxActionPerformed(ActionEvent e) {
+        // TODO add your code here
+        if (decryptComboBox.getSelectedIndex()==0){
+            return;
+        }
+        String select = decryptComboBox.getItemAt(decryptComboBox.getSelectedIndex());
+        resultArea.setText(func.callFunc(input,select));
+        decryptComboBox.setSelectedIndex(0);
+    }
+
+    private void decodeComboBoxItemStateChanged(ItemEvent e) {
+        // TODO add your code here
     }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -147,7 +153,7 @@ public class DecodePanel extends JPanel {
         encodeComboBox.setModel(new DefaultComboBoxModel<>(new String[] {
             "Encode as"
         }));
-        encodeComboBox.addItemListener(e -> encodeComboBoxItemStateChanged(e));
+        encodeComboBox.addActionListener(e -> encodeComboBoxActionPerformed(e));
         add(encodeComboBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 5, 5), 0, 0));
@@ -156,7 +162,7 @@ public class DecodePanel extends JPanel {
         decodeComboBox.setModel(new DefaultComboBoxModel<>(new String[] {
             "Decode as"
         }));
-        decodeComboBox.addItemListener(e -> decodeComboBoxItemStateChanged(e));
+        decodeComboBox.addActionListener(e -> decodeComboBoxActionPerformed(e));
         add(decodeComboBox, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 5, 5), 0, 0));
@@ -165,7 +171,7 @@ public class DecodePanel extends JPanel {
         decryptComboBox.setModel(new DefaultComboBoxModel<>(new String[] {
             "Decrypt as"
         }));
-        decryptComboBox.addItemListener(e -> decryptComboBoxItemStateChanged(e));
+        decryptComboBox.addActionListener(e -> decryptComboBoxActionPerformed(e));
         add(decryptComboBox, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 5, 5), 0, 0));
