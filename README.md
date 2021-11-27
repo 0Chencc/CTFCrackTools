@@ -8,6 +8,8 @@
 
 米斯特安全官网：http://www.acmesec.cn/
 
+本工具已经可以作为burp插件导入，仓库地址：[DaE](https://github.com/0Chencc/DaE)
+
 ## 界面介绍
 
 ![mark](img/use.gif)
