@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-{
-Title:CaserCode
-Author:naiquan
-Type:crypto
-Detail:凯撒密码
-}
-'''
+#凯撒密码
 def kaisa(lstr):
     returnStr = ''
     for p in range(127):
@@ -23,8 +16,11 @@ def kaisa(lstr):
         if feel == 1:
             returnStr = returnStr + str1 + '\n'
     return returnStr
-
+def author_info():
+    info = {
+    'name':'CaesarCode',
+    'author':'naiquan',
+    'describe':'CeasarCode',
+    }
 def main(lstr):
     print kaisa(lstr)
-
-main('MSTSEC')

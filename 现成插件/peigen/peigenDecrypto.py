@@ -1,13 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-{
-Title:PeigenDecrypto
-Author:naiquan
-Type:crypto
-Detail:培根密码解密
-}
-'''
+
+#培根密码解密
+
 def peigenDecrypto(string):
     dicts={'aabbb': 'H', 'aabba': 'G', 'baaab': 'R', 'baaaa': 'Q', 'bbaab': 'Z', 'bbaaa': 'Y', 'abbab': 'N', 'abbaa': 'M', 'babaa': 'U', 'babab': 'V', 'abaaa': 'I', 'abaab': 'J', 'aabab': 'F', 'aabaa': 'E', 'aaaaa': 'A', 'aaaab': 'B', 'baabb': 'T', 'baaba': 'S', 'aaaba': 'C', 'aaabb': 'D', 'abbbb': 'P', 'abbba': 'O', 'ababa': 'K', 'ababb': 'L', 'babba': 'W', 'babbb': 'X'}
     sums=len(string)
@@ -17,6 +12,11 @@ def peigenDecrypto(string):
         result=string[j*i:j*(i+1)].lower()
         returnStr = returnStr + dicts[result]
     return returnStr
-
+def author_info():
+    info = {
+    'name':'BaconDecode',
+    'author':'naiquan',
+    'describe':'BaconDecode',
+    }
 def main(string):
     return peigenDecrypto(string)

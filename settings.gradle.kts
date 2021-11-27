@@ -1,2 +1,2 @@
-rootProject.name = "CTFCrackToolsKt"
+rootProject.name = "CTFCrackTools"
 

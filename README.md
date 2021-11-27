@@ -1,4 +1,5 @@
-# CTFcrackTools-V3.2
+# CTFcrackTools-V4.0
+
 [![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
 [![language](https://img.shields.io/badge/Language-Java/Kotlin-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
@@ -7,14 +8,9 @@
 
 米斯特安全官网：http://www.acmesec.cn/
 
-## 第二版
-应老用户要求，将继续更新V2版本。以下是项目地址：
-
-[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)
-
 ## 界面介绍
 
-![mark](/img/use.gif)
+![mark](img/use.gif)
 
 ## 框架介绍
 
@@ -26,54 +22,78 @@
 
 内置目前主流密码（包括但不限于维吉利亚密码，凯撒密码，栅栏密码······）
 
-用户可自主编写插件，但仅支持Python编写插件。编写方法也极为简单。
+用户可自主编写插件，但仅支持Python编写插件。编写方法也极为简单。(由于Jython自身的原因，暂时无法支持Python3)
+
+我们附带了一些插件在[现成插件](https://github.com/0Chencc/CTFCrackTools/tree/master/%E7%8E%B0%E6%88%90%E6%8F%92%E4%BB%B6)可供用户的使用
 
 该项目一直在增强，这一次的重置只保留了部分核心代码，而将UI及优化代码重构，使这个框架支持更多功能。
 
 项目地址：[https://github.com/0Chencc/CTFCrackTools](https://github.com/0Chencc/CTFCrackTools)
 
-下载编译好的版本：https://github.com/0Chencc/CTFCrackTools/releases/
+下载编译好的版本：[releases](https://github.com/0Chencc/CTFCrackTools/releases/)
 
-
-## 插件编写
+##  插件编写
 
 ```Python
 #-*- coding:utf-8 -*-
-'''
-{
-  title:程序标题
-  type:程序类型
-  author:作者昵称
-  dialog:变量
-  detail:插件详情
-}
-'''
-def main(a):
-    return a
+#一个函数调用的demo
+def main(input,a,b,c):
+    return a+b+c
+  
+#我们希望能将插件开发者的信息存入程序中，所以需要定义author_info来进行开发者信息的注册
+def author_info():
+    info = {
+    "author":"0chen",
+    "name":"test_version",
+    "key":["a","b","c"],
+    "describe":"plugin describe"
+    }
+    return info
 ```
 
 现在来具体讲下这些插件的用法，具体应该将下框架的调用方法。
 
-**type：**为什么需要写插件类型呢，我其实有个野心。是打算尽可能的把能遇到的题目类型的解密方式都写进去，比如pwn这些。
+**函数：**main
 
-**dialog：**这个呢，其实我考虑到了有些解密方式需要多个密钥。故此设计了这个，如果声明了多个密钥，则程序会弹出多个输入框。
+**描述：**这个是程序调用插件时调用的函数。
 
-**main：**本工具插件调用十分简单，但是限制就是，必须传入数据。
+定义：
 
-**因为工具调用其实就是通过def mian(a)传入数据然后获取return的数据。**
+```python
+def main(input):
+  return 'succ'
+```
+
+**函数：**author_info
+
+**描述：**我们希望能将插件开发者的信息存入程序中，所以需要定义author_info来进行开发者信息的注册
+
+**author：**作者信息
+
+**name：**插件名称
+
+**key：**考虑到会有某些特定的密码需要key，有时候需要多个key。所以可以注册key的信息，当程序调用的时候会进行弹框。
+
+**describe：**这个地方是插件的描述。由于python2的原因，似乎对中文的支持不是很全，建议大家使用英文来进行描述。
+
+定义:
+
+```python
+def author_info():
+    info = {
+    "author":"0chen",
+    "name":"test_version",
+    "key":["a","b","c"],
+    "describe":"plugin describe"
+    }
+    return info
+```
+
+**因为工具调用其实就是通过def mian(input)传入数据然后获取return的数据。**
 
 ```Python
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
-{
-Title:VigenereDecrypto
-Author:naiquan
-Type:crypto
-Dialog:key
-Detail:维吉利亚密码解码
-}
-'''
 def vigenereDecrypto(ciphertext,key):
     ascii='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     keylen=len(key)
@@ -89,19 +109,31 @@ def vigenereDecrypto(ciphertext,key):
         plaintext += ascii[m-k]
         i += 1
     return plaintext
-def main(ciphertext,key):
-    return vigenereDecrypto(ciphertext.replace(" ","").upper(),key.replace(" ","").upper())
+def author_info:
+  info = {
+    'name':'VigenereDecrypto',
+    'author':'naiquan',
+    'key':'key',
+    'describe':'VigenereDecrypto'
+  }
+def main(input,key):
+    return vigenereDecrypto(input.replace(" ","").upper(),key.replace(" ","").upper())
 ```
 
-ciphertext是输入框的内容，直接导入的，无需管。
+## 作者的碎碎念
 
-代码的架构是这样的话，框架就可以自行读取插件信息，然后会弹一个窗口请输入key。
+​	作为一款自从2016年发布至今的工具，由于发布的时候，彼时作者在读高中，没有时间也没有能力去更新这样一款受众颇多的工具，这款工具到至今我收到了许多ctf初学者的感谢，因为近两年一直忙于生计，很难有时间去顾及到这款工具的发展，但是仍然会有许多朋友来联系我的qq和微信，对这款工具的发展提出宝贵的意见，这也是我时不时更新的动力。
 
-如图：![mark](/img/plugin.gif)
+​	我发现国内很多厂商都将这款工具作为ctf必备的工具加入到工具包中，非常感谢这些朋友的抬爱，也因为他们我的工具才能有上万人在使用。ctf圈子的氛围日益增长，希望这款工具也能跟随大家一直使用下去。
 
-```Python
-def vigenereDecrypto(ciphertext,key)
-```
+​	我在高二的时候参加了人生第一次ctf比赛，那时候被虐得体无完肤。当时我们留意到第一名在提交wp的时候也有这款工具的截图，让我非常开心。我希望这款工具能伴随各位ctfer的成长，如果有什么做得不够好的地方，欢迎大家在github的issue提供宝贵的意见，在力所能及的范围内我一定会采纳。
 
-ciphertext即是输入的内容，key是由弹窗出来由用户填写的。
+​	会一直坚持开源，也欢迎各位厂商继续采用我的工具作为新手必备的工具，感谢大家！
 
+​	另外：米斯特安全团队一直在寻找优秀的CTF选手，如果有打算来我们团队发展的朋友可以联系邮箱：admin@hi-ourlife.com
+
+## 旧版本
+
+应老用户要求，将继续更新V2版本。以下是项目地址：
+
+[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)
