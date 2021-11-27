@@ -20,3 +20,5 @@ test
 *.idx
 *.pkc
 out
+ctfcracktools_plugins.json
+ctfcracktools_setting.json
