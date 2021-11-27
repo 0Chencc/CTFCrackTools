@@ -6,10 +6,10 @@ import com.google.gson.reflect.TypeToken
 import java.io.*
 
 class SettingJson {
-    private var settingFile = File("ctfracktools_setting.json")
+    private var settingFile = File("ctfcracktools_setting.json")
     init {
         if(!isJson()){
-            val initSetting = mapOf<String,String>("Jython" to "")
+            val initSetting = mapOf("jython" to "")
             settingFile.createNewFile()
             writeJson(initSetting)
         }

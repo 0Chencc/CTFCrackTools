@@ -67,7 +67,7 @@ public class SettingConfig extends JPanel {
             new Insets(0, 0, 5, 0), 0, 0));
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
         SettingJson json = new SettingJson();
-        jythonPathTextField.setText(json.parseJson().get("Jython"));
+        jythonPathTextField.setText(json.parseJson().get("jython"));
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
