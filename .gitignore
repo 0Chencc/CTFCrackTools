@@ -1,6 +1,6 @@
 .gradle
 /build/
-
+*.jfd
 # Ignore Gradle GUI config
 gradle-app.setting
 
@@ -12,14 +12,11 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
-out/production/classes/
 /.idea/
-Plugins.json
 *.iml
-/test/
+test
 *.idx
 *.pkc
 *.idx
 *.pkc
-out/test/classes/META-INF/CTFCrackToolsKt.kotlin_module
-out/test/classes/Menu.class
+out
