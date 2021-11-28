@@ -28,8 +28,8 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 sourceSets{
-    main.kotlin.srcDirs += 'src/main'
-    main.java.srcDirs += 'src/main'
+    main.kotlin.srcDirs += 'src'
+    main.java.srcDirs += 'src'
     test.kotlin.srcDirs += 'test'
     test.java.srcDirs += 'test'
 }

@@ -439,7 +439,7 @@ class CoreFunc{
     val isChar = {c:Char -> c.isLowerCase()||c.isUpperCase()}
     val isDigit = {c:Char -> (c >='0')&&(c <= '9')}
     /* moresCode */
-    val morseCharacters = arrayOf(".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+    val morseCharacters = arrayOf(".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "src", ".---",
             "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--",
             "--..")
     val morseDigits = arrayOf("-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...",
