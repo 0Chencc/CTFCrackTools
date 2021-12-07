@@ -14,10 +14,20 @@ class SettingJson {
             writeJson(initSetting)
         }
     }
+
+    /**
+     * 返回一个储存配置信息的Map
+     * @return Map<String,String>
+     */
     fun parseJson():Map<String,String>{
         val settingReader = BufferedReader(FileReader(settingFile))
         return Gson().fromJson(settingReader, object : TypeToken<Map<String, String>>() {}.type)
     }
+
+    /**
+     * 将配置信息写入json文件
+     * @param Setting String 配置信息
+     */
     fun writeJson(setting:Map<String,String>){
         val gson = GsonBuilder().setPrettyPrinting().create()
         val writer = BufferedWriter(FileWriter(settingFile))
