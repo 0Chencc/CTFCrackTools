@@ -1,7 +1,9 @@
 # CTFcrackTools-V4.0
 
 [![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
+[![](https://img.shields.io/github/v/release/0chencc/ctfcracktools?label=LATEST%20VERSION)](https://github.com/0Chencc/CTFCrackTools/releases/latest)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
+[![download](https://img.shields.io/github/downloads/0chencc/ctfcracktools/total)](https://github.com/0Chencc/CTFCrackTools/releases)
 [![language](https://img.shields.io/badge/Language-Java/Kotlin-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
 
 作者：林晨(0chen)
