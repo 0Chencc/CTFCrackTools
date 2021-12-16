@@ -170,6 +170,6 @@ def author_info():
 
 ## 旧版本
 
-应老用户要求，将继续更新V2版本。以下是项目地址：
+旧版本与新版本的差别仅仅在于ui的差别，最新的4.0版本抛弃了3.0被大家诟病的ui，并且在2.0也就是调查发现比较喜欢的版本的基础上进行了ui的美化，我认为旧版本已没有存在的必要，所以将项目设置为private，如果呼声过高我会重新开放。感谢大家。
 
-[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)
+~~[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)~~
