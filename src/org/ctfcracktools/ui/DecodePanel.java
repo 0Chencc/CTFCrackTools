@@ -146,6 +146,9 @@ public class DecodePanel extends JPanel {
 
         //======== scrollPane1 ========
         {
+
+            //---- inputArea ----
+            inputArea.setLineWrap(true);
             scrollPane1.setViewportView(inputArea);
         }
         add(scrollPane1, new GridBagConstraints(0, 1, 7, 1, 0.0, 0.0,
@@ -203,6 +206,9 @@ public class DecodePanel extends JPanel {
 
         //======== scrollPane2 ========
         {
+
+            //---- resultArea ----
+            resultArea.setLineWrap(true);
             scrollPane2.setViewportView(resultArea);
         }
         add(scrollPane2, new GridBagConstraints(0, 4, 7, 1, 0.0, 0.0,

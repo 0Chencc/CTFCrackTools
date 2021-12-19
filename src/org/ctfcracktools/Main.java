@@ -18,7 +18,7 @@ public class Main {
             System.err.println( "Failed to initialize LaF" );
         }
         String title = "CTFCrackTools %s %s";
-        String version = "4.0.2";
+        String version = "4.0.3";
         String slogan = "";
         JFrame f = new JFrame(String.format(title, version,slogan));
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

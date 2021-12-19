@@ -29,6 +29,9 @@ public class About extends JPanel {
 
         //======== scrollPane1 ========
         {
+
+            //---- textArea1 ----
+            textArea1.setLineWrap(true);
             scrollPane1.setViewportView(textArea1);
         }
         add(scrollPane1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
