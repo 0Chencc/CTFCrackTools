@@ -174,7 +174,6 @@ class TabTitleEditListener extends MouseAdapter implements ChangeListener, Docum
         renameTabTitle.actionPerformed(null);
     }
     public void newTab(){
-        Object[][] data = new Object[][]{{false, "New Name", "(New Regex)", "gray", "any", "nfa"}};
         insertTab(tabbedPane);
     }
     public void insertTab(JTabbedPane pane){

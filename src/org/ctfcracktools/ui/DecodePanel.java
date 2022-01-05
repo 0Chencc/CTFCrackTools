@@ -2,6 +2,7 @@ package org.ctfcracktools.ui;/*
  * Created by JFormDesigner on Thu Nov 25 10:28:49 CST 2021
  */
 
+import org.ctfcracktools.fuction.CodeMode;
 import org.ctfcracktools.fuction.CoreFunc;
 import org.ctfcracktools.fuction.PythonFunc;
 import org.ctfcracktools.json.PluginsJson;
@@ -78,7 +79,7 @@ public class DecodePanel extends JPanel {
             return;
         }
         String select = encodeComboBox.getItemAt(encodeComboBox.getSelectedIndex());
-        if ("VigenereEnCode".equals(select)){
+        if (CodeMode.ENCODE_VIGENERE.equals(select)){
             String tmp = JOptionPane.showInputDialog("Please input key");
             char[] key = tmp.toCharArray();
             resultArea.setText(func.vigenereEnCode(input.toCharArray(),key));
@@ -94,7 +95,7 @@ public class DecodePanel extends JPanel {
             return;
         }
         String select = decodeComboBox.getItemAt(decodeComboBox.getSelectedIndex());
-        if ("VigenereDeCode".equals(select)){
+        if (CodeMode.DECODE_VIGENERE.equals(select)){
             String tmp = JOptionPane.showInputDialog("Please input key");
             char[] key = tmp.toCharArray();
             resultArea.setText(func.vigenereDeCode(input.toCharArray(),key));
@@ -247,37 +248,37 @@ public class DecodePanel extends JPanel {
         });
         DefaultComboBoxModel encodeModel = new DefaultComboBoxModel(new String[]{
                 "Encode as",
-                "MorseEncode",
-                "BaconEncode",
-                "Base64Encode",
-                "Base32Encode",
-                "UrlEncode",
-                "UnicodeEncode",
-                "HTMLEncode",
-                "VigenereEnCode"
+                CodeMode.ENCODE_MORSE,
+                CodeMode.ENCODE_BACON,
+                CodeMode.ENCODE_BASE64,
+                CodeMode.ENCODE_BASE32,
+                CodeMode.ENCODE_URL,
+                CodeMode.ENCODE_UNICODE,
+                CodeMode.ENCODE_HTML,
+                CodeMode.ENCODE_VIGENERE,
         });
         DefaultComboBoxModel decodeModel = new DefaultComboBoxModel(new String[]{
                 "Decode as",
-                "MorseDecode",
-                "BaconDecode",
-                "Base64Decode",
-                "Base32Decode",
-                "UrlDecode",
-                "UnicodeDecode",
-                "HTMLDecode",
-                "VigenereDeCode"
+                CodeMode.DECODE_MORSE,
+                CodeMode.DECODE_BACON,
+                CodeMode.DECODE_BASE64,
+                CodeMode.DECODE_BASE32,
+                CodeMode.DECODE_URL,
+                CodeMode.DECODE_UNICODE,
+                CodeMode.DECODE_HTML,
+                CodeMode.DECODE_VIGENERE,
         });
         DefaultComboBoxModel decryptModel = new DefaultComboBoxModel(new String[]{
                 "Decrypt as",
-                "Fence",
-                "CaesarCode",
-                "PigCode",
-                "Rot13",
-                "Hex2String",
-                "String2Hex",
-                "Unicode2Ascii",
-                "Ascii2Unicode",
-                "Reverse"
+                CodeMode.CRYPTO_FENCE,
+                CodeMode.CRYPTO_CAESAR,
+                CodeMode.CRYPTO_PIG,
+                CodeMode.CRYPTO_ROT13,
+                CodeMode.CRYPTO_HEX_2_STRING,
+                CodeMode.CRYPTO_STRING_2_HEX,
+                CodeMode.CRYPTO_UNICODE_2_ASCII,
+                CodeMode.CRYPTO_ASCII_2_UNICODE,
+                CodeMode.CRYPTO_REVERSE
         });
         encodeComboBox.setModel(encodeModel);
         decodeComboBox.setModel(decodeModel);
