@@ -79,13 +79,7 @@ public class DecodePanel extends JPanel {
             return;
         }
         String select = encodeComboBox.getItemAt(encodeComboBox.getSelectedIndex());
-        if (CodeMode.ENCODE_VIGENERE.equals(select)){
-            String tmp = JOptionPane.showInputDialog("Please input key");
-            char[] key = tmp.toCharArray();
-            resultArea.setText(func.vigenereEnCode(input.toCharArray(),key));
-        }else {
-            resultArea.setText(func.callFunc(input,select));
-        }
+        resultArea.setText(func.callFunc(input,select));
         encodeComboBox.setSelectedIndex(0);
     }
 
@@ -95,13 +89,7 @@ public class DecodePanel extends JPanel {
             return;
         }
         String select = decodeComboBox.getItemAt(decodeComboBox.getSelectedIndex());
-        if (CodeMode.DECODE_VIGENERE.equals(select)){
-            String tmp = JOptionPane.showInputDialog("Please input key");
-            char[] key = tmp.toCharArray();
-            resultArea.setText(func.vigenereDeCode(input.toCharArray(),key));
-        }else{
-            resultArea.setText(func.callFunc(input,select));
-        }
+        resultArea.setText(func.callFunc(input,select));
         decodeComboBox.setSelectedIndex(0);
     }
 
