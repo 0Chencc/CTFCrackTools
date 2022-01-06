@@ -2,8 +2,7 @@ package org.ctfcracktools.fuction
 
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Base64.*
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils
+import org.apache.commons.text.StringEscapeUtils
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
@@ -97,7 +96,7 @@ class CoreFunc{
                     }
                 }
             }
-            if (a !== 0) {
+            if (a != 0) {
                 (0 until a).forEach { it -> result.append(" " + x[it]) }
                 (0 until a).forEach { i ->
                     result.append("${i+1}：")
@@ -320,9 +319,8 @@ class CoreFunc{
         return StringBuilder()
             .let{
                     result ->
-                var inputnew:String = ""
                 if(isBacon(input)){
-                    inputnew = input.replace(" ","")
+                    val inputnew = input.replace(" ","")
                     splitNum(inputnew,5,"[ab]{5}").forEach { result.append(keymap[it]) }
                 }else{
                     result.append("并非是培根密码")
@@ -493,7 +491,7 @@ class CoreFunc{
                     }
                     .toString()
         }*/
-    private fun htmlEncode(input:String): String? = StringEscapeUtils.escapeHtml4(input)
+    private fun htmlEncode(input:String): String = StringEscapeUtils.escapeHtml4(input)
     private fun htmlDecode(input:String):String = StringEscapeUtils.unescapeHtml4(input)
     /* 内置方法/内置常量 */
     private val UpperCase:String ="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
