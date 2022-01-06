@@ -3,14 +3,14 @@ package org.ctfcracktools.json
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import org.ctfcracktools.Config
 import java.io.*
 
 class SettingJson {
-    private var settingFile = File("ctfcracktools_setting.json")
     init {
         if(!isJson()){
             val initSetting = mapOf("jython" to "")
-            settingFile.createNewFile()
+            Config.SETTING_FILE.createNewFile()
             writeJson(initSetting)
         }
     }
@@ -20,8 +20,9 @@ class SettingJson {
      * @return Map<String,String>
      */
     fun parseJson():Map<String,String>{
-        val settingReader = BufferedReader(FileReader(settingFile))
+        val settingReader = BufferedReader(FileReader(Config.SETTING_FILE))
         return Gson().fromJson(settingReader, object : TypeToken<Map<String, String>>() {}.type)
+            ?: return mapOf(pair = "jython" to "")
     }
 
     /**
@@ -30,9 +31,9 @@ class SettingJson {
      */
     fun writeJson(setting:Map<String,String>){
         val gson = GsonBuilder().setPrettyPrinting().create()
-        val writer = BufferedWriter(FileWriter(settingFile))
+        val writer = BufferedWriter(FileWriter(Config.SETTING_FILE))
         writer.write(gson.toJson(setting))
         writer.flush()
     }
-    fun isJson():Boolean = settingFile.isFile && settingFile.exists()
+    fun isJson():Boolean = Config.SETTING_FILE.isFile && Config.SETTING_FILE.exists()
 }

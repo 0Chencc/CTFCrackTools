@@ -13,6 +13,7 @@ import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import org.ctfcracktools.Config;
 import org.ctfcracktools.fuction.PythonFunc;
 import org.ctfcracktools.json.PluginsJson;
 import org.ctfcracktools.json.SettingJson;
@@ -46,8 +47,7 @@ public class PluginsConfig extends JPanel {
         int selectFrame = selectFile.showDialog(new JLabel(),"Select");
         if (selectFrame == JFileChooser.APPROVE_OPTION){
             String pluginPath = selectFile.getSelectedFile().toString();
-            PythonFunc pyFunc = new PythonFunc();
-            Map<String,Object> plugin = pyFunc.getAuthorInfo(pluginPath);
+            Map<String,Object> plugin = Config.pyFunc.getAuthorInfo(pluginPath);
             plugin.put("path",pluginPath);
             plugins.add(plugin);
             json.writeJson(plugins);

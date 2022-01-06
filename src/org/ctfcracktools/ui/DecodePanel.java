@@ -2,6 +2,7 @@ package org.ctfcracktools.ui;/*
  * Created by JFormDesigner on Thu Nov 25 10:28:49 CST 2021
  */
 
+import org.ctfcracktools.Config;
 import org.ctfcracktools.fuction.CodeMode;
 import org.ctfcracktools.fuction.CoreFunc;
 import org.ctfcracktools.fuction.PythonFunc;
@@ -38,7 +39,7 @@ public class DecodePanel extends JPanel {
             return;
         }
         String select = pluginsComboBox.getItemAt(pluginsComboBox.getSelectedIndex());
-        PythonFunc pyFunc = new PythonFunc();
+
         Map<String,Object> plugin = json.search(select);
         String[] prams = {};
         ArrayList<String> keys = new ArrayList<>();
@@ -46,15 +47,15 @@ public class DecodePanel extends JPanel {
             keys = (ArrayList<String>) plugin.get("key");
             prams = new String[keys.size()+1];
         }
-        pyFunc.loadFile(plugin.get("path").toString());
+        Config.pyFunc.loadFile(plugin.get("path").toString());
         if (keys.size()>=1){
             prams[0] = inputArea.getText();
             for (int i = 1;i<prams.length;i++){
                 prams[i] = JOptionPane.showInputDialog("Please input "+keys.get(i-1));
             }
-            resultArea.setText(pyFunc.execFuncOfArr(pyFunc.loadPythonFunc(pyFunc.interpreter,"main"),prams).toString());
+            resultArea.setText(Config.pyFunc.execFuncOfArr(Config.pyFunc.loadPythonFunc(Config.pyFunc.interpreter,"main"),prams).toString());
         }else {
-            resultArea.setText(pyFunc.execFuncOfArr(pyFunc.loadPythonFunc(pyFunc.interpreter,"main"),inputArea.getText()).toString());
+            resultArea.setText(Config.pyFunc.execFuncOfArr(Config.pyFunc.loadPythonFunc(Config.pyFunc.interpreter,"main"),inputArea.getText()).toString());
         }
         pluginsComboBox.setSelectedIndex(0);
     }

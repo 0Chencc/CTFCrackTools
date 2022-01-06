@@ -3,19 +3,18 @@ package org.ctfcracktools.json
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import org.ctfcracktools.Config
 import java.io.*
 import kotlin.collections.ArrayList
 
 class PluginsJson {
-    private var jsonFile = File("ctfcracktools_plugins.json")
-
     /**
      * 初始化
      */
     init{
         if(!isJson()){
             val initPlugins = arrayListOf<Map<String,Any>>()
-            jsonFile.createNewFile()
+            Config.PLUGIN_FILE.createNewFile()
             writeJson(initPlugins)
         }
     }
@@ -25,7 +24,7 @@ class PluginsJson {
      * @return 返回一个Map<String,Object>的ArrayList插件列表
      */
     fun parseJson(): ArrayList<Map<String, Any>> {
-        val pluginsReader = BufferedReader(FileReader(jsonFile))
+        val pluginsReader = BufferedReader(FileReader(Config.PLUGIN_FILE))
         return Gson().fromJson(pluginsReader, object : TypeToken<ArrayList<Map<String, Any>>>() {}.type)
     }
 
@@ -59,7 +58,7 @@ class PluginsJson {
      */
     fun writeJson(plugins:ArrayList<Map<String,Any>>){
         val gson = GsonBuilder().setPrettyPrinting().create()
-        val writer = BufferedWriter(FileWriter(jsonFile))
+        val writer = BufferedWriter(FileWriter(Config.PLUGIN_FILE))
         writer.write(gson.toJson(plugins))
         writer.flush()
     }
@@ -68,5 +67,5 @@ class PluginsJson {
      * 判断是否为配置文件
      * @return Boolean
      */
-    fun isJson():Boolean = jsonFile.isFile && jsonFile.exists()
+    fun isJson():Boolean = Config.PLUGIN_FILE.isFile && Config.PLUGIN_FILE.exists()
 }
