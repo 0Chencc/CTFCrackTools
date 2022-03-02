@@ -61,7 +61,7 @@ public class MainUi extends JPanel {
                 tabbedPane2.addTab("...", decodePanel2);
             }
             tabbedPane1.addTab("DaE", tabbedPane2);
-            tabbedPane1.addTab("RadiexConvert", autoConvertRadix1);
+            tabbedPane1.addTab("RadixConvert", autoConvertRadix1);
             tabbedPane1.addTab("PluginsConfig", pluginsConfig1);
             tabbedPane1.addTab("SettingConfig", settingConfig1);
             tabbedPane1.addTab("About", about1);
