@@ -1,5 +1,5 @@
 group 'org.ctfcracktools'
-version '4.0.4'
+version '4.0.5'
 
 buildscript {
     ext.kotlin_version = '1.4.10'
