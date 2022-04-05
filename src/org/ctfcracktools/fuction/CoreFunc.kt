@@ -236,7 +236,7 @@ class CoreFunc{
         val keymap= mapOf('A' to 'J','B' to 'K','C' to 'L','D' to 'M',
             'E' to 'N','F' to 'O','G' to 'P','H' to 'Q','I' to 'R','J' to 'A','K' to 'B','L' to 'C',
             'M' to 'D','N' to 'E','O' to 'F','P' to 'G','Q' to 'H','R' to 'I','S' to 'W','T' to 'X',
-            'U' to 'Y','V' to 'Z','W' to 'S','X' to 'T')
+            'U' to 'Y','V' to 'Z','W' to 'S','X' to 'T','Y' to 'U','Z' to 'V')
         val word = input.toCharArray()
         for (i in word.indices){
             if (word[i].isUpperCase()){
