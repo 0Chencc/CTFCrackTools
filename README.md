@@ -12,9 +12,11 @@
 
 本工具已经可以作为burp插件导入，仓库地址：[DaE](https://github.com/0Chencc/DaE)
 
-如果你觉得好用的话，或许可以请我喝一杯咖啡☕️
+[请我喝一杯咖啡☕️](#要饭环节)
 
-![](img/wechat.jpeg)
+## 疑难解答
+
+跳转到：[https://github.com/0Chencc/CTFCrackTools/wiki/FAQ](https://github.com/0Chencc/CTFCrackTools/wiki/FAQ)
 
 ## 界面介绍
 
@@ -177,3 +179,9 @@ def author_info():
 旧版本与新版本的差别仅仅在于ui的差别，最新的4.0版本抛弃了3.0被大家诟病的ui，并且在2.0也就是调查发现比较喜欢的版本的基础上进行了ui的美化，我认为旧版本已没有存在的必要，所以将项目设置为private，如果呼声过高我会重新开放。感谢大家。
 
 ~~[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)~~
+
+## 要饭环节
+
+我司承接各类安全培训以及渗透测试，可联系admin[#]hi-ourlife.com
+
+![wechat](img/wechat.jpeg)

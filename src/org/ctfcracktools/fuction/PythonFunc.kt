@@ -13,7 +13,12 @@ class PythonFunc {
      * 初始化
      */
     init {
-        jythonLoad()
+        try {
+            jythonLoad()
+        }catch (e:Exception){
+            println("Jython加载失败")
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -28,8 +33,8 @@ class PythonFunc {
         props["python.import.site"] = "false"
         val sysProps = System.getProperties()
         PythonInterpreter.initialize(sysProps,props, arrayOfNulls(0))
-        val sysS = Py.getSystemState()
-        sysS.path.add(System.getProperty("user.dir") + "")
+        val sysState = Py.getSystemState()
+        sysState.path.add(System.getProperty("user.dir") + "")
         interpreter = PythonInterpreter()
     }
 

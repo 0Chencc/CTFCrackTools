@@ -8,7 +8,7 @@ import java.io.File;
  * @author linchen
  */
 public class Config {
-    public final static String VERSION = "4.0.6";
+    public final static String VERSION = "4.0.7";
     public final static String SLOGAN = "";
     public final static String ABOUT =
             "Author:0chen(@0chencc)\n" +

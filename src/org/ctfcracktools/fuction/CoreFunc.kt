@@ -49,7 +49,7 @@ class CoreFunc{
             CodeMode.ENCODE_URL to ::urlEncoder,
             CodeMode.ENCODE_UNICODE to ::unicodeEncode,
             CodeMode.ENCODE_HTML to ::htmlEncode,
-            CodeMode.ENCODE_VIGENERE to ::vigenereEnCode,)
+            CodeMode.ENCODE_VIGENERE to ::vigenereEnCode)
 
         return funcMap[type]?.let { it(input) }
     }
@@ -381,6 +381,8 @@ class CoreFunc{
                     when {
                         isChar(it) -> result.append(morseCharacters[(it - 'a')]+" ")
                         isDigit(it) -> result.append(morseDigits[(it - '0')]+" ")
+                        isSymbol(it) -> result.append(morseSymbols[symbols.indexOf(it)]+" ")
+//                        else -> result.append(" ")
                     }
                 }
                 result
@@ -541,15 +543,20 @@ class CoreFunc{
     private fun initMorseTable(){
         (0..25).forEach { i -> htMorse.put(morseCharacters[i], Character.valueOf((65+i).toChar())) }
         (0..9).forEach { i -> htMorse.put(morseDigits[i], Character.valueOf((48+i).toChar())) }
+        (0..16).forEach{ i -> htMorse.put(morseSymbols[i], symbols[i]) }
     }
     val isChar = {c:Char -> c.isLowerCase()||c.isUpperCase()}
     val isDigit = {c:Char -> (c >='0')&&(c <= '9')}
+    val isSymbol = {c:Char -> c in symbols}
     /* moresCode */
     private val morseCharacters = arrayOf(".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "src", ".---",
         "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--",
         "--..")
     private val morseDigits = arrayOf("-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...",
         "---..", "----.")
+    private val morseSymbols = arrayOf(".-.-.-","---...","--..--","-.-.-.","..--..","-...-",".----.","-..-.","-.-.--",
+        "-....-", "..--.-",".-..-.","-.--.","-.--.-","...-..-", ".--.-.",".-...")
+    private val symbols: Array<Char> = arrayOf('.', ':', ',', ';', '?', '=', '\'', '/', '!', '-', '_', '"', '(', ')', '$', '@', '&')
     val format = {
             input:String->
         val word = input.toCharArray()
