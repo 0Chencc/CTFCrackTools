@@ -1,0 +1,317 @@
+@import "tailwindcss";
+
+/* ========== 日间模式 - 清爽明亮 ========== */
+:root {
+  /* 背景 - 干净的浅灰 */
+  --background: 210 20% 98%;
+  --foreground: 220 20% 15%;
+
+  /* 卡片 - 纯白 */
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 15%;
+
+  /* 弹出层 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 20% 15%;
+
+  /* 主色调 - 清新蓝色 */
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+
+  /* 次要色 */
+  --secondary: 210 20% 94%;
+  --secondary-foreground: 220 20% 40%;
+
+  /* 静音色 */
+  --muted: 210 15% 92%;
+  --muted-foreground: 220 10% 50%;
+
+  /* 强调色 */
+  --accent: 210 20% 96%;
+  --accent-foreground: 220 20% 20%;
+
+  /* 危险色 */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* 边框 */
+  --border: 220 13% 90%;
+  --input: 220 13% 91%;
+  --ring: 217 91% 60%;
+
+  --radius: 0.5rem;
+
+  /* 节点颜色 - 日间模式 */
+  --node-input: 217 91% 55%;
+  --node-encoding: 160 84% 39%;
+  --node-crypto: 262 83% 58%;
+  --node-hash: 25 95% 53%;
+  --node-ai: 330 81% 60%;
+  --node-output: 43 96% 50%;
+}
+
+/* ========== 夜间模式 - 优雅深邃 ========== */
+.dark {
+  /* 背景 - 深蓝灰 */
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+
+  /* 卡片 */
+  --card: 222 47% 14%;
+  --card-foreground: 210 40% 98%;
+
+  /* 弹出层 */
+  --popover: 222 47% 16%;
+  --popover-foreground: 210 40% 98%;
+
+  /* 主色调 - 亮蓝 */
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+
+  /* 次要色 */
+  --secondary: 222 47% 18%;
+  --secondary-foreground: 210 40% 80%;
+
+  /* 静音色 */
+  --muted: 222 40% 20%;
+  --muted-foreground: 215 20% 55%;
+
+  /* 强调色 */
+  --accent: 222 47% 22%;
+  --accent-foreground: 210 40% 95%;
+
+  /* 危险色 */
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* 边框 */
+  --border: 222 40% 22%;
+  --input: 222 40% 24%;
+  --ring: 217 91% 60%;
+
+  /* 节点颜色 - 夜间模式 */
+  --node-input: 217 91% 60%;
+  --node-encoding: 160 84% 45%;
+  --node-crypto: 262 83% 65%;
+  --node-hash: 25 95% 55%;
+  --node-ai: 330 81% 65%;
+  --node-output: 43 96% 56%;
+}
+
+* {
+  border-color: hsl(var(--border));
+  box-sizing: border-box;
+}
+
+/* 主题切换平滑过渡 */
+html,
+html *,
+html *::before,
+html *::after {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+
+/* 禁用某些元素的过渡以避免闪烁 */
+html .no-transition,
+html .no-transition *,
+html button:active {
+  transition: none !important;
+}
+
+/* 表单元素基础样式 */
+textarea,
+select,
+input {
+  background-color: inherit;
+  color: inherit;
+  border-color: hsl(var(--border));
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv11", "ss01";
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 滚动条 - 现代细滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* React Flow 样式覆盖 - 现代扁平化 */
+.react-flow__node {
+  font-size: 12px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.react-flow__node-input,
+.react-flow__node-encoding,
+.react-flow__node-output,
+.react-flow__node-default {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 隐藏默认 Handle 样式，使用组件内自定义样式 */
+.react-flow__handle {
+  opacity: 1;
+  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.3);
+}
+
+/* 连线样式 */
+.react-flow__edge-path {
+  stroke: hsl(var(--muted-foreground) / 0.4);
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: hsl(var(--primary));
+  stroke-width: 2;
+}
+
+/* 动画连线 */
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 5;
+  animation: dash 0.5s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.react-flow__background {
+  background-color: hsl(var(--background));
+  transition: background-color 0.3s ease !important;
+}
+
+.react-flow__background pattern {
+  transition: stroke 0.3s ease !important;
+}
+
+/* MiniMap - 更现代 */
+.react-flow__minimap {
+  background-color: hsl(var(--card)) !important;
+  border-radius: 8px !important;
+  border: 1px solid hsl(var(--border)) !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px hsl(0 0% 0% / 0.2);
+}
+
+/* 缩放控制 - 更现代更明显 */
+.react-flow__controls {
+  border-radius: 8px !important;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: 0 4px 12px hsl(0 0% 0% / 0.2) !important;
+  background: hsl(var(--card)) !important;
+}
+
+.react-flow__controls-button {
+  background-color: hsl(var(--card)) !important;
+  border: none !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+}
+
+/* 选择框样式 */
+.react-flow__selection {
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.5);
+}
+
+/* 选择框 */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+/* 按钮过渡 */
+button {
+  transition: all 0.15s ease;
+}
+
+/* 节点删除按钮 - 悬停显示 */
+.node-delete-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.group:hover .node-delete-btn {
+  opacity: 1;
+}
+
+/* 输入框焦点 */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+}

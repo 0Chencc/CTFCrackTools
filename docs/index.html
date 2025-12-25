@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTFCrackTools X - 新一代节点化 CTF 工具箱</title>
+    <meta name="description" content="CTFCrackTools X 是基于 Rust + Tauri 构建的新一代 CTF 工具箱，支持可视化节点工作流，内置 43+ 编解码算法。">
+    <meta name="keywords" content="CTF, CTFCrackTools, 编解码, Base64, 密码学, Rust, Tauri">
+    <link rel="icon" href="https://raw.githubusercontent.com/0Chencc/CTFCrackTools/main/src-tauri/icons/icon.png">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        /* Screenshot */
+        .screenshot {
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 48px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        /* Comparison */
+        .comparison {
+            padding: 80px 0;
+        }
+
+        .comparison h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 48px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Download */
+        .download {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .download h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .download p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .download-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .download-card {
+            background: var(--bg-secondary);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+
+        .download-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .download-card .platform {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .download-card .name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .download-card .file {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">CTFCrackTools <span>X</span></a>
+                <ul class="nav-links">
+                    <li><a href="#features">功能</a></li>
+                    <li><a href="#download">下载</a></li>
+                    <li><a href="https://github.com/0Chencc/CTFCrackTools">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>CTFCrackTools X</h1>
+                <p class="tagline">新一代节点化 CTF 工具箱<br>From V4 to X — 不只是版本号的升级</p>
+                <div class="hero-buttons">
+                    <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        下载
+                    </a>
+                    <a href="https://github.com/0Chencc/CTFCrackTools" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="screenshot">
+            <div class="container">
+                <img src="https://raw.githubusercontent.com/0Chencc/CTFCrackTools/main/img/theme.jpg" alt="CTFCrackTools X 界面预览">
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <h2>核心特性</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">🔗</span>节点化工作流</h3>
+                        <p>告别传统线性操作，通过可视化节点自由组合编解码流程，支持多路径并行处理。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">⚡</span>原生性能</h3>
+                        <p>基于 Rust + Tauri 构建，享受原生应用的极致性能，启动迅速，内存占用低。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">🔐</span>43+ 内置算法</h3>
+                        <p>覆盖 Base64、Hex、Caesar、AES、MD5 等常见编解码和加密算法，满足 CTF 需求。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">💻</span>跨平台支持</h3>
+                        <p>原生支持 Windows、macOS、Linux，无需安装 Java 或其他运行时环境。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">🎨</span>现代界面</h3>
+                        <p>简洁优雅的深色主题设计，专为长时间使用优化，减轻视觉疲劳。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">📦</span>轻量便携</h3>
+                        <p>单文件可执行，体积仅约 4MB，无需安装，下载即用。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="comparison">
+            <div class="container">
+                <h2>版本对比</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>CTFCrackTools V4</th>
+                            <th>CTFCrackTools X</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>界面</td>
+                            <td>传统表单</td>
+                            <td class="highlight">节点化工作流</td>
+                        </tr>
+                        <tr>
+                            <td>技术栈</td>
+                            <td>Java / Kotlin</td>
+                            <td class="highlight">Rust + React</td>
+                        </tr>
+                        <tr>
+                            <td>性能</td>
+                            <td>Java 运行时</td>
+                            <td class="highlight">原生性能</td>
+                        </tr>
+                        <tr>
+                            <td>体积</td>
+                            <td>~50MB+</td>
+                            <td class="highlight">~4MB</td>
+                        </tr>
+                        <tr>
+                            <td>依赖</td>
+                            <td>需要 JRE</td>
+                            <td class="highlight">无依赖</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="download" id="download">
+            <div class="container">
+                <h2>立即下载</h2>
+                <p>选择适合你系统的版本，下载即可使用</p>
+                <div class="download-cards">
+                    <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest/download/ctfcracktools-x-windows-x64.exe" class="download-card">
+                        <div class="platform">🪟</div>
+                        <div class="name">Windows x64</div>
+                        <div class="file">ctfcracktools-x-windows-x64.exe</div>
+                    </a>
+                    <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest/download/ctfcracktools-x-macos-arm64" class="download-card">
+                        <div class="platform">🍎</div>
+                        <div class="name">macOS ARM64</div>
+                        <div class="file">ctfcracktools-x-macos-arm64</div>
+                    </a>
+                    <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest/download/ctfcracktools-x-linux-x64" class="download-card">
+                        <div class="platform">🐧</div>
+                        <div class="name">Linux x64</div>
+                        <div class="file">ctfcracktools-x-linux-x64</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <strong>CTFCrackTools X</strong> — Perhaps it will be better than better
+                <br>
+                Made with Rust + React by <a href="https://github.com/0Chencc">0Chencc</a>
+                <br><br>
+                <a href="https://github.com/0Chencc/CTFCrackTools">GitHub</a> ·
+                <a href="https://github.com/0Chencc/CTFCrackTools/releases">Releases</a> ·
+                <a href="https://github.com/0Chencc/CTFCrackTools/issues">Issues</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

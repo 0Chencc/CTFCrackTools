@@ -1,0 +1,203 @@
+name: CI
+
+on:
+  push:
+    branches: [main, next, develop]
+    tags: ['v*']
+  pull_request:
+    branches: [main, next, develop]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # ============================================
+  # Frontend Code Quality
+  # ============================================
+  frontend-lint:
+    name: Frontend Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tsc --noEmit
+      - run: pnpm lint
+      - run: pnpm lint:complexity
+
+  # ============================================
+  # Rust Code Quality
+  # ============================================
+  rust-lint:
+    name: Rust Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache apt packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libgtk-3-dev
+          version: 1.0
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          shared-key: rust-lint
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - run: cargo fmt --all -- --check
+        working-directory: src-tauri
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+        working-directory: src-tauri
+
+  # ============================================
+  # Rust Tests
+  # ============================================
+  rust-test:
+    name: Rust Tests
+    runs-on: ubuntu-latest
+    needs: rust-lint  # Run after lint to reuse cache
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache apt packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libgtk-3-dev
+          version: 1.0
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          shared-key: rust-lint
+          save-if: false  # Only read, lint job saves
+
+      - run: cargo test --all-features
+        working-directory: src-tauri
+
+  # ============================================
+  # Security Audit
+  # ============================================
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
+        continue-on-error: true
+
+      # Use cargo-binstall for faster installation
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install cargo-audit
+        run: cargo binstall cargo-audit --no-confirm
+
+      - run: cargo audit
+        working-directory: src-tauri
+        continue-on-error: true
+
+  # ============================================
+  # Build (Cross-platform)
+  # ============================================
+  build:
+    name: Build (${{ matrix.os }})
+    needs: [frontend-lint, rust-lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: macos-latest
+            target: aarch64-apple-darwin
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache apt packages
+        if: matrix.os == 'ubuntu-24.04'
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libgtk-3-dev
+          version: 1.0
+
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: 'pnpm' }
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: '${{ matrix.target }}' }
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          shared-key: build-${{ matrix.target }}
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tauri build --target ${{ matrix.target }}
+
+      - name: Upload artifacts (Linux)
+        if: matrix.os == 'ubuntu-24.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctfcracktools-linux
+          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
+          if-no-files-found: warn
+
+      - name: Upload artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctfcracktools-windows
+          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x.exe
+          if-no-files-found: warn
+
+      - name: Upload artifacts (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctfcracktools-macos
+          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
+          if-no-files-found: warn
+
+  # ============================================
+  # Summary
+  # ============================================
+  ci-success:
+    name: CI Success
+    needs: [frontend-lint, rust-lint, rust-test, security, build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.frontend-lint.result }}" == "failure" ]]; then
+            echo "Frontend lint failed"; exit 1
+          fi
+          if [[ "${{ needs.rust-lint.result }}" == "failure" ]]; then
+            echo "Rust lint failed"; exit 1
+          fi
+          if [[ "${{ needs.rust-test.result }}" == "failure" ]]; then
+            echo "Rust tests failed"; exit 1
+          fi
+          if [[ "${{ needs.build.result }}" == "failure" ]]; then
+            echo "Build failed"; exit 1
+          fi
+          echo "All CI checks passed!"

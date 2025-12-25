@@ -1,0 +1,66 @@
+[package]
+name = "ctfcracktools-x"
+version = "0.1.0"
+description = "CTFCrackTools X - Node-based CTF toolkit"
+authors = ["CTFCrackTools Team"]
+license = "MIT"
+repository = "https://github.com/0Chencc/CTFCrackTools"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Tauri
+tauri = { version = "2", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+
+# 序列化
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# 编码
+base64 = "0.22"
+data-encoding = "2"
+percent-encoding = "2"
+hex = "0.4"
+
+# 哈希
+md5 = "0.8"
+sha1 = "0.10"
+sha2 = "0.10"
+
+# 加密
+aes = "0.8"
+cbc = { version = "0.1", features = ["alloc"] }
+rc4 = "0.1"
+block-padding = "0.3"
+des = "0.8"
+blowfish = "0.9"
+
+# HMAC & KDF
+hmac = "0.12"
+pbkdf2 = "0.12"
+
+# Utility
+lazy_static = "1.5"
+
+# 错误处理
+thiserror = "1"
+
+# 日志
+log = "0.4"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+opt-level = "z"
