@@ -1,0 +1,26 @@
+# Rustfmt configuration for CTFCrackTools
+# https://rust-lang.github.io/rustfmt/
+
+# Maximum width of each line
+max_width = 100
+
+# Number of spaces per tab
+tab_spaces = 4
+
+# Unix line endings
+newline_style = "Unix"
+
+# Use field initialize shorthand if possible
+use_field_init_shorthand = true
+
+# Reorder imports
+reorder_imports = true
+
+# Group imports
+group_imports = "StdExternalCrate"
+
+# Format strings
+format_strings = false
+
+# Merge derives
+merge_derives = true

@@ -1,0 +1,69 @@
+# Dependabot configuration
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # NPM dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      development:
+        patterns:
+          - "@types/*"
+          - "eslint*"
+          - "typescript*"
+          - "@vitejs/*"
+          - "vite"
+        update-types:
+          - "minor"
+          - "patch"
+      tauri:
+        patterns:
+          - "@tauri-apps/*"
+
+  # Rust dependencies
+  - package-ecosystem: "cargo"
+    directory: "/src-tauri"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "rust"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      tauri:
+        patterns:
+          - "tauri*"
+      crypto:
+        patterns:
+          - "aes"
+          - "cbc"
+          - "rc4"
+          - "md5"
+          - "sha1"
+          - "sha2"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"

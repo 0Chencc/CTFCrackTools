@@ -1,0 +1,14 @@
+# Clippy configuration for CTFCrackTools
+# https://doc.rust-lang.org/clippy/configuration.html
+
+# Maximum cognitive complexity allowed for a function
+cognitive-complexity-threshold = 25
+
+# Maximum number of lines a function may have
+too-many-lines-threshold = 100
+
+# Maximum number of arguments a function may have
+too-many-arguments-threshold = 7
+
+# Minimum lines in a function to be considered for analysis
+trivial-copy-size-limit = 8
