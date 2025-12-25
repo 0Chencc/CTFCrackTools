@@ -79,7 +79,7 @@ jobs:
       version: ${{ needs.check-release.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.check-release.outputs.version }}
 
@@ -157,7 +157,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.check-release.outputs.version }}
 
