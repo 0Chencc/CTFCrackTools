@@ -1,0 +1,185 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # ============================================
+  # Wait for CI to pass before releasing
+  # ============================================
+  wait-for-ci:
+    name: Wait for CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI workflow to succeed
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'CI Success'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+          allowed-conclusions: success
+
+  # ============================================
+  # Determine version
+  # ============================================
+  get-version:
+    name: Get Version
+    needs: wait-for-ci
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+      - run: echo "Releasing version ${{ steps.version.outputs.version }}"
+
+  # ============================================
+  # Create GitHub Release
+  # ============================================
+  create-release:
+    name: Create Release
+    needs: get-version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ needs.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get-version.outputs.version }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.get-version.outputs.version }}
+          name: CTFCrackTools X ${{ needs.get-version.outputs.version }}
+          draft: false
+          prerelease: ${{ contains(needs.get-version.outputs.version, '-') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Build Release Artifacts
+  # ============================================
+  build-release:
+    name: Build (${{ matrix.platform }})
+    needs: [get-version, create-release]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-linux-x64
+            asset_ext: tar.gz
+          - platform: windows
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: ctfcracktools-x.exe
+            asset_name: ctfcracktools-x-windows-x64
+            asset_ext: zip
+          - platform: macos-arm
+            os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-macos-arm64
+            asset_ext: zip
+          - platform: macos-intel
+            os: macos-13
+            target: x86_64-apple-darwin
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-macos-x64
+            asset_ext: zip
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get-version.outputs.version }}
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libgtk-3-dev
+
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: 'pnpm' }
+      - uses: dtolnay/rust-toolchain@stable
+        with: { targets: '${{ matrix.target }}' }
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: src-tauri, shared-key: 'release-${{ matrix.target }}' }
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: cargo build --release --target ${{ matrix.target }}
+        working-directory: src-tauri
+
+      - name: Package (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          chmod +x ${{ matrix.artifact_name }}
+          tar -czvf ${{ matrix.asset_name }}.${{ matrix.asset_ext }} ${{ matrix.artifact_name }}
+
+      - name: Package (Windows)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          Compress-Archive -Path ${{ matrix.artifact_name }} -DestinationPath ${{ matrix.asset_name }}.${{ matrix.asset_ext }}
+
+      - name: Package (macOS)
+        if: startsWith(matrix.platform, 'macos')
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          chmod +x ${{ matrix.artifact_name }}
+          zip -r ${{ matrix.asset_name }}.${{ matrix.asset_ext }} ${{ matrix.artifact_name }}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.get-version.outputs.version }}
+          files: src-tauri/target/${{ matrix.target }}/release/${{ matrix.asset_name }}.${{ matrix.asset_ext }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Summary
+  # ============================================
+  release-complete:
+    name: Release Complete
+    needs: [get-version, build-release]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check status
+        run: |
+          if [ "${{ needs.build-release.result }}" = "success" ]; then
+            echo "✅ Release ${{ needs.get-version.outputs.version }} completed!"
+          else
+            echo "❌ Release failed: ${{ needs.build-release.result }}"
+            exit 1
+          fi
