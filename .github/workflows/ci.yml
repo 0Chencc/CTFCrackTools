@@ -210,7 +210,7 @@ jobs:
 
       - name: Upload artifacts (Linux)
         if: matrix.os == 'ubuntu-24.04'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ctfcracktools-linux
           path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
@@ -218,7 +218,7 @@ jobs:
 
       - name: Upload artifacts (Windows)
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ctfcracktools-windows
           path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x.exe
@@ -226,7 +226,7 @@ jobs:
 
       - name: Upload artifacts (macOS)
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ctfcracktools-macos
           path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
