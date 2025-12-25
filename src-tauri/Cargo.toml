@@ -41,7 +41,7 @@ sha2 = "0.10"
 aes = "0.8"
 cbc = { version = "0.1", features = ["alloc"] }
 rc4 = "0.1"
-block-padding = "0.3"
+block-padding = "0.4"
 des = "0.8"
 blowfish = "0.9"
 
