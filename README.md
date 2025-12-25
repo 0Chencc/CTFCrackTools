@@ -1,187 +1,151 @@
-# CTFcrackTools-V4.0
+<div align="center">
 
-[![Build Status](https://travis-ci.org/0Chencc/CTFCrackTools.svg?branch=master)](https://travis-ci.org/0Chencc/CTFCrackTools)
-[![](https://img.shields.io/github/v/release/0chencc/ctfcracktools?label=LATEST%20VERSION)](https://github.com/0Chencc/CTFCrackTools/releases/latest)
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://raw.githubusercontent.com/0Chencc/CTFCrackTools/master/doc/LICENSE)
-[![download](https://img.shields.io/github/downloads/0chencc/ctfcracktools/total)](https://github.com/0Chencc/CTFCrackTools/releases)
-[![language](https://img.shields.io/badge/Language-Java/Kotlin-orange.svg)](https://github.com/0Chencc/CTFCrackTools/)
+[English](README_en.md) | 简体中文
 
-作者：林晨(0chen)
+# CTFCrackTools X
 
-米斯特安全官网：http://www.acmesec.cn/
+**新一代节点化 CTF 工具箱**
 
-本工具已经可以作为burp插件导入，仓库地址：[DaE](https://github.com/0Chencc/DaE)
+*从 V4 到 X —— 不只是版本号的升级*
 
-[请我喝一杯咖啡☕️](#要饭环节)
+![CTFCrackTools X](img/theme.jpg)
 
-## 疑难解答
+[![Release](https://img.shields.io/github/v/release/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![License](https://img.shields.io/github/license/0Chencc/CTFCrackTools?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
 
-跳转到：[https://github.com/0Chencc/CTFCrackTools/wiki/FAQ](https://github.com/0Chencc/CTFCrackTools/wiki/FAQ)
+[下载](#下载) | [功能特性](#功能特性) | [作者留](#作者留)
 
-## 界面介绍
+</div>
 
-主页面
+---
 
-![mark](img/use.gif)
+## 品牌升级
 
-添加插件
+**CTFCrackTools X** 是 CTFCrackTools 的全新一代版本。"X" 代表着：
 
-![mark](img/plugin.gif)
+- **eXtreme** — 极致的性能与体验
+- **eXtensible** — 可扩展的节点化架构
+- **neXt** — 面向未来的技术栈
 
-## 框架介绍
+| | CTFCrackTools V4 | CTFCrackTools X |
+|---|---|---|
+| 界面 | 传统表单 | **节点化工作流** |
+| 性能 | Java 运行时 | **原生性能** |
+| 体积 | ~50MB+ | **<15MB** |
+| 跨平台 | 需要 JRE | **原生支持** |
 
-使用kotlin与java混合开发
+---
 
-这大概是国内首个应用于CTF的工具框架。
+## 功能特性
 
-可以被应用于CTF中的Crypto，Misc...
+### 节点化工作流
 
-内置目前主流密码（包括但不限于维吉利亚密码，凯撒密码，栅栏密码······）
+告别传统的线性操作，通过可视化节点自由组合编解码流程。
 
-用户可自主编写插件，但仅支持Python编写插件。编写方法也极为简单。(由于Jython自身的原因，暂时无法支持Python3)
+1. **下载并安装** 适合你系统的版本
+2. **启动应用**，你会看到一个空白画布
+3. **右键添加节点**：Input → 编码节点 → Output
+4. **连接节点**，输入文本，点击执行
 
-在导入插件的时候一定要记得确认jython文件已经加载。
+![Workflow](img/workflow.gif)
 
-我们附带了一些插件在[现成插件](https://github.com/0Chencc/CTFCrackTools/tree/master/%E7%8E%B0%E6%88%90%E6%8F%92%E4%BB%B6)可供用户的使用
+### 43+ 内置算法
 
-该项目一直在增强，这一次的重置只保留了部分核心代码，而将UI及优化代码重构，使这个框架支持更多功能。
+覆盖 CTF 常见的编解码、加密、哈希需求：
 
-项目地址：[https://github.com/0Chencc/CTFCrackTools](https://github.com/0Chencc/CTFCrackTools)
+<details>
+<summary><b>编码 (15)</b></summary>
 
-下载编译好的版本：[releases](https://github.com/0Chencc/CTFCrackTools/releases/)
+- Base64 / Base32 / Base58 / Base85
+- Hex / URL / ASCII / Binary
+- Morse / UUEncode / ROT47
+- Unicode / HTML Entity
+- JWT Decode / Brainfuck
 
-##  插件编写
+</details>
 
-![plugin](img/plugin.gif)
+<details>
+<summary><b>古典密码 (11)</b></summary>
 
-```Python
-#-*- coding:utf-8 -*-
-#一个函数调用的demo
-def main(input,a):
-    return 'input is %s,key is %s'%(input,a)
-  
-#我们希望能将插件开发者的信息存入程序中，所以需要定义author_info来进行开发者信息的注册
-def author_info():
-    info = {
-    "author":"0chen",
-    "name":"test_version",
-    "key":["a"],
-    "describe":"plugin describe"
-    }
-    return info
-```
+- Caesar / ROT13 / Atbash
+- Vigenère / Beaufort
+- Playfair / Polybius
+- Affine / Rail Fence
+- Bacon / XOR
 
-现在来具体讲下这些插件的用法，具体应该将下框架的调用方法。
+</details>
 
-**函数：** main
+<details>
+<summary><b>现代加密 (5)</b></summary>
 
-**描述：** 这个是程序调用插件时调用的函数。
+- AES-128-CBC
+- DES / 3DES
+- Blowfish
+- RC4
 
-定义：
+</details>
 
-```python
-def main(input):
-  return 'succ'
-```
+<details>
+<summary><b>哈希 & KDF (6)</b></summary>
 
-**函数：** author_info
+- MD5 / SHA1 / SHA256 / SHA512
+- HMAC-SHA256
+- PBKDF2
 
-**描述：** 我们希望能将插件开发者的信息存入程序中，所以需要定义author_info来进行开发者信息的注册
+</details>
 
-**author：** 作者信息
+<details>
+<summary><b>文本处理 (7)</b></summary>
 
-**name：** 插件名称
+- Uppercase / Lowercase
+- Reverse / Trim
+- Capitalize / SwapCase
+- Length
 
-**key：** 考虑到会有某些特定的密码需要key，有时候需要多个key。所以可以注册key的信息，当程序调用的时候会进行弹框。
+</details>
 
-**describe：** 这个地方是插件的描述。由于python2的原因，似乎对中文的支持不是很全，建议大家使用英文来进行描述。
+### 跨平台支持
 
-定义:
+原生支持 Windows、macOS、Linux，无需安装运行时。
 
-```python
-def author_info():
-    info = {
-    "author":"0chen",
-    "name":"test_version",
-    "key":["a"],
-    "describe":"plugin describe"
-    }
-    return info
-```
+---
 
-**因为工具调用其实就是通过def mian(input)传入数据然后获取return的数据。**
+## 下载
 
-```Python
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-def vigenereDecrypto(ciphertext,key):
-    ascii='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    keylen=len(key)
-    ctlen=len(ciphertext)
-    plaintext = ''
-    i = 0
-    while i < ctlen:
-        j = i % keylen
-        k = ascii.index(key[j])
-        m = ascii.index(ciphertext[i])
-        if m < k:
-            m += 26
-        plaintext += ascii[m-k]
-        i += 1
-    return plaintext
-def author_info:
-  info = {
-    'name':'VigenereDecrypto',
-    'author':'naiquan',
-    'key':'key',
-    'describe':'VigenereDecrypto'
-  }
-def main(input,key):
-    return vigenereDecrypto(input.replace(" ","").upper(),key.replace(" ","").upper())
-```
+前往 [Releases](https://github.com/0Chencc/CTFCrackTools/releases) 下载适合你系统的版本：
 
-多参数调用demo（注册传入函数只需要以string数组的形式注册即可，如demo所示）
+| 平台 | 下载 |
+|------|------|
+| Windows | `CTFCrackTools_x.x.x_x64-setup.exe` |
+| macOS (Apple Silicon) | `CTFCrackTools_x.x.x_aarch64.dmg` |
+| macOS (Intel) | `CTFCrackTools_x.x.x_x64.dmg` |
+| Linux (Debian/Ubuntu) | `CTFCrackTools_x.x.x_amd64.deb` |
+| Linux (AppImage) | `CTFCrackTools_x.x.x_amd64.AppImage` |
 
-```python
-#-*- coding:utf-8 -*-
-#多参数调用的demo
-#abd分别为需要传入参数，基本上没有参数限制（没测过）
-def main(input,a,b,c):
-    return 'input is %s,key a is %s,key b is %s,key c is %s'%(input,a,b,c)
-  
-#我们希望能将插件开发者的信息存入程序中，所以需要定义author_info来进行开发者信息的注册
-def author_info():
-    info = {
-    "author":"0chen",
-    "name":"test_version",
-    "key":["a","b","c"],
-    "describe":"plugin describe"
-    }
-    return info
-```
+---
 
+## 作者留
 
+很长的一段时间里，我收到过许多关于本工具的反馈，但是因为很长一段时间没有接触CTF这个圈子所以一直搁置，这个项目也因为年轻时不懂事错误地迭代了四个大版本。
 
-## 作者的碎碎念
+因为很多朋友反馈本工具的问题并非通过github，而是通过我私人的联系方式，这也导致我常常忘记。
 
-​	作为一款自从2016年发布至今的工具，由于发布的时候，彼时作者在读高中，没有时间也没有能力去更新这样一款受众颇多的工具，这款工具到至今我收到了许多ctf初学者的感谢，因为近两年一直忙于生计，很难有时间去顾及到这款工具的发展，但是仍然会有许多朋友来联系我的qq和微信，对这款工具的发展提出宝贵的意见，这也是我时不时更新的动力。
+我印象中本工具最初是在2016发布的，同时我多次清理commit记录，因为年轻时不懂事并不知道如何规范地push代码，为了规范化和代码的整洁只能不停地覆盖git记录。
 
-​	我发现国内很多厂商都将这款工具作为ctf必备的工具加入到工具包中，非常感谢这些朋友的抬爱，也因为他们我的工具才能有上万人在使用。ctf圈子的氛围日益增长，希望这款工具也能跟随大家一直使用下去。
+现在已经熟练掌握git地操作了，但是也已经过去了十年，我想起了十年前使用eclipse编程的那个过年夜，如果时间可以停留在当年该有多美好。
 
-​	我在高二的时候参加了人生第一次ctf比赛，那时候被虐得体无完肤。当时我们留意到第一名在提交wp的时候也有这款工具的截图，让我非常开心。我希望这款工具能伴随各位ctfer的成长，如果有什么做得不够好的地方，欢迎大家在github的issue提供宝贵的意见，在力所能及的范围内我一定会采纳。
+近期的一段时间，我一直在参与或者主导一些我兴趣使然的项目，当我检索以前写过的项目里，我注意到这款我16岁时编写的工具，我也想起当时挑灯夜战做CTF题目的初心。确实本工具在开源的圈子并不算非常优秀的工具，它仅仅只是一个新手入门的工具。
 
-​	会一直坚持开源，也欢迎各位厂商继续采用我的工具作为新手必备的工具，感谢大家！
+之所以让这段话留在文末是希望抛开煽情本身让大家更专注于工具功能本身，我很清楚这款工具在十年后的今天并非“优秀”的工具，所以我希望在日后能够不停地更新让这款工具重新被大家使用。在重构本项目前，我特地翻看了几年前自己的留言，以及在搜索引擎上搜索了本工具的相关内容，我看到一些博主在今天仍然在推荐我的工具，以及在一些write up提到我这款工具，这让我非常开心。谢谢大家这么多年的支持。
 
-​	另外：米斯特安全团队一直在寻找优秀的CTF选手，如果有打算来我们团队发展的朋友可以联系邮箱：admin@hi-ourlife.com
+为了让本工具能在当前的环境下依然能发挥一点余热，我花费了一点时间使用全新的架构对本项目进行重构。希望你能喜欢。
 
-## 旧版本
+在提交代码的这一天是2025年12月25号，是圣诞节，祝大家圣诞节愉快。
+<div align="center">
 
-旧版本与新版本的差别仅仅在于ui的差别，最新的4.0版本抛弃了3.0被大家诟病的ui，并且在2.0也就是调查发现比较喜欢的版本的基础上进行了ui的美化，我认为旧版本已没有存在的必要，所以将项目设置为private，如果呼声过高我会重新开放。感谢大家。
+**CTFCrackTools X** — *Perhaps it will be better than better*
 
-~~[https://github.com/Acmesec/CTFCrackTools-V2](https://github.com/Acmesec/CTFCrackTools-V2)~~
+Made with Rust + React by [0Chencc](https://github.com/0Chencc)
 
-## 要饭环节
-
-我司承接各类安全培训以及渗透测试，可联系admin[#]hi-ourlife.com
-
-![wechat](img/wechat.jpeg)
+</div>

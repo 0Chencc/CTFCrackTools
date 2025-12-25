@@ -1,0 +1,257 @@
+name: Release
+
+on:
+  # Auto release after CI passes on tag push
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches-ignore:
+      - '**'
+    # Note: workflow_run doesn't support tags filter directly,
+    # we check for tags in the job condition
+
+  # Manual trigger for emergency releases
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # ============================================
+  # Check if we should release
+  # ============================================
+  check-release:
+    name: Check Release Conditions
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check conditions
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual release triggered"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            # Check if workflow_run was successful and triggered by a tag
+            if [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
+              REF="${{ github.event.workflow_run.head_branch }}"
+              if [[ "$REF" == v* ]]; then
+                echo "CI passed on tag: $REF"
+                echo "should_release=true" >> $GITHUB_OUTPUT
+                echo "version=$REF" >> $GITHUB_OUTPUT
+              else
+                echo "CI passed but not on a tag (branch: $REF)"
+                echo "should_release=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "CI did not succeed: ${{ github.event.workflow_run.conclusion }}"
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Unknown trigger"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Log decision
+        run: |
+          echo "Should release: ${{ steps.check.outputs.should_release }}"
+          echo "Version: ${{ steps.check.outputs.version }}"
+
+  # ============================================
+  # Create GitHub Release
+  # ============================================
+  create-release:
+    name: Create Release
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ needs.check-release.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.check-release.outputs.version }}
+
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          VERSION="${{ needs.check-release.outputs.version }}"
+          echo "Generating release notes for $VERSION"
+
+          # Try to extract changelog section for this version
+          if [ -f "CHANGELOG.md" ]; then
+            NOTES=$(sed -n "/## \[${VERSION#v}\]/,/## \[/p" CHANGELOG.md | head -n -1)
+            if [ -z "$NOTES" ]; then
+              NOTES="See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) for details."
+            fi
+          else
+            NOTES="Release $VERSION"
+          fi
+
+          # Save to file to preserve formatting
+          echo "$NOTES" > release_notes.md
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-release.outputs.version }}
+          name: CTFCrackTools X ${{ needs.check-release.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(needs.check-release.outputs.version, '-') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Build Release Artifacts
+  # ============================================
+  build-release:
+    name: Build (${{ matrix.platform }})
+    needs: [check-release, create-release]
+    if: needs.check-release.outputs.should_release == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-linux-x64
+            asset_ext: tar.gz
+
+          - platform: windows
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: ctfcracktools-x.exe
+            asset_name: ctfcracktools-x-windows-x64
+            asset_ext: zip
+
+          - platform: macos-arm
+            os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-macos-arm64
+            asset_ext: zip
+
+          - platform: macos-intel
+            os: macos-13
+            target: x86_64-apple-darwin
+            artifact_name: ctfcracktools-x
+            asset_name: ctfcracktools-x-macos-x64
+            asset_ext: zip
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.check-release.outputs.version }}
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          key: release-${{ matrix.target }}
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+
+      - name: Build release binary
+        working-directory: src-tauri
+        run: cargo build --release --target ${{ matrix.target }}
+
+      # Package artifacts
+      - name: Package (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          chmod +x ${{ matrix.artifact_name }}
+          tar -czvf ${{ matrix.asset_name }}.${{ matrix.asset_ext }} ${{ matrix.artifact_name }}
+
+      - name: Package (Windows)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          Compress-Archive -Path ${{ matrix.artifact_name }} -DestinationPath ${{ matrix.asset_name }}.${{ matrix.asset_ext }}
+
+      - name: Package (macOS)
+        if: startsWith(matrix.platform, 'macos')
+        run: |
+          cd src-tauri/target/${{ matrix.target }}/release
+          chmod +x ${{ matrix.artifact_name }}
+          zip -r ${{ matrix.asset_name }}.${{ matrix.asset_ext }} ${{ matrix.artifact_name }}
+
+      # Upload to release
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-release.outputs.version }}
+          files: src-tauri/target/${{ matrix.target }}/release/${{ matrix.asset_name }}.${{ matrix.asset_ext }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Post-release notification
+  # ============================================
+  notify:
+    name: Release Complete
+    needs: [check-release, create-release, build-release]
+    if: always() && needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check release status
+        run: |
+          if [ "${{ needs.build-release.result }}" = "success" ]; then
+            echo "✅ Release ${{ needs.check-release.outputs.version }} completed successfully!"
+            echo "📦 All platform builds uploaded"
+          else
+            echo "❌ Release ${{ needs.check-release.outputs.version }} had failures"
+            echo "Build result: ${{ needs.build-release.result }}"
+            exit 1
+          fi
