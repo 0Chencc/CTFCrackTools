@@ -53,7 +53,7 @@ pbkdf2 = "0.12"
 lazy_static = "1.5"
 
 # 错误处理
-thiserror = "1"
+thiserror = "2"
 
 # 日志
 log = "0.4"
