@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTFCrackTools X - 新一代节点化 CTF 工具箱</title>
-    <meta name="description" content="CTFCrackTools X 是基于 Rust + Tauri 构建的新一代 CTF 工具箱，支持可视化节点工作流，内置 43+ 编解码算法。">
-    <meta name="keywords" content="CTF, CTFCrackTools, 编解码, Base64, 密码学, Rust, Tauri">
+    <title>CTFCrackTools X - Next-Gen Node-Based CTF Toolkit</title>
+    <meta name="description" content="CTFCrackTools X is a next-generation CTF toolkit built with Rust + Tauri, featuring visual node-based workflow and 43+ encoding/crypto algorithms.">
+    <meta name="keywords" content="CTF, CTFCrackTools, encoding, Base64, cryptography, Rust, Tauri">
     <link rel="icon" href="https://raw.githubusercontent.com/0Chencc/CTFCrackTools/main/src-tauri/icons/icon.png">
     <style>
         :root {
@@ -65,6 +65,13 @@
             display: flex;
             gap: 32px;
             list-style: none;
+            align-items: center;
+        }
+
+        .nav-links li {
+            position: relative;
+            min-width: 70px;
+            text-align: center;
         }
 
         .nav-links a {
@@ -75,6 +82,23 @@
 
         .nav-links a:hover {
             color: var(--text-primary);
+        }
+
+        .lang-switch {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .lang-switch:hover {
+            border-color: var(--accent);
         }
 
         /* Hero */
@@ -121,7 +145,10 @@
         .btn-primary {
             background: var(--accent);
             color: white;
+            min-width: 160px;
+            justify-content: center;
         }
+
 
         .btn-primary:hover {
             background: var(--accent-hover);
@@ -317,6 +344,10 @@
             }
 
             .nav-links {
+                gap: 16px;
+            }
+
+            .nav-links a:not(.lang-switch) {
                 display: none;
             }
 
@@ -324,6 +355,23 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* i18n visibility - hide by default */
+        [data-lang="zh"] { display: none; }
+        html[lang="zh"] [data-lang="en"] { display: none; }
+
+        /* i18n visibility - show with correct display types */
+        html:not([lang="zh"]) span[data-lang="en"],
+        html[lang="zh"] span[data-lang="zh"] { display: inline; }
+
+        html:not([lang="zh"]) a[data-lang="en"],
+        html[lang="zh"] a[data-lang="zh"] { display: inline; }
+
+        html:not([lang="zh"]) p[data-lang="en"],
+        html[lang="zh"] p[data-lang="zh"] { display: block; }
+
+        html:not([lang="zh"]) td[data-lang="en"],
+        html[lang="zh"] td[data-lang="zh"] { display: table-cell; }
     </style>
 </head>
 <body>
@@ -332,9 +380,21 @@
             <nav>
                 <a href="#" class="logo">CTFCrackTools <span>X</span></a>
                 <ul class="nav-links">
-                    <li><a href="#features">功能</a></li>
-                    <li><a href="#download">下载</a></li>
+                    <li>
+                        <a href="#features" data-lang="en">Features</a>
+                        <a href="#features" data-lang="zh">功能</a>
+                    </li>
+                    <li>
+                        <a href="#download" data-lang="en">Download</a>
+                        <a href="#download" data-lang="zh">下载</a>
+                    </li>
                     <li><a href="https://github.com/0Chencc/CTFCrackTools">GitHub</a></li>
+                    <li>
+                        <button class="lang-switch" onclick="toggleLang()">
+                            <span data-lang="en">中文</span>
+                            <span data-lang="zh">EN</span>
+                        </button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -344,11 +404,15 @@
         <section class="hero">
             <div class="container">
                 <h1>CTFCrackTools X</h1>
-                <p class="tagline">新一代节点化 CTF 工具箱<br>From V4 to X — 不只是版本号的升级</p>
+                <p class="tagline">
+                    <span data-lang="en">Next-Generation Node-Based CTF Toolkit<br>From V4 to X — More Than Just a Version Number</span>
+                    <span data-lang="zh">新一代节点化 CTF 工具箱<br>From V4 to X — 不只是版本号的升级</span>
+                </p>
                 <div class="hero-buttons">
                     <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest" class="btn btn-primary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        下载
+                        <span data-lang="en">Download</span>
+                        <span data-lang="zh">下载</span>
                     </a>
                     <a href="https://github.com/0Chencc/CTFCrackTools" class="btn btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -360,37 +424,70 @@
 
         <section class="screenshot">
             <div class="container">
-                <img src="https://raw.githubusercontent.com/0Chencc/CTFCrackTools/main/img/theme.jpg" alt="CTFCrackTools X 界面预览">
+                <img src="https://raw.githubusercontent.com/0Chencc/CTFCrackTools/main/img/theme.jpg" alt="CTFCrackTools X Interface Preview">
             </div>
         </section>
 
         <section class="features" id="features">
             <div class="container">
-                <h2>核心特性</h2>
+                <h2>
+                    <span data-lang="en">Core Features</span>
+                    <span data-lang="zh">核心特性</span>
+                </h2>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <h3><span class="feature-icon">🔗</span>节点化工作流</h3>
-                        <p>告别传统线性操作，通过可视化节点自由组合编解码流程，支持多路径并行处理。</p>
+                        <h3>
+                            <span class="feature-icon">🔗</span>
+                            <span data-lang="en">Node-Based Workflow</span>
+                            <span data-lang="zh">节点化工作流</span>
+                        </h3>
+                        <p data-lang="en">Say goodbye to linear operations. Visually compose your encoding/decoding pipelines with drag-and-drop nodes.</p>
+                        <p data-lang="zh">告别传统线性操作，通过可视化节点自由组合编解码流程，支持多路径并行处理。</p>
                     </div>
                     <div class="feature-card">
-                        <h3><span class="feature-icon">⚡</span>原生性能</h3>
-                        <p>基于 Rust + Tauri 构建，享受原生应用的极致性能，启动迅速，内存占用低。</p>
+                        <h3>
+                            <span class="feature-icon">⚡</span>
+                            <span data-lang="en">Native Performance</span>
+                            <span data-lang="zh">原生性能</span>
+                        </h3>
+                        <p data-lang="en">Built with Rust + Tauri for native performance. Fast startup, low memory footprint.</p>
+                        <p data-lang="zh">基于 Rust + Tauri 构建，享受原生应用的极致性能，启动迅速，内存占用低。</p>
                     </div>
                     <div class="feature-card">
-                        <h3><span class="feature-icon">🔐</span>43+ 内置算法</h3>
-                        <p>覆盖 Base64、Hex、Caesar、AES、MD5 等常见编解码和加密算法，满足 CTF 需求。</p>
+                        <h3>
+                            <span class="feature-icon">🔐</span>
+                            <span data-lang="en">43+ Built-in Algorithms</span>
+                            <span data-lang="zh">43+ 内置算法</span>
+                        </h3>
+                        <p data-lang="en">Covers Base64, Hex, Caesar, AES, MD5 and more. Everything you need for CTF challenges.</p>
+                        <p data-lang="zh">覆盖 Base64、Hex、Caesar、AES、MD5 等常见编解码和加密算法，满足 CTF 需求。</p>
                     </div>
                     <div class="feature-card">
-                        <h3><span class="feature-icon">💻</span>跨平台支持</h3>
-                        <p>原生支持 Windows、macOS、Linux，无需安装 Java 或其他运行时环境。</p>
+                        <h3>
+                            <span class="feature-icon">💻</span>
+                            <span data-lang="en">Cross-Platform</span>
+                            <span data-lang="zh">跨平台支持</span>
+                        </h3>
+                        <p data-lang="en">Native support for Windows, macOS, and Linux. No Java or runtime required.</p>
+                        <p data-lang="zh">原生支持 Windows、macOS、Linux，无需安装 Java 或其他运行时环境。</p>
                     </div>
                     <div class="feature-card">
-                        <h3><span class="feature-icon">🎨</span>现代界面</h3>
-                        <p>简洁优雅的深色主题设计，专为长时间使用优化，减轻视觉疲劳。</p>
+                        <h3>
+                            <span class="feature-icon">🎨</span>
+                            <span data-lang="en">Modern Interface</span>
+                            <span data-lang="zh">现代界面</span>
+                        </h3>
+                        <p data-lang="en">Clean dark theme designed for extended use, reducing eye strain.</p>
+                        <p data-lang="zh">简洁优雅的深色主题设计，专为长时间使用优化，减轻视觉疲劳。</p>
                     </div>
                     <div class="feature-card">
-                        <h3><span class="feature-icon">📦</span>轻量便携</h3>
-                        <p>单文件可执行，体积仅约 4MB，无需安装，下载即用。</p>
+                        <h3>
+                            <span class="feature-icon">📦</span>
+                            <span data-lang="en">Lightweight & Portable</span>
+                            <span data-lang="zh">轻量便携</span>
+                        </h3>
+                        <p data-lang="en">Single executable, only ~4MB. No installation required, download and run.</p>
+                        <p data-lang="zh">单文件可执行，体积仅约 4MB，无需安装，下载即用。</p>
                     </div>
                 </div>
             </div>
@@ -398,7 +495,10 @@
 
         <section class="comparison">
             <div class="container">
-                <h2>版本对比</h2>
+                <h2>
+                    <span data-lang="en">Version Comparison</span>
+                    <span data-lang="zh">版本对比</span>
+                </h2>
                 <table class="comparison-table">
                     <thead>
                         <tr>
@@ -409,29 +509,40 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>界面</td>
-                            <td>传统表单</td>
-                            <td class="highlight">节点化工作流</td>
+                            <td data-lang="en">Interface</td>
+                            <td data-lang="zh">界面</td>
+                            <td data-lang="en">Traditional forms</td>
+                            <td data-lang="zh">传统表单</td>
+                            <td class="highlight" data-lang="en">Node-based workflow</td>
+                            <td class="highlight" data-lang="zh">节点化工作流</td>
                         </tr>
                         <tr>
-                            <td>技术栈</td>
+                            <td data-lang="en">Tech Stack</td>
+                            <td data-lang="zh">技术栈</td>
                             <td>Java / Kotlin</td>
                             <td class="highlight">Rust + React</td>
                         </tr>
                         <tr>
-                            <td>性能</td>
-                            <td>Java 运行时</td>
-                            <td class="highlight">原生性能</td>
+                            <td data-lang="en">Performance</td>
+                            <td data-lang="zh">性能</td>
+                            <td data-lang="en">Java runtime</td>
+                            <td data-lang="zh">Java 运行时</td>
+                            <td class="highlight" data-lang="en">Native performance</td>
+                            <td class="highlight" data-lang="zh">原生性能</td>
                         </tr>
                         <tr>
-                            <td>体积</td>
+                            <td data-lang="en">Size</td>
+                            <td data-lang="zh">体积</td>
                             <td>~50MB+</td>
                             <td class="highlight">~4MB</td>
                         </tr>
                         <tr>
-                            <td>依赖</td>
-                            <td>需要 JRE</td>
-                            <td class="highlight">无依赖</td>
+                            <td data-lang="en">Dependencies</td>
+                            <td data-lang="zh">依赖</td>
+                            <td data-lang="en">Requires JRE</td>
+                            <td data-lang="zh">需要 JRE</td>
+                            <td class="highlight" data-lang="en">None</td>
+                            <td class="highlight" data-lang="zh">无依赖</td>
                         </tr>
                     </tbody>
                 </table>
@@ -440,8 +551,14 @@
 
         <section class="download" id="download">
             <div class="container">
-                <h2>立即下载</h2>
-                <p>选择适合你系统的版本，下载即可使用</p>
+                <h2>
+                    <span data-lang="en">Download Now</span>
+                    <span data-lang="zh">立即下载</span>
+                </h2>
+                <p>
+                    <span data-lang="en">Choose the version for your system, download and run</span>
+                    <span data-lang="zh">选择适合你系统的版本，下载即可使用</span>
+                </p>
                 <div class="download-cards">
                     <a href="https://github.com/0Chencc/CTFCrackTools/releases/latest/download/ctfcracktools-x-windows-x64.exe" class="download-card">
                         <div class="platform">🪟</div>
@@ -476,5 +593,26 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        function toggleLang() {
+            const html = document.documentElement;
+            const currentLang = html.getAttribute('lang');
+            const newLang = currentLang === 'en' ? 'zh' : 'en';
+            html.setAttribute('lang', newLang);
+            localStorage.setItem('lang', newLang);
+        }
+
+        // Initialize language from localStorage or browser preference
+        (function() {
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang) {
+                document.documentElement.setAttribute('lang', savedLang);
+            } else {
+                const browserLang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+                document.documentElement.setAttribute('lang', browserLang);
+            }
+        })();
+    </script>
 </body>
 </html>
