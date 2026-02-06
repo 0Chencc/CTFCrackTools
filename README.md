@@ -117,11 +117,12 @@
 
 | 平台 | 文件名 |
 |------|------|
-| Windows x64 | `ctfcracktools-x-windows-x64.exe` |
-| macOS ARM64 | `ctfcracktools-x-macos-arm64` |
-| Linux x64 | `ctfcracktools-x-linux-x64` |
+| Windows x64 | `ctfcracktools-x-{version}-windows-x64.exe` |
+| macOS ARM64 | `ctfcracktools-x-{version}-macos-arm64.dmg` |
+| macOS Intel | `ctfcracktools-x-{version}-macos-x64.dmg` |
+| Linux x64 | `ctfcracktools-x-{version}-linux-x64` |
 
-> **注意**: macOS/Linux 用户下载后需要添加执行权限：`chmod +x ctfcracktools-x-*`
+> **注意**: Linux 用户下载后需要添加执行权限：`chmod +x ctfcracktools-x-*`
 
 ---
 

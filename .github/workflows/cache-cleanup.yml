@@ -1,0 +1,164 @@
+name: Cache Cleanup
+
+on:
+  # PR 合并/关闭后自动清理该分支的缓存
+  pull_request:
+    types: [closed]
+
+  # 每周日 UTC 00:00 定期清理过期缓存
+  schedule:
+    - cron: '0 0 * * 0'
+
+  workflow_dispatch:
+    inputs:
+      cleanup_mode:
+        description: 'Cleanup mode'
+        required: true
+        default: 'stale'
+        type: choice
+        options:
+          - stale    # 清理 7 天未命中的缓存
+          - all      # 清理所有缓存（慎用）
+
+jobs:
+  # ============================================================
+  # PR 分支缓存清理 - PR 关闭后清理该分支产生的所有缓存
+  # ============================================================
+  cleanup-pr-branch:
+    name: Cleanup PR Branch Cache
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Cleanup caches for PR #${{ github.event.pull_request.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_BRANCH: refs/heads/${{ github.event.pull_request.head.ref }}
+          MERGE_BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+        run: |
+          echo "Cleaning up caches for PR #${PR_NUMBER}"
+
+          DELETED=0
+
+          for BRANCH in "$HEAD_BRANCH" "$MERGE_BRANCH"; do
+            echo "Checking branch: $BRANCH"
+
+            CACHE_IDS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/caches?ref=${BRANCH}&per_page=100" \
+              --jq '.actions_caches[].id')
+
+            if [ -z "$CACHE_IDS" ]; then
+              echo "  No caches found"
+              continue
+            fi
+
+            while IFS= read -r id; do
+              echo "  Deleting cache ID: $id"
+              gh api --method DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/actions/caches/${id}" || true
+              DELETED=$((DELETED + 1))
+            done <<< "$CACHE_IDS"
+          done
+
+          echo "::notice::Deleted $DELETED cache(s) for PR #${PR_NUMBER}"
+
+  # ============================================================
+  # 定期清理 - 删除超过 7 天未被访问的缓存
+  # ============================================================
+  cleanup-stale:
+    name: Cleanup Stale Caches
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.cleanup_mode == 'stale')
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Cleanup stale caches (>7 days)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Fetching all caches..."
+
+          THRESHOLD_DATE=$(date -u -d "7 days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
+            || date -u -v-7d +%Y-%m-%dT%H:%M:%SZ)
+
+          echo "Deleting caches last accessed before: $THRESHOLD_DATE"
+
+          DELETED=0
+          PAGE=1
+
+          while true; do
+            RESPONSE=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/caches?per_page=100&page=${PAGE}&sort=last_accessed_at&direction=asc")
+
+            TOTAL=$(echo "$RESPONSE" | jq '.total_count')
+            STALE=$(echo "$RESPONSE" | jq -r \
+              ".actions_caches[] | select(.last_accessed_at < \"$THRESHOLD_DATE\") | .id")
+
+            if [ -z "$STALE" ]; then
+              break
+            fi
+
+            while IFS= read -r id; do
+              echo "Deleting stale cache ID: $id"
+              gh api --method DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/actions/caches/${id}" || true
+              DELETED=$((DELETED + 1))
+            done <<< "$STALE"
+
+            COUNT=$(echo "$RESPONSE" | jq '.actions_caches | length')
+            if [ "$COUNT" -lt 100 ]; then
+              break
+            fi
+
+            PAGE=$((PAGE + 1))
+          done
+
+          echo "::notice::Deleted $DELETED stale cache(s) (total caches in repo: $TOTAL)"
+
+  # ============================================================
+  # 全量清理 - 手动触发，删除所有缓存
+  # ============================================================
+  cleanup-all:
+    name: Cleanup All Caches
+    if: github.event_name == 'workflow_dispatch' && inputs.cleanup_mode == 'all'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete all caches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Deleting ALL caches for $REPO"
+
+          DELETED=0
+
+          while true; do
+            CACHE_IDS=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/caches?per_page=100" \
+              --jq '.actions_caches[].id')
+
+            if [ -z "$CACHE_IDS" ]; then
+              break
+            fi
+
+            while IFS= read -r id; do
+              echo "Deleting cache ID: $id"
+              gh api --method DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/repos/${REPO}/actions/caches/${id}" || true
+              DELETED=$((DELETED + 1))
+            done <<< "$CACHE_IDS"
+          done
+
+          echo "::notice::Deleted $DELETED cache(s) in total"
