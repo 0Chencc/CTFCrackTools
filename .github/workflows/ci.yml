@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [main, next, develop]
-    tags: ['v*']
     paths-ignore:
       - '**.md'
       - '.gitignore'
