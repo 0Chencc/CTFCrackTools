@@ -4,8 +4,23 @@ on:
   push:
     branches: [main, next, develop]
     tags: ['v*']
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'docs/**'
   pull_request:
     branches: [main, next, develop]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'docs/**'
+
+# Cancel in-progress runs for the same branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CARGO_TERM_COLOR: always
@@ -127,6 +142,8 @@ jobs:
             target: x86_64-pc-windows-msvc
           - os: macos-latest
             target: aarch64-apple-darwin
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -169,12 +186,20 @@ jobs:
           path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x.exe
           if-no-files-found: warn
 
-      - name: Upload artifacts (macOS)
+      - name: Upload artifacts (macOS ARM64)
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ctfcracktools-macos
-          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
+          name: ctfcracktools-macos-arm64
+          path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+          if-no-files-found: warn
+
+      - name: Upload artifacts (macOS Intel)
+        if: matrix.os == 'macos-15-intel'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctfcracktools-macos-x64
+          path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
           if-no-files-found: warn
 
   # ============================================
