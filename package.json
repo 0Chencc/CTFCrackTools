@@ -17,7 +17,7 @@
     "@tauri-apps/api": "^2.9.1",
     "@tauri-apps/plugin-dialog": "^2.5.0",
     "@tauri-apps/plugin-fs": "^2.4.5",
-    "react": "^19.2.0",
+    "react": "^19.2.4",
     "react-dom": "^19.2.0",
     "reactflow": "^11.11.4",
     "zustand": "^5.0.10"
@@ -27,7 +27,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tauri-apps/cli": "^2.9.6",
     "@types/node": "^24.10.1",
-    "@types/react": "^19.2.8",
+    "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.23",
