@@ -167,39 +167,7 @@ jobs:
           shared-key: build-${{ matrix.target }}
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm tauri build --target ${{ matrix.target }}
-
-      - name: Upload artifacts (Linux)
-        if: matrix.os == 'ubuntu-24.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ctfcracktools-linux
-          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x
-          if-no-files-found: warn
-
-      - name: Upload artifacts (Windows)
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ctfcracktools-windows
-          path: src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x.exe
-          if-no-files-found: warn
-
-      - name: Upload artifacts (macOS ARM64)
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ctfcracktools-macos-arm64
-          path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
-          if-no-files-found: warn
-
-      - name: Upload artifacts (macOS Intel)
-        if: matrix.os == 'macos-15-intel'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ctfcracktools-macos-x64
-          path: src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
-          if-no-files-found: warn
+      - run: pnpm tauri build --no-bundle --target ${{ matrix.target }}
 
   # ============================================
   # Summary
