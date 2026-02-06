@@ -107,6 +107,25 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: src-tauri, shared-key: 'release-linux' }
 
+      - name: Sync version from tag
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const v = process.env.VERSION;
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            pkg.version = v;
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = v;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            let toml = fs.readFileSync("src-tauri/Cargo.toml", "utf8");
+            toml = toml.replace(/^version = ".*"/m, `version = "${v}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", toml);
+            console.log("Synced version to " + v);
+          '
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --target x86_64-unknown-linux-gnu
 
@@ -144,6 +163,26 @@ jobs:
         with: { targets: 'x86_64-pc-windows-msvc' }
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: src-tauri, shared-key: 'release-windows' }
+
+      - name: Sync version from tag
+        shell: bash
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const v = process.env.VERSION;
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            pkg.version = v;
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = v;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            let toml = fs.readFileSync("src-tauri/Cargo.toml", "utf8");
+            toml = toml.replace(/^version = ".*"/m, `version = "${v}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", toml);
+            console.log("Synced version to " + v);
+          '
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --target x86_64-pc-windows-msvc
@@ -184,6 +223,25 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: src-tauri, shared-key: 'release-macos-arm64' }
 
+      - name: Sync version from tag
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const v = process.env.VERSION;
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            pkg.version = v;
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = v;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            let toml = fs.readFileSync("src-tauri/Cargo.toml", "utf8");
+            toml = toml.replace(/^version = ".*"/m, `version = "${v}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", toml);
+            console.log("Synced version to " + v);
+          '
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --target aarch64-apple-darwin
 
@@ -221,6 +279,25 @@ jobs:
         with: { targets: 'x86_64-apple-darwin' }
       - uses: Swatinem/rust-cache@v2
         with: { workspaces: src-tauri, shared-key: 'release-macos-intel' }
+
+      - name: Sync version from tag
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const v = process.env.VERSION;
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            pkg.version = v;
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+            const conf = JSON.parse(fs.readFileSync("src-tauri/tauri.conf.json", "utf8"));
+            conf.version = v;
+            fs.writeFileSync("src-tauri/tauri.conf.json", JSON.stringify(conf, null, 2) + "\n");
+            let toml = fs.readFileSync("src-tauri/Cargo.toml", "utf8");
+            toml = toml.replace(/^version = ".*"/m, `version = "${v}"`);
+            fs.writeFileSync("src-tauri/Cargo.toml", toml);
+            console.log("Synced version to " + v);
+          '
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --target x86_64-apple-darwin
