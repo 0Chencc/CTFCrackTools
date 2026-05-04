@@ -169,6 +169,15 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --no-bundle --target ${{ matrix.target }}
 
+      # Windows-only: launch the built exe and verify it actually renders
+      # (catches React mount errors / JS exceptions that compile-time checks miss).
+      # WebView2 supports Chrome DevTools Protocol; macOS/Linux webviews do not,
+      # so this smoke test runs only on Windows but catches all-platform JS bugs.
+      - name: Smoke test (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: node scripts/smoke-test.mjs src-tauri/target/${{ matrix.target }}/release/ctfcracktools-x.exe
+
   # ============================================
   # Summary
   # ============================================

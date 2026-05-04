@@ -187,6 +187,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --no-bundle --target x86_64-pc-windows-msvc
 
+      # Last line of defense before publishing: verify the exe actually renders.
+      # v0.1.1 shipped with React 19.2.4 + react-dom 19.2.3 — compiled fine
+      # but white-screened on launch. This step would have caught it.
+      - name: Smoke test
+        shell: pwsh
+        run: node scripts/smoke-test.mjs src-tauri/target/x86_64-pc-windows-msvc/release/ctfcracktools-x.exe
+
       - name: Prepare artifacts
         shell: bash
         run: |
