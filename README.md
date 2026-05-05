@@ -1,22 +1,20 @@
-<div align="center">
-
-[English](README_en.md) | 简体中文
-
 # CTFCrackTools X
 
 **新一代节点化 CTF 工具箱**
+
+[English](README_en.md) | 简体中文
+
+[![Release](https://img.shields.io/github/v/release/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![Released](https://img.shields.io/github/release-date/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![Downloads](https://img.shields.io/github/downloads/0Chencc/CTFCrackTools/total?style=flat-square&label=Downloads)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![License](https://img.shields.io/github/license/0Chencc/CTFCrackTools?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
 
 *从 V4 到 X —— 不只是版本号的升级*
 
 ![CTFCrackTools X](img/theme.jpg)
 
-[![Release](https://img.shields.io/github/v/release/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
-[![License](https://img.shields.io/github/license/0Chencc/CTFCrackTools?style=flat-square)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
-
 [下载](#下载) | [功能特性](#功能特性) | [作者留](#作者留)
-
-</div>
 
 ---
 

@@ -1,22 +1,20 @@
-<div align="center">
-
-English | [简体中文](README.md)
-
 # CTFCrackTools X
 
 **Next-Generation Node-Based CTF Toolkit**
+
+English | [简体中文](README.md)
+
+[![Release](https://img.shields.io/github/v/release/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![Released](https://img.shields.io/github/release-date/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![Downloads](https://img.shields.io/github/downloads/0Chencc/CTFCrackTools/total?style=flat-square&label=Downloads)](https://github.com/0Chencc/CTFCrackTools/releases)
+[![License](https://img.shields.io/github/license/0Chencc/CTFCrackTools?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
 
 *From V4 to X — More Than Just a Version Number*
 
 ![CTFCrackTools X](img/theme.jpg)
 
-[![Release](https://img.shields.io/github/v/release/0Chencc/CTFCrackTools?style=flat-square)](https://github.com/0Chencc/CTFCrackTools/releases)
-[![License](https://img.shields.io/github/license/0Chencc/CTFCrackTools?style=flat-square)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue?style=flat-square)]()
-
 [Download](#download) | [Features](#features) | [Author's Note](#authors-note)
-
-</div>
 
 ---
 
