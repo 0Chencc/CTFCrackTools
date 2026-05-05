@@ -10,13 +10,14 @@ use commands::{base64_decode, base64_encode, execute_workflow};
 /// 不存在时静默回退，对 NSIS 安装版 / 裸 exe 均无副作用。
 #[cfg(target_os = "windows")]
 fn setup_portable_webview2() {
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            let wv2 = dir.join("WebView2");
-            if wv2.is_dir() {
-                std::env::set_var("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER", &wv2);
-            }
-        }
+    let Some(wv2) = std::env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(|dir| dir.join("WebView2")))
+    else {
+        return;
+    };
+    if wv2.is_dir() {
+        std::env::set_var("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER", &wv2);
     }
 }
 

@@ -78,16 +78,8 @@ pub fn decode(input: &str) -> Result<String, String> {
                 // 输入操作：在这个上下文中跳过
                 // 可以扩展为从额外参数读取
             }
-            '[' => {
-                if memory[ptr] == 0 {
-                    pc = brackets[&pc];
-                }
-            }
-            ']' => {
-                if memory[ptr] != 0 {
-                    pc = brackets[&pc];
-                }
-            }
+            '[' if memory[ptr] == 0 => pc = brackets[&pc],
+            ']' if memory[ptr] != 0 => pc = brackets[&pc],
             _ => {}
         }
         pc += 1;
